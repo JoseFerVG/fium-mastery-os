@@ -7,17 +7,18 @@ import {
   Clock, 
   BookOpen, 
   RotateCcw,
-  Compass
+  Compass,
+  Sparkles
 } from 'lucide-react';
 import { Subject, SubjectId } from '../types';
 
 interface NavbarProps {
-  currentView: 'dashboard' | 'course' | 'exam' | 'pomodoro';
+  currentView: 'dashboard' | 'course' | 'exam' | 'pomodoro' | 'duolingo';
   selectedSubjectId: SubjectId | null;
   subjects: Subject[];
   overallProgress: number;
   streakDays: number;
-  onNavigate: (view: 'dashboard' | 'course' | 'exam' | 'pomodoro', subjectId?: SubjectId) => void;
+  onNavigate: (view: 'dashboard' | 'course' | 'exam' | 'pomodoro' | 'duolingo', subjectId?: SubjectId) => void;
   onResetProgress: () => void;
 }
 
@@ -66,6 +67,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Compass className="w-3.5 h-3.5" />
               Mission Control
+            </button>
+
+            {/* Duolingo Gamified Mode Button */}
+            <button
+              onClick={() => onNavigate('duolingo')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                currentView === 'duolingo'
+                  ? 'bg-green-500 text-white shadow-md shadow-green-500/20 border border-green-400'
+                  : 'text-green-400 hover:text-white hover:bg-green-500/20 border border-green-500/30'
+              }`}
+            >
+              <span className="text-sm">🦉</span>
+              FIUMingo
+              <span className="px-1.5 py-0.2 rounded-full bg-green-950/80 text-green-300 text-[10px] border border-green-500/40">
+                Duolingo
+              </span>
             </button>
 
             {/* Courses quick dropdown/picker */}
@@ -167,6 +184,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`flex-1 py-1 text-center font-medium ${currentView === 'dashboard' ? 'text-indigo-400 font-bold' : 'text-slate-400'}`}
           >
             Dashboard
+          </button>
+          <button
+            onClick={() => onNavigate('duolingo')}
+            className={`flex-1 py-1 text-center font-bold ${currentView === 'duolingo' ? 'text-green-400 font-bold' : 'text-green-500/80'}`}
+          >
+            🦉 Duolingo
           </button>
           <button
             onClick={() => onNavigate('exam')}

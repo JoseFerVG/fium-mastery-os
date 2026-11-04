@@ -4,6 +4,7 @@ import { Dashboard } from './components/Dashboard';
 import { CourseView } from './components/CourseView';
 import { ExamTrainer } from './components/ExamTrainer';
 import { PomodoroTimer } from './components/PomodoroTimer';
+import { DuolingoView } from './components/duolingo/DuolingoView';
 import { COURSES } from './data/coursesData';
 import { Subject, SubjectId, UserProgress } from './types';
 import confetti from 'canvas-confetti';
@@ -26,7 +27,7 @@ const DEFAULT_PROGRESS: UserProgress = {
 };
 
 export const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'course' | 'exam' | 'pomodoro'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'course' | 'exam' | 'pomodoro' | 'duolingo'>('dashboard');
   const [selectedSubjectId, setSelectedSubjectId] = useState<SubjectId>('aoc');
   const [progress, setProgress] = useState<UserProgress>(() => {
     try {
@@ -74,7 +75,7 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleNavigate = (view: 'dashboard' | 'course' | 'exam' | 'pomodoro', subjectId?: SubjectId) => {
+  const handleNavigate = (view: 'dashboard' | 'course' | 'exam' | 'pomodoro' | 'duolingo', subjectId?: SubjectId) => {
     if (subjectId) {
       setSelectedSubjectId(subjectId);
     }
@@ -117,49 +118,57 @@ export const App: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {currentView === 'dashboard' && (
-          <Dashboard
-            progress={progress}
-            onSelectSubject={handleSelectSubject}
-            onOpenExamTrainer={() => handleNavigate('exam')}
-            onOpenPomodoro={() => handleNavigate('pomodoro')}
-          />
-        )}
+      {currentView === 'duolingo' ? (
+        <DuolingoView
+          initialSubjectId={selectedSubjectId}
+          onBackToDashboard={() => handleNavigate('dashboard')}
+        />
+      ) : (
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {currentView === 'dashboard' && (
+            <Dashboard
+              progress={progress}
+              onSelectSubject={handleSelectSubject}
+              onOpenExamTrainer={() => handleNavigate('exam')}
+              onOpenPomodoro={() => handleNavigate('pomodoro')}
+              onOpenDuolingo={() => handleNavigate('duolingo')}
+            />
+          )}
 
-        {currentView === 'course' && (
-          <CourseView
-            subject={currentSubject}
-            topicMastery={progress.topicMastery}
-            onUpdateMastery={handleUpdateMastery}
-            onBack={() => handleNavigate('dashboard')}
-          />
-        )}
+          {currentView === 'course' && (
+            <CourseView
+              subject={currentSubject}
+              topicMastery={progress.topicMastery}
+              onUpdateMastery={handleUpdateMastery}
+              onBack={() => handleNavigate('dashboard')}
+            />
+          )}
 
-        {currentView === 'exam' && (
-          <ExamTrainer
-            onBack={() => handleNavigate('dashboard')}
-          />
-        )}
+          {currentView === 'exam' && (
+            <ExamTrainer
+              onBack={() => handleNavigate('dashboard')}
+            />
+          )}
 
-        {currentView === 'pomodoro' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-black text-white tracking-tight">Estación de Enfoque Profundo</h2>
-                <p className="text-sm text-slate-400">Técnica Pomodoro 25/5 optimizada para retención conceptual de ingeniería</p>
+          {currentView === 'pomodoro' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-black text-white tracking-tight">Estación de Enfoque Profundo</h2>
+                  <p className="text-sm text-slate-400">Técnica Pomodoro 25/5 optimizada para retención conceptual de ingeniería</p>
+                </div>
+                <button
+                  onClick={() => handleNavigate('dashboard')}
+                  className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+                >
+                  Volver al Panel
+                </button>
               </div>
-              <button
-                onClick={() => handleNavigate('dashboard')}
-                className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
-              >
-                Volver al Panel
-              </button>
+              <PomodoroTimer />
             </div>
-            <PomodoroTimer />
-          </div>
-        )}
-      </main>
+          )}
+        </main>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">

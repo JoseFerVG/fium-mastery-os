@@ -23,13 +23,15 @@ interface DashboardProps {
   onSelectSubject: (subject: Subject) => void;
   onOpenExamTrainer: () => void;
   onOpenPomodoro: () => void;
+  onOpenDuolingo?: () => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
   progress,
   onSelectSubject,
   onOpenExamTrainer,
-  onOpenPomodoro
+  onOpenPomodoro,
+  onOpenDuolingo
 }) => {
   // Calculate total concepts and mastery counts
   const allConcepts = COURSES.flatMap(c => c.concepts);
@@ -76,6 +78,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </p>
 
           <div className="flex flex-wrap gap-3 mt-6">
+            {onOpenDuolingo && (
+              <button
+                onClick={onOpenDuolingo}
+                className="px-5 py-2.5 bg-green-500 hover:bg-green-400 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-green-500/25 border-b-4 border-green-700 active:border-b-0 active:translate-y-1 flex items-center gap-2 transition"
+              >
+                <span className="text-sm">🦉</span> Modo FIUMingo (Duolingo)
+              </button>
+            )}
             <button
               onClick={onOpenPomodoro}
               className="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-600/30 flex items-center gap-2 transition"
