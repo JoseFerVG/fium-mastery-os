@@ -84,7 +84,7 @@ export const ExamTrainer: React.FC<ExamTrainerProps> = ({ initialSubjectId = 'al
 
         {/* Subject Filter Pills */}
         <div className="flex flex-wrap gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
-          {(['all', 'aoc', 'aso', 'alf'] as const).map(sub => (
+          {(['all', 'aoc', 'aso', 'alf', 'tds', 'iso', 'ac', 'ar', 'st', 'si'] as const).map(sub => (
             <button
               key={sub}
               onClick={() => {

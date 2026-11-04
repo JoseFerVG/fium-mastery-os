@@ -90,6 +90,89 @@ public class ServicioUsuarios {
 }`,
     diagnosis: 'Permite hacer tests unitarios con Mockito instantáneos pasando un mock en el constructor sin levantar ninguna base de datos real.',
     examRule: 'Si no puedes mockear un servicio en JUnit porque tiene `new` dentro, no pasarás las pruebas automáticas del proyecto.'
+  },
+  {
+    id: 'lsp-composition',
+    principle: 'L - Liskov Substitution & Favorecer Composición',
+    name: 'El Antipatrón de la Herencia Frágil (Efecto "Yo-Yo")',
+    symptom: 'Al heredar de HashSet para contar elementos añadidos, addAll() cuenta el doble debido a la ligadura dinámica interna.',
+    badCode: `// ❌ MAL: Herencia directa viola encapsulación y LSP (Effective Java Item 16)
+public class InstrumentedHashSet<E> extends HashSet<E> {
+    private int addCount = 0;
+    
+    @Override
+    public boolean add(E e) {
+        addCount++;
+        return super.add(e);
+    }
+    
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
+        addCount += c.size(); // Suma 3
+        return super.addAll(c); // ¡HashSet.addAll llama a this.add() 3 veces! Contador = 6
+    }
+    public int getAddCount() { return addCount; }
+}`,
+    cleanCode: `// ✅ BIEN: Composición y delegación (Patrón Decorator / Wrapper)
+public class InstrumentedSet<E> implements Set<E> {
+    private final Set<E> s; // Delegación "caja negra"
+    private int addCount = 0;
+    
+    public InstrumentedSet(Set<E> s) { this.s = s; }
+    
+    @Override
+    public boolean add(E e) {
+        addCount++;
+        return s.add(e);
+    }
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
+        addCount += c.size();
+        return s.addAll(c); // s.addAll NO llama al add() de InstrumentedSet
+    }
+    public int getAddCount() { return addCount; }
+    // El resto de métodos de Set delegan limpiamente: public int size() { return s.size(); }
+}`,
+    diagnosis: 'La superclase no fue diseñada explícitamente para herencia. Cualquier cambio interno en HashSet rompe la subclase. La composición evita sorpresas en tiempo de ejecución.',
+    examRule: 'Pregunta fija de teoría: "Explica por qué la herencia rompe la encapsulación citando el ejemplo de InstrumentedHashSet y cómo lo resuelve la composición".'
+  },
+  {
+    id: 'grasp-mvc',
+    principle: 'GRASP - Controlador & Separación Modelo-Vista',
+    name: 'Lógica de Dominio incrustada en la GUI (JavaFX / Swing)',
+    symptom: 'El botón de la vista busca directamente en repositorios, recorre colecciones con bucles anidados y ejecuta lógica de negocio.',
+    badCode: `// ❌ MAL: La vista conoce repositorios y entidades del dominio (0 puntos en examen)
+public class VentanaProductosFX extends Application {
+    // En el manejador del botón:
+    btnAñadir.setOnAction(ev -> {
+        List<Producto> productos = RepoProductos.INSTANCE.getTodosProductos();
+        for (Producto p : productos) {
+            if (p.getNombre().equals(txtNombre.getText())) {
+                LineaVenta linea = new LineaVenta(p, Integer.parseInt(txtCant.getText()));
+                ventaActual.addLineaVenta(linea); // La GUI crea e interactúa con el modelo
+            }
+        }
+    });
+}`,
+    cleanCode: `// ✅ BIEN: La vista solo delega en el Controlador; el dominio crea sus objetos
+public class VentanaProductosFX extends Application {
+    btnAñadir.setOnAction(ev -> {
+        // La vista SOLO recoge datos y delega en el Controlador
+        ControladorVentas.INSTANCE.añadirProductoAVenta(
+            txtNombre.getText(), 
+            Integer.parseInt(txtCant.getText())
+        );
+    });
+}
+
+public class ControladorVentas {
+    public void añadirProductoAVenta(String nombre, int cant) {
+        Producto p = RepoProductos.INSTANCE.buscarPorNombre(nombre);
+        ventaActual.crearLineaVenta(p, cant); // Patrón Creador: Venta crea sus LineaVenta
+    }
+}`,
+    diagnosis: 'La capa de presentación solo debe encargarse de mostrar widgets y capturar eventos. Todo cálculo, búsqueda o agregación debe remitirse al Controlador y al Modelo.',
+    examRule: 'Criterio de corrección UMU (Boletín GRASP, Ej. 6): Si la clase Ventana hace un "new LineaVenta" o accede a "RepoProductos", se penaliza por violar Controlador, Experto y Separación Modelo-Vista.'
   }
 ];
 

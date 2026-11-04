@@ -353,5 +353,273 @@ public class CarritoCompra {
         }
       }
     ]
+  },
+  {
+    id: 'iso',
+    code: '1897',
+    name: 'Introducción a los Sistemas Operativos',
+    shortName: 'ISO',
+    semester: '1º Cuatrimestre · 2º Grado',
+    color: 'from-amber-600 to-yellow-600',
+    accentColor: '#f59e0b',
+    icon: 'Layers',
+    tagline: 'Cimientos del Software de Sistema: Planificación de CPU, Inodos y Gestión de Memoria',
+    formulaCheatSheet: {
+      title: 'Formulario & Leyes de Examen de ISO',
+      items: [
+        {
+          label: 'Tiempo de Retorno (Turnaround Time)',
+          formulaOrLaw: 'T_{retorno} = T_{finalizacion} - T_{llegada}',
+          notes: 'Tiempo total que pasa el proceso en el sistema desde que entra hasta que concluye.'
+        },
+        {
+          label: 'Tiempo de Espera (Wait Time)',
+          formulaOrLaw: 'T_{espera} = T_{retorno} - Ráfaga_{CPU}',
+          notes: 'Tiempo que pasa el proceso en la cola de listos (ready).'
+        },
+        {
+          label: 'Cálculo de Capacidad Máxima de un Inodo',
+          formulaOrLaw: 'TamMax = (N_{dir} + N_{ind1} \\times B_{dir} + N_{ind2} \\times B_{dir}^2 + N_{ind3} \\times B_{dir}^3) \\times TamBloque',
+          notes: 'B_dir = Tamaño Bloque / Tamaño Puntero (ej. 4096 / 4 = 1024 punteros por bloque).'
+        }
+      ]
+    },
+    concepts: [
+      {
+        id: 'iso-cpu-scheduling',
+        title: 'Planificación de la CPU: Algoritmos y Diagramas de Gantt',
+        subtitle: 'Round Robin, SJF no apropiativo vs SRTF y prioridades',
+        importance: 'CRÍTICO EN EXAMEN',
+        difficulty: 'Intermedio',
+        timeEstimateMin: 40,
+        feynmanExplanation: {
+          intuition: 'Imagina la cola de una caja de supermercado con un solo cajero. FCFS atiende en orden de llegada: si alguien lleva 50 carros (ráfaga enorme), todos esperan. SJF pone delante al que tiene una botella de agua (ráfaga mínima), minimizando el tiempo medio de espera. Round Robin le da a cada persona 2 minutos (quantum q); si no termina, vuelve al final de la cola.',
+          analogy: 'Quantum de Round Robin: Si el quantum es infinito, se convierte en FCFS. Si el quantum es diminuto (ej. 1 microsegundo), la CPU pasa más tiempo cambiando de contexto que procesando.',
+          formalTheory: '1. **SJF (Shortest Job First)**: Óptimo en tiempo medio de espera para algoritmos no apropiativos.\n2. **SRTF (Shortest Remaining Time First)**: Versión apropiativa de SJF.\n3. **Round Robin (RR)**: Apropiativo basado en reloj (quantum q). La selección del quantum balancea interactividad y sobrecarga por cambio de contexto.\n4. **Inversión de Prioridad**: Un proceso de baja prioridad retiene un recurso que necesita uno de alta prioridad. Solución: Protocolo de Techo de Prioridad o Herencia de Prioridad.',
+          keyFormulasOrRules: [
+            'Tiempo Medio de Espera = Sumatorio(T_espera_i) / N_procesos.',
+            'Sobrecarga de cambio de contexto: debe ser despreciable respecto al quantum q (idealmente < 1%).'
+          ],
+          examPitfalls: [
+            'En los diagramas de Gantt de examen, olvidar comprobar si llega un nuevo proceso justo en el instante de cambio.',
+            'En Round Robin, si un proceso agota su quantum exactamente cuando llega uno nuevo, el nuevo se coloca ANTES en la cola de listos según el convenio de la FIUM.'
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: 'ac',
+    code: '1910',
+    name: 'Aprendizaje Computacional',
+    shortName: 'AC',
+    semester: '1º Cuatrimestre · 3º Grado',
+    color: 'from-emerald-600 to-teal-700',
+    accentColor: '#10b981',
+    icon: 'Brain',
+    tagline: 'De los Datos al Conocimiento: Clasificación, Árboles, Redes Neuronales y Evaluación',
+    formulaCheatSheet: {
+      title: 'Formulario & Métricas de Evaluación de AC',
+      items: [
+        {
+          label: 'Entropía de Shannon H(S)',
+          formulaOrLaw: 'H(S) = - \\sum_{i=1}^{c} p_i \\log_2(p_i)',
+          notes: 'Mide la impureza de un conjunto de ejemplos. H(S) = 0 si todos son de la misma clase; 1 si 50/50.'
+        },
+        {
+          label: 'Ganancia de Información IG(S, A)',
+          formulaOrLaw: 'IG(S, A) = H(S) - \\sum_{v \\in Valores(A)} \\frac{|S_v|}{|S|} H(S_v)',
+          notes: 'Criterio de partición del algoritmo ID3 en árboles de decisión.'
+        },
+        {
+          label: 'Métricas de la Matriz de Confusión',
+          formulaOrLaw: 'Precision = \\frac{TP}{TP + FP} \\quad | \\quad Recall = \\frac{TP}{TP + FN} \\quad | \\quad F1 = 2 \\times \\frac{P \\times R}{P + R}',
+          notes: 'Precision: de los que predije positivos, cuántos acerté. Recall: de los positivos reales, cuántos encontré.'
+        }
+      ]
+    },
+    concepts: [
+      {
+        id: 'ac-decision-trees',
+        title: 'Árboles de Decisión y Criterio de Información',
+        subtitle: 'Entropía de Shannon, Ganancia de Información y Poda',
+        importance: 'CRÍTICO EN EXAMEN',
+        difficulty: 'Avanzado',
+        timeEstimateMin: 45,
+        feynmanExplanation: {
+          intuition: 'Un árbol de decisión juega al "¿Quién es quién?". Si preguntas "¿Lleva sombrero?", quieres una pregunta que divida a los sospechosos en grupos lo más puros posible. La Entropía mide el desorden (50% hombres y 50% mujeres = desorden máximo, Entropía 1). La Ganancia de Información mide cuánto orden ganas al hacer esa pregunta.',
+          analogy: 'Sobreajuste (Overfitting): Un árbol que memoriza hasta el color de calcetines de cada ejemplo de entrenamiento no aprenderá la regla general, fallará estrepitosamente con datos nuevos.',
+          formalTheory: '1. **Algoritmo ID3**: Construye el árbol de forma top-down voraz eligiendo en cada nodo el atributo con mayor Ganancia de Información (Information Gain).\n2. **Algoritmo C4.5**: Mejora ID3 usando el Ratio de Ganancia (Gain Ratio) para penalizar atributos con muchos valores continuos/discretos (ej. DNI o ID único).\n3. **Poda (Pruning)**: Pre-pruning (criterio de parada temprana) o Post-pruning (reducción de ramas mediante validación cruzada para evitar sobreajuste).',
+          keyFormulasOrRules: [
+            'H(S) = - (p+ * log2(p+) + p- * log2(p-)).',
+            'Gain Ratio(S, A) = IG(S, A) / SplitInfo(S, A).'
+          ],
+          examPitfalls: [
+            'Recuerda que log2(1) = 0 y 0 * log2(0) se define como 0 por límite continuo.',
+            'En preguntas de examen de la FIUM sobre Gain Ratio, el atributo "ID_Cliente" maximiza IG pero tiene un SplitInfo altísimo, por lo que C4.5 lo descarta.'
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: 'ar',
+    code: '1908',
+    name: 'Arquitectura de Redes',
+    shortName: 'AR',
+    semester: '1º Cuatrimestre · 3º Grado',
+    color: 'from-sky-600 to-cyan-700',
+    accentColor: '#0ea5e9',
+    icon: 'GitBranch',
+    tagline: 'La Columna Vertebral de Internet: Protocolos, Subnetting VLSM y Control de Congestión',
+    formulaCheatSheet: {
+      title: 'Formulario & Leyes de Arquitectura de Redes',
+      items: [
+        {
+          label: 'Retardo Total de Transmisión de un Paquete',
+          formulaOrLaw: 'd_{end-to-end} = d_{proc} + d_{cola} + d_{trans} + d_{prop}',
+          notes: 'd_trans = L / R (Longitud paquete / Ancho de banda); d_prop = d / v (Distancia física / Velocidad propagación 2x10^8 m/s).'
+        },
+        {
+          label: 'Producto Ancho de Banda x Retardo (BDP)',
+          formulaOrLaw: 'BDP = R \\times RTT',
+          notes: 'Mide la cantidad máxima de bytes en vuelo que pueden llenar la tubería de la red.'
+        },
+        {
+          label: 'Subnetting VLSM (Hosts por subred)',
+          formulaOrLaw: 'Hosts_{utilizables} = 2^{32 - prefijo} - 2',
+          notes: 'Se restan 2 direcciones: la de Red (todo ceros) y la de Broadcast (todo unos).'
+        }
+      ]
+    },
+    concepts: [
+      {
+        id: 'ar-vlsm-tcp',
+        title: 'Direccionamiento IP con VLSM y Control de Congestión TCP',
+        subtitle: 'Subredes eficientes, Slow Start, Congestion Avoidance y Fast Recovery',
+        importance: 'CRÍTICO EN EXAMEN',
+        difficulty: 'Avanzado',
+        timeEstimateMin: 45,
+        feynmanExplanation: {
+          intuition: 'Enviar datos por Internet sin control de congestión es como meter 10.000 coches en una autovía de dos carriles: atasco total y pérdidas de paquetes. TCP es prudente: arranca despacio (Slow Start) duplicando su ventana cada RTT (1, 2, 4, 8...). Cuando detecta pérdida, frena en seco y pasa a incremento lineal.',
+          analogy: 'VLSM: Tienes una tarta grande (bloque /24) y necesitas darle un trozo a un departamento con 60 ordenadores, otro con 25 y otro con 10. No le das un /24 a cada uno porque gastarías miles de IPs públicas; cortas porciones exactas en potencias de dos.',
+          formalTheory: '1. **Mecanismos de TCP Reno**:\n   - **Slow Start**: La ventana cwnd empieza en 1 MSS y se duplica por cada RTT hasta alcanzar ssthresh.\n   - **Congestion Avoidance**: Crecimiento lineal (AIMD: Additive Increase, Multiplicative Decrease).\n   - **3 ACKs Duplicados**: Pérdida de un paquete aislado. Entra en Fast Retransmit y Fast Recovery (ssthresh = cwnd / 2; cwnd = ssthresh + 3).\n   - **Timeout (Temporizador agotado)**: Congestión grave. cwnd cae a 1 MSS y ssthresh = cwnd / 2.',
+          keyFormulasOrRules: [
+            'Throughput TCP ≈ 1.22 * MSS / (RTT * sqrt(p)) donde p es la tasa de pérdida de paquetes.'
+          ],
+          examPitfalls: [
+            'Confundir un Timeout con 3 ACKs Duplicados: con Timeout cwnd se desploma a 1 MSS; con 3 ACKs duplicados se reduce a la mitad (Fast Recovery).',
+            'Al calcular el número de hosts en una subred, olvidar restar SIEMPRE la dirección de red y la de broadcast.'
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: 'st',
+    code: '1906',
+    name: 'Servicios Telemáticos',
+    shortName: 'ST',
+    semester: '1º Cuatrimestre · 3º Grado',
+    color: 'from-purple-600 to-indigo-700',
+    accentColor: '#8b5cf6',
+    icon: 'PackageCheck',
+    tagline: 'Capa de Aplicación y Ciberseguridad: HTTP/2, DNS, Criptografía Asimétrica RSA y TLS',
+    formulaCheatSheet: {
+      title: 'Formulario & Criptografía de Servicios Telemáticos',
+      items: [
+        {
+          label: 'Generación de Claves RSA',
+          formulaOrLaw: 'n = p \\times q \\quad | \\quad \\phi(n) = (p-1)(q-1) \\quad | \\quad e \\cdot d \\equiv 1 \\pmod{\\phi(n)}',
+          notes: 'Clave Pública = (e, n); Clave Privada = (d, n). p y q son primos grandes secretos.'
+        },
+        {
+          label: 'Cifrado y Descifrado RSA',
+          formulaOrLaw: 'C = M^e \\pmod n \\quad | \\quad M = C^d \\pmod n',
+          notes: 'Seguridad basada en la intratabilidad computacional de factorizar n.'
+        },
+        {
+          label: 'Tiempo de Descarga Web con RTTs',
+          formulaOrLaw: 'T_{no\\_persistente} = 2 \\times RTT \\times N_{objetos} + T_{DNS} \\quad | \\quad T_{persistente} = RTT + N_{objetos} \\times \\dots',
+          notes: 'HTTP no persistente requiere un 3-way handshake de TCP por cada imagen.'
+        }
+      ]
+    },
+    concepts: [
+      {
+        id: 'st-rsa-web',
+        title: 'Criptografía RSA, Certificados X.509 y Arquitectura Web HTTP',
+        subtitle: 'Intercambio seguro Diffie-Hellman, firmas digitales y cachés web',
+        importance: 'CRÍTICO EN EXAMEN',
+        difficulty: 'Avanzado',
+        timeEstimateMin: 45,
+        feynmanExplanation: {
+          intuition: '¿Cómo le envías un secreto a alguien al otro lado del mundo si un espía escucha el cable? Con RSA: tú fabricas un candado abierto (clave pública) y te quedas con la llave (clave privada). Cualquiera puede meter un mensaje y cerrar el candado, pero solo tú con tu llave puedes abrirlo.',
+          analogy: 'Certificados X.509 y HTTPS: Un candado no sirve si un impostor te engaña diciendo que es el banco. Una Autoridad de Certificación (CA) es un notario de confianza que firma criptográficamente que esa clave pública pertenece realmente a banco.com.',
+          formalTheory: '1. **RSA**: Criptosistema de clave asimétrica basado en el Teorema de Euler. Para firmar digitalmente, el emisor cifra con su clave privada d; cualquiera verifica con la clave pública e.\n2. **Diffie-Hellman**: Protocolo para acordar una clave simétrica de sesión sin transmitirla nunca por el canal (usando potencias g^a mod p).\n3. **HTTP/2**: Introduce multiplexación binaria sobre una única conexión TCP, solucionando el bloqueo en cabeza de línea (Head-of-Line Blocking) de HTTP/1.1.\n4. **Cachés Web y Validación**: Headers `If-Modified-Since` y `ETag` permitiendo respuestas `304 Not Modified` con 0 bytes de carga.',
+          keyFormulasOrRules: [
+            'MCD(e, phi(n)) = 1.',
+            'Firma digital = Hash(Mensaje)^d mod n.'
+          ],
+          examPitfalls: [
+            'Confundir Cifrado con Firma: Para confidencialidad se cifra con la clave PÚBLICA del receptor. Para autenticidad/firma se cifra con la clave PRIVADA del emisor.',
+            'Calcular phi(n) como n - 1 en vez de (p - 1)(q - 1).'
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: 'si',
+    code: '1904',
+    name: 'Sistemas Inteligentes',
+    shortName: 'SI',
+    semester: '1º Cuatrimestre · 3º Grado',
+    color: 'from-rose-600 to-pink-700',
+    accentColor: '#f43f5e',
+    icon: 'Sparkles',
+    tagline: 'Algoritmos de Búsqueda y Razonamiento: A*, Minimax con Poda Alfa-Beta y CSP',
+    formulaCheatSheet: {
+      title: 'Formulario & Algoritmos de Sistemas Inteligentes',
+      items: [
+        {
+          label: 'Función de Evaluación del Algoritmo A*',
+          formulaOrLaw: 'f(n) = g(n) + h(n)',
+          notes: 'g(n) = Coste real acumulado desde el inicio hasta n; h(n) = Estimación heurística desde n al objetivo.'
+        },
+        {
+          label: 'Condición de Admisibilidad y Consistencia',
+          formulaOrLaw: 'h(n) \\le h^*(n) \\quad | \\quad h(n) \\le c(n, a, n\') + h(n\')',
+          notes: 'Admisible: nunca sobreestima el coste real. Consistente (monótona): satisface la desigualdad triangular.'
+        },
+        {
+          label: 'Regla de Poda Alfa-Beta en Árboles de Juego',
+          formulaOrLaw: '\\text{Podar si } \\beta \\le \\alpha',
+          notes: 'alfa: mejor valor para MAX en el camino; beta: mejor valor para MIN. Si beta <= alfa, el adversario evitará esta rama.'
+        }
+      ]
+    },
+    concepts: [
+      {
+        id: 'si-search-minimax',
+        title: 'Algoritmo A* y Poda Alfa-Beta en Juegos Competitivos',
+        subtitle: 'Búsqueda informada óptima y poda de ramas en juegos de suma cero',
+        importance: 'CRÍTICO EN EXAMEN',
+        difficulty: 'Avanzado',
+        timeEstimateMin: 45,
+        feynmanExplanation: {
+          intuition: 'A* es el GPS más inteligente del mundo. Para decidir qué cruce explorar, no solo mira cuántos kilómetros lleva andados (g), sino que le suma la distancia en línea recta al destino (h). Si la línea recta nunca engaña diciendo que está más lejos de lo que realmente está (admisible), A* garantiza encontrar el camino óptimo.',
+          analogy: 'Poda Alfa-Beta en Ajedrez: Si ves una jugada que permite a tu rival darte jaque mate en el siguiente movimiento, no pierdes tiempo calculando qué harías tú 10 jugadas después de ese mate: descartas la rama inmediatamente.',
+          formalTheory: '1. **A* en Grafos**: Garantiza optimalidad si h(n) es consistente (monótona). No requiere reabrir nodos cerrados.\n2. **Minimax**: Algoritmo para juegos de 2 jugadores de información perfecta y suma cero. Propaga utilidades desde las hojas hacia la raíz alternando niveles MAX y MIN.\n3. **Poda Alfa-Beta**: Reduce el número de nodos explorados de O(b^d) a O(b^(d/2)) en el caso óptimo, permitiendo doblar la profundidad de búsqueda en el mismo tiempo.',
+          keyFormulasOrRules: [
+            'Condición de parada de A*: el algoritmo NO se detiene cuando ve el objetivo por primera vez, sino cuando el nodo objetivo es EXTRAÍDO de la lista de abiertos (cola de prioridad).'
+          ],
+          examPitfalls: [
+            'Trampa fija de examen de SI en la FIUM: Detener A* cuando un hijo generado es el estado meta. ¡ERROR! Debe detenerse cuando el meta esté en la cima de abiertos para garantizar optimalidad.',
+            'En poda alfa-beta, actualizar alfa en nodos MIN o beta en nodos MAX: alfa SOLO se actualiza en MAX; beta SOLO se actualiza en MIN.'
+          ]
+        }
+      }
+    ]
   }
 ];

@@ -473,4 +473,531 @@ export const DUOLINGO_UNITS: DuolingoUnit[] = [
       },
     ],
   },
+
+  // ==========================================
+  // ASIGNATURA: AOC (Unidad 3: Superescalar & Tomasulo) - Sugerencia de Carlos
+  // ==========================================
+  {
+    id: 'aoc-unit-3',
+    unitNumber: 3,
+    title: 'Procesadores Superescalares y Tomasulo con ROB',
+    description: 'Ejecución fuera de orden, renombramiento de registros y confirmación en orden.',
+    color: 'from-blue-700 to-indigo-800',
+    borderColor: 'border-blue-600',
+    subjectId: 'aoc',
+    guideBook: {
+      title: 'Guía Superescalar: Tomasulo, ROB y Fases F-I-X-W-C',
+      keyPoints: [
+        'En emisión múltiple (Superescalar), el procesador despacha 2 o más instrucciones por ciclo de reloj.',
+        'Las falsas dependencias WAR y WAW surgen únicamente por escasez de nombres en el banco de registros lógicos; el Renombramiento de Registros las elimina por completo.',
+        'El Reorder Buffer (ROB) almacena los resultados de forma especulativa y garantiza confirmación (Commit) en orden secuencial para soportar excepciones precisas.',
+      ],
+      commonMistakes: [
+        'Pensar que una instrucción puede hacer Commit fuera de orden; SOLO la etapa X (Ejecución) y W (Writeback) son fuera de orden. F, I y C son siempre en orden.',
+      ],
+      essentialFormula: 'Etapas: F (Fetch) -> I (Issue/Rename) -> X (Exec fuera de orden) -> W (Writeback CDB) -> C (Commit en orden)',
+    },
+    lessons: [
+      {
+        id: 'aoc-u3-l1',
+        title: 'Fases del Procesador Superescalar',
+        subtitle: 'F, I, X, W, C y el Bus Común CDB',
+        unitId: 'aoc-unit-3',
+        subjectId: 'aoc',
+        xpReward: 25,
+        gemReward: 10,
+        questions: [
+          {
+            id: 'aoc-tomasulo-q1',
+            type: 'multiple_choice',
+            prompt: 'En el algoritmo de Tomasulo con Reorder Buffer (ROB), ¿en qué etapa se liberan definitivamente los registros lógicos y se escriben los datos en memoria?',
+            options: ['Etapa C (Commit / Confirmación)', 'Etapa W (Writeback a las Estaciones de Reserva)', 'Etapa X (Ejecución ALU)', 'Etapa I (Issue)'],
+            correctIndex: 0,
+            explanation: 'En la etapa Commit, las instrucciones se confirman en estricto orden de programa. Los Stores a memoria y las actualizaciones del banco de registros visible solo ocurren aquí.',
+            tip: 'Esto garantiza que si ocurre una excepción (ej. división por cero o fallo de página), el estado del procesador sea idéntico al de una ejecución puramente secuencial (excepción precisa).'
+          },
+          {
+            id: 'aoc-tomasulo-q2',
+            type: 'true_false',
+            prompt: '¿Puede el renombramiento de registros eliminar las verdaderas dependencias de datos RAW (Read After Write)?',
+            statement: 'El renombramiento de registros elimina tanto las dependencias RAW como las WAR y WAW.',
+            isTrue: false,
+            explanation: 'FALSO: Una dependencia RAW es una dependencia de flujo real: el consumidor NECESITA el dato que produce el productor. Ningún renombramiento puede eliminar la necesidad del dato; solo elimina las dependencias de nombre (WAR y WAW).',
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: ASO (Unidad 3: FDT, OFT, Señales & Kernel) - Sugerencia de Lucía
+  // ==========================================
+  {
+    id: 'aso-unit-3',
+    unitNumber: 3,
+    title: 'Descriptores FDT/OFT y Señales en Linux',
+    description: 'Estructuras de ficheros en el kernel, duplicación de descriptores y entrega de señales.',
+    color: 'from-teal-600 to-emerald-700',
+    borderColor: 'border-teal-500',
+    subjectId: 'aso',
+    guideBook: {
+      title: 'Guía de Kernel ASO: FDT, OFT y Señales POSIX',
+      keyPoints: [
+        'FDT (File Descriptor Table): privada de cada proceso (índice 0, 1, 2...).',
+        'OFT (Open File Table): compartida en el kernel, guarda el offset actual y el modo de acceso.',
+        'dup(fd) y fork() duplican el puntero hacia la MISMA entrada de la OFT (comparten offset).',
+        'open() sobre el mismo fichero crea una NUEVA entrada en la OFT (offsets independientes).',
+        'Las señales estándar POSIX no se encolan; son un simple bit en SigPnd (coalescencia).',
+      ],
+      commonMistakes: [
+        'Creer que dos procesos que abren el mismo fichero con open() comparten el offset de lectura/escritura: ¡falso, cada open tiene su propio offset!',
+      ],
+      essentialFormula: 'dup() / fork() -> MISMA entrada en OFT | open() -> NUEVA entrada en OFT con offset a 0',
+    },
+    lessons: [
+      {
+        id: 'aso-u3-l1',
+        title: 'Descriptores y la Tabla OFT del Kernel',
+        subtitle: 'El clásico ejercicio del examen de DITEC',
+        unitId: 'aso-unit-3',
+        subjectId: 'aso',
+        xpReward: 25,
+        gemReward: 10,
+        questions: [
+          {
+            id: 'aso-q-oft-sharing',
+            type: 'multiple_choice',
+            prompt: 'Un programa ejecuta:\nint fd1 = open("f.txt", O_RDWR|O_CREAT|O_TRUNC, 0644);\nwrite(fd1, "HOLA", 4);\nint fd2 = dup(fd1);\nint fd3 = open("f.txt", O_RDWR);\nwrite(fd2, "MUNDO", 5);\nwrite(fd3, "ZZ", 2);\n¿Cuál es el contenido final del fichero "f.txt"?',
+            options: ['ZZLAMUNDO', 'HOLAMUNDOZZ', 'ZZNDO', 'HZMUNDO'],
+            correctIndex: 0,
+            explanation: '¡Clásico examen DITEC! fd1 y fd2 apuntan a la MISMA entrada en la OFT, compartiendo offset (4 tras "HOLA", 9 tras "MUNDO"). fd3 abrió el fichero de nuevo de forma independiente con offset 0: al escribir "ZZ", sobreescribe los bytes 0 y 1 ("HO"), quedando "ZZLAMUNDO".',
+            tip: 'Regla de oro: fork() y dup() comparten entrada en OFT (mismo offset). open() crea una entrada nueva en OFT con offset independiente a 0.',
+          },
+          {
+            id: 'aso-q-signals-coalesce',
+            type: 'true_false',
+            prompt: 'Si un proceso bloquea SIGUSR1 con sigprocmask(), recibe la señal SIGUSR1 5 veces de procesos externos, y luego desbloquea la señal, ¿se invocará el manejador de SIGUSR1 exactamente 5 veces?',
+            statement: 'Las señales estándar POSIX se encolan acumulativamente en el kernel.',
+            isTrue: false,
+            explanation: 'FALSO: Las señales estándar de Linux NO se encolan. El kernel únicamente marca un bit en el vector de pendientes (SigPnd). Múltiples envíos se fusionan (coalescencia) en una única entrega al desbloquear.',
+          },
+          {
+            id: 'aso-q-zombie-orphan',
+            type: 'match_pairs',
+            prompt: 'Empareja cada estado de proceso con su tratamiento exacto en el kernel de Linux:',
+            pairs: [
+              { left: 'Proceso Zombie', right: 'Terminó pero el padre no ha hecho waitpid(); ocupa entrada en PCB' },
+              { left: 'Proceso Huérfano', right: 'Su padre murió antes; es adoptado por init/systemd (PID 1)' },
+              { left: 'Señal SIGCHLD', right: 'Notificación asíncrona enviada al padre cuando un hijo concluye' },
+              { left: 'Opción WNOHANG', right: 'Permite consultar el estado del hijo sin bloquear al padre' },
+            ],
+            explanation: 'Dominar la diferencia entre Zombie (recursos de memoria liberados, retiene PCB para status) y Huérfano (re-parented) es vital en ASO.',
+          },
+        ],
+      },
+    ],
+  },
+
+  // ==========================================
+  // ASIGNATURA: TDS (Unidad 2: GoF Avanzado & TDD) - Sugerencia de Marcos
+  // ==========================================
+  {
+    id: 'tds-unit-2',
+    unitNumber: 2,
+    title: 'Patrones GoF y Testing con Mockito',
+    description: 'Factory con Lambdas, Decorator, Adapter y pruebas unitarias aisladas en JUnit 5.',
+    color: 'from-blue-600 to-cyan-700',
+    borderColor: 'border-blue-500',
+    subjectId: 'tds',
+    guideBook: {
+      title: 'Guía TDS: Patrones Estructurales & Mockito',
+      keyPoints: [
+        'El patrón Factory con Java 8 se simplifica con `Map<String, Supplier<T>>` eliminando switch-cases.',
+        'El patrón Decorator envuelve un objeto añadiendo comportamiento dinámico con la misma interfaz (ej. Streams en Java I/O).',
+        'En Mockito: NUNCA se mockea el SUT (System Under Test); solo sus dependencias colaboradoras.',
+      ],
+      commonMistakes: [
+        'Hacer new de la clase probada como mock. Si quieres testear ServicioGastos, haces `new ServicioGastos(repoMock)`.',
+      ],
+      essentialFormula: 'Target (interfaz esperada) <-> Adapter (adaptador) <-> Adaptee (clase existente)',
+    },
+    lessons: [
+      {
+        id: 'tds-u2-l1',
+        title: 'Factory con Lambdas y Mockito',
+        subtitle: 'Pruebas unitarias sin efectos colaterales',
+        unitId: 'tds-unit-2',
+        subjectId: 'tds',
+        xpReward: 25,
+        gemReward: 10,
+        questions: [
+          {
+            id: 'tds-q-factory-lambda',
+            type: 'multiple_choice',
+            prompt: 'En el patrón Factoría moderno en Java 8+, ¿cuál es la mejor forma de eliminar sentencias switch al registrar nuevos tipos dinámicamente?',
+            options: [
+              'Map<String, Supplier<Producto>> asociando nombres con referencias a constructores (ProductoConcreto::new)',
+              'Usar múltiples sentencias if-else encadenadas en el constructor',
+              'Hacer que la interfaz Producto herede de Cloneable',
+              'Instanciar siempre mediante reflexión bruta usando cadenas de texto en un fichero properties'
+            ],
+            correctIndex: 0,
+            explanation: 'Usar un mapa con Supplier<Producto> permite cumplir OCP de forma limpia: nuevos productos se registran con map.put("TIPO", TipoProducto::new) sin tocar el código de la factoría.',
+            tip: 'En el Tema 4 de TDS (Creación, slide 79), los profesores explican este mecanismo moderno para evitar el antipatrón del switch infinito.'
+          },
+          {
+            id: 'tds-q-mockito-sut',
+            type: 'true_false',
+            prompt: 'En un test unitario con JUnit y Mockito de la clase ServicioGastos, ¿debemos crear un mock de ServicioGastos?',
+            statement: 'Para testear ServicioGastos con Mockito se debe invocar Mockito.mock(ServicioGastos.class).',
+            isTrue: false,
+            explanation: 'FALSO: El objeto que estás testeando (SUT, System Under Test) debe instanciarse REALMENTE con new. Los únicos que se mockean con Mockito son sus colaboradores externos (ej. RepositorioGastos repoMock = mock(RepositorioGastos.class)).',
+          },
+          {
+            id: 'tds-q-tdd-cycle',
+            type: 'code_reorder',
+            prompt: 'Ordena cronológicamente las 3 fases del ciclo TDD (Test-Driven Development):',
+            tokens: ['3. Refactorizar código y tests', '1. Escribir test que falle (Rojo)', '2. Escribir código mínimo que pase el test (Verde)'],
+            correctSequence: ['1. Escribir test que falle (Rojo)', '2. Escribir código mínimo que pase el test (Verde)', '3. Refactorizar código y tests'],
+            explanation: 'Ciclo Red-Green-Refactor: primero el test falla (garantiza que prueba algo nuevo), luego se implementa lo mínimo para pasar, y finalmente se pule la arquitectura.',
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: ISO (Introducción a los Sistemas Operativos) - Sugerencia de Javier
+  // ==========================================
+  {
+    id: 'iso-unit-1',
+    unitNumber: 1,
+    title: 'Planificación de CPU y Algoritmos de Gantt',
+    description: 'Round Robin, FCFS, SJF no apropiativo vs SRTF y cálculo de tiempos de espera.',
+    color: 'from-amber-600 to-yellow-600',
+    borderColor: 'border-amber-500',
+    subjectId: 'iso',
+    guideBook: {
+      title: 'Guía de Planificación ISO: Round Robin y Tiempos Medios',
+      keyPoints: [
+        'Tiempo de Retorno (Turnaround): Finalización - Llegada.',
+        'Tiempo de Espera (Wait Time): Retorno - Ráfaga de CPU real.',
+        'Round Robin reparte la CPU en rodajas de tiempo de tamaño q (quantum). Si un proceso no termina en q, vuelve a la cola de listos.',
+        'SJF es óptimo en tiempo medio de espera, pero sufre de inanición (starvation) para procesos con ráfagas largas.',
+      ],
+      commonMistakes: [
+        'En Round Robin, olvidar que cuando un proceso agota su quantum en el instante t y otro nuevo llega en t, el nuevo tiene preferencia para entrar a la cola.',
+      ],
+      essentialFormula: 'T_retorno = T_fin - T_llegada | T_espera = T_retorno - Ráfaga',
+    },
+    lessons: [
+      {
+        id: 'iso-u1-l1',
+        title: 'Mecánica de Round Robin y Tiempos de Espera',
+        subtitle: 'Diagramas de Gantt sin errores de cálculo',
+        unitId: 'iso-unit-1',
+        subjectId: 'iso',
+        xpReward: 20,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'iso-q1',
+            type: 'multiple_choice',
+            prompt: 'Tres procesos P1 (ráfaga 6), P2 (ráfaga 4) y P3 (ráfaga 2) llegan simultáneamente en t=0. Se planifican con Round Robin (quantum q = 2). ¿En qué instante finaliza P3?',
+            options: ['En t = 6', 'En t = 2', 'En t = 4', 'En t = 12'],
+            correctIndex: 0,
+            explanation: 'Gantt: P1 ejecuta [0-2] (le quedan 4). P2 ejecuta [2-4] (le quedan 2). P3 ejecuta [4-6] (consume sus 2 unidades y FINALIZA en t=6).',
+            tip: 'Dibuja siempre la cola de listos circular en sucio antes de responder preguntas de tiempo de finalización en ISO.'
+          },
+          {
+            id: 'iso-q2',
+            type: 'true_false',
+            prompt: '¿Qué ocurre con el algoritmo Round Robin si el tamaño del quantum q se hace infinitamente grande (q -> ∞)?',
+            statement: 'Un Round Robin con quantum infinito se comporta de forma idéntica al algoritmo FCFS (First-Come, First-Served).',
+            isTrue: true,
+            explanation: 'VERDADERO: Si el quantum supera la ráfaga de cualquier proceso, ningún proceso será expulsado antes de terminar su ráfaga, ejecutándose estrictamente en orden de llegada (FCFS).',
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'iso-unit-2',
+    unitNumber: 2,
+    title: 'Sistemas de Ficheros e Inodos de Disco',
+    description: 'Punteros directos, indirectos simples, dobles y triples para cálculo de capacidad máxima.',
+    color: 'from-orange-600 to-amber-700',
+    borderColor: 'border-orange-500',
+    subjectId: 'iso',
+    guideBook: {
+      title: 'Guía de Ficheros ISO: Cálculo de Capacidad Máxima de un Inodo',
+      keyPoints: [
+        'Un inodo estándar de tipo UNIX contiene 12 punteros directos, 1 puntero indirecto simple, 1 indirecto doble y 1 indirecto triple.',
+        'Punteros por bloque = Tamaño del Bloque / Tamaño del Puntero (ej. 4 KB / 4 B = 1024 punteros).',
+        'Los punteros directos apuntan a bloques de datos. Los indirectos apuntan a bloques de punteros.',
+      ],
+      commonMistakes: [
+        'Confundir KB con KiB o multiplicar por 1000 en vez de 1024 en el cálculo de bytes en disco.',
+      ],
+      essentialFormula: 'TamMax = (N_dir + P_bloque + P_bloque^2 + P_bloque^3) * TamBloque',
+    },
+    lessons: [
+      {
+        id: 'iso-u2-l1',
+        title: 'Cálculo de Inodos en Examen',
+        subtitle: 'Capacidad de direccionamiento en disco',
+        unitId: 'iso-unit-2',
+        subjectId: 'iso',
+        xpReward: 25,
+        gemReward: 10,
+        questions: [
+          {
+            id: 'iso-q3',
+            type: 'multiple_choice',
+            prompt: 'En un sistema de ficheros tipo ext2 con bloques de 4 KB y punteros de bloque de 4 bytes, ¿cuántos punteros caben en un bloque de indirección simple?',
+            options: ['1024 punteros', '4096 punteros', '512 punteros', '256 punteros'],
+            correctIndex: 0,
+            explanation: '4 KB = 4096 bytes. Si cada puntero ocupa 4 bytes: 4096 / 4 = 1024 punteros a bloques de datos (lo que permite direccionar 1024 * 4 KB = 4 MB con una sola indirección simple).',
+            tip: 'Pregunta fija de examen de ISO en la FIUM: "Punteros por bloque = Bloque / Puntero".'
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: AC (Aprendizaje Computacional) - Sugerencia de Laura
+  // ==========================================
+  {
+    id: 'ac-unit-1',
+    unitNumber: 1,
+    title: 'Fundamentos de ML y Árboles de Decisión',
+    description: 'Entropía de Shannon, Ganancia de Información y el Dilema Sesgo-Varianza.',
+    color: 'from-emerald-600 to-teal-700',
+    borderColor: 'border-emerald-500',
+    subjectId: 'ac',
+    guideBook: {
+      title: 'Guía de AC: Entropía, ID3 y Métricas de Rendimiento',
+      keyPoints: [
+        'Entropía H(S) = - sum(p_i * log2(p_i)). Mide la impureza de las clases.',
+        'Ganancia de Información IG(S, A) = H(S) - sum(|S_v|/|S| * H(S_v)). Atributo que maximiza la pureza.',
+        'Precision = TP / (TP + FP); Recall = TP / (TP + FN); F1 = 2 * (P * R) / (P + R).',
+      ],
+      commonMistakes: [
+        'Confundir Precision (de lo que el modelo predijo positivo, cuánto acertó) con Recall (de los positivos reales que existían, cuántos detectó).',
+      ],
+      essentialFormula: 'H(S) = - [ p+ * log2(p+) + p- * log2(p-) ]',
+    },
+    lessons: [
+      {
+        id: 'ac-u1-l1',
+        title: 'Cálculo de Entropía y Selección ID3',
+        subtitle: 'Pureza de atributos y partición óptima',
+        unitId: 'ac-unit-1',
+        subjectId: 'ac',
+        xpReward: 20,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'ac-q1',
+            type: 'multiple_choice',
+            prompt: 'Un conjunto de datos de entrenamiento contiene 8 ejemplos positivos y 8 ejemplos negativos (50% / 50%). ¿Cuál es la Entropía de Shannon H(S)?',
+            options: ['H(S) = 1.0 bit', 'H(S) = 0.0 bits', 'H(S) = 0.5 bits', 'H(S) = 8.0 bits'],
+            correctIndex: 0,
+            explanation: 'H(S) = - (0.5 * log2(0.5) + 0.5 * log2(0.5)) = - (0.5 * (-1) + 0.5 * (-1)) = 1.0 bit. Es la máxima impureza e incertidumbre posible en un problema binario.',
+            tip: 'Si todos los ejemplos fueran positivos (16 positivos y 0 negativos), la entropía sería 0 (pureza total).'
+          },
+          {
+            id: 'ac-q2',
+            type: 'match_pairs',
+            prompt: 'Empareja cada métrica de evaluación de aprendizaje automático con su fórmula:',
+            pairs: [
+              { left: 'Precision (Precisión)', right: 'TP / (TP + FP)' },
+              { left: 'Recall (Sensibilidad)', right: 'TP / (TP + FN)' },
+              { left: 'F1-Score', right: 'Media armónica de Precision y Recall' },
+              { left: 'Specificity (Especificidad)', right: 'TN / (TN + FP)' },
+            ],
+            explanation: '¡Exacto! Las 4 métricas estándar derivadas de la matriz de confusión en AC.',
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: AR (Arquitectura de Redes) - Sugerencia de Alejandro
+  // ==========================================
+  {
+    id: 'ar-unit-1',
+    unitNumber: 1,
+    title: 'Subnetting VLSM y Mecanismos TCP',
+    description: 'Direccionamiento CIDR eficiente, cálculo de retardos y control de congestión.',
+    color: 'from-sky-600 to-cyan-700',
+    borderColor: 'border-sky-500',
+    subjectId: 'ar',
+    guideBook: {
+      title: 'Guía de AR: VLSM, Retardos y TCP Reno',
+      keyPoints: [
+        'Retardo de transmisión d_trans = L / R (tamaño paquete / ancho de banda).',
+        'Retardo de propagación d_prop = d / v (distancia física / velocidad 2x10^8 m/s).',
+        'En subredes IPv4: Hosts utilizables = 2^(32 - prefijo) - 2.',
+        'TCP Slow Start duplica la ventana por cada RTT; Congestion Avoidance suma 1 MSS por RTT.',
+      ],
+      commonMistakes: [
+        'Olvidar restar 2 direcciones (Red y Broadcast) al calcular hosts útiles en una subred.',
+      ],
+      essentialFormula: 'Hosts = 2^(32 - prefijo) - 2 | d_trans = L / R | d_prop = d / v',
+    },
+    lessons: [
+      {
+        id: 'ar-u1-l1',
+        title: 'Cálculo de Subredes con VLSM',
+        subtitle: 'Asignación óptima de máscaras de red',
+        unitId: 'ar-unit-1',
+        subjectId: 'ar',
+        xpReward: 20,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'ar-q1',
+            type: 'multiple_choice',
+            prompt: 'Una empresa necesita crear una subred en la que conectará 50 ordenadores. ¿Cuál es el prefijo CIDR mínimo necesario para albergar esa subred?',
+            options: ['/26 (máscara 255.255.255.192, 62 hosts utilizables)', '/27 (30 hosts utilizables)', '/25 (126 hosts utilizables)', '/24 (254 hosts utilizables)'],
+            correctIndex: 0,
+            explanation: 'Con prefijo /26 quedan 32 - 26 = 6 bits para host. 2^6 - 2 = 64 - 2 = 62 hosts útiles, suficiente para 50 ordenadores. Un /27 solo daría 2^5 - 2 = 30 (insuficiente).',
+            tip: 'En el examen de AR, siempre elige la potencia de 2 más ajustada por arriba de N + 2.'
+          },
+          {
+            id: 'ar-q2',
+            type: 'true_false',
+            prompt: '¿Aumentar el ancho de banda del enlace (de 10 Mbps a 1 Gbps) reduce el tiempo que tarda un fotón en viajar por la fibra óptica (retardo de propagación)?',
+            statement: 'Un enlace con mayor ancho de banda tiene menor retardo de propagación.',
+            isTrue: false,
+            explanation: 'FALSO: El ancho de banda reduce el retardo de TRANSMISIÓN (L / R, el tiempo en inyectar los bits al cable), pero la velocidad de propagación de la luz en la fibra es constante (~200.000 km/s) y depende solo de la distancia física.',
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: ST (Servicios Telemáticos) - Sugerencia de Sofía
+  // ==========================================
+  {
+    id: 'st-unit-1',
+    unitNumber: 1,
+    title: 'Criptografía RSA y Arquitectura Web HTTP',
+    description: 'Generación de claves asimétricas, firmas digitales y tiempos de descarga con RTT.',
+    color: 'from-purple-600 to-indigo-700',
+    borderColor: 'border-purple-500',
+    subjectId: 'st',
+    guideBook: {
+      title: 'Guía de ST: Criptografía RSA & HTTP Persistente',
+      keyPoints: [
+        'En RSA: n = p * q; phi(n) = (p - 1)(q - 1). La clave pública es (e, n); privada (d, n).',
+        'e * d = 1 (mod phi(n)). Se cifra con M^e mod n; se descifra con C^d mod n.',
+        'HTTP/1.0 no persistente abre una conexión TCP independiente por cada objeto (2 RTTs por imagen).',
+        'HTTP/1.1 persistente reutiliza la conexión TCP; HTTP/2 añade multiplexación binaria.',
+      ],
+      commonMistakes: [
+        'Calcular phi(n) como n - 1 en vez de (p - 1)(q - 1).',
+      ],
+      essentialFormula: 'n = p * q | phi(n) = (p-1)(q-1) | e * d = 1 mod phi(n)',
+    },
+    lessons: [
+      {
+        id: 'st-u1-l1',
+        title: 'Mecánica de Claves en RSA',
+        subtitle: 'Generación de claves y cifrado asimétrico',
+        unitId: 'st-unit-1',
+        subjectId: 'st',
+        xpReward: 20,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'st-q1',
+            type: 'multiple_choice',
+            prompt: 'En el algoritmo criptográfico RSA, elegimos los números primos p = 3 y q = 11. ¿Cuál es el valor de la función de Euler phi(n)?',
+            options: ['phi(n) = 20', 'phi(n) = 33', 'phi(n) = 32', 'phi(n) = 14'],
+            correctIndex: 0,
+            explanation: 'phi(n) = (p - 1) * (q - 1) = (3 - 1) * (11 - 1) = 2 * 10 = 20. El módulo es n = 3 * 11 = 33.',
+            tip: 'Pregunta clásica de examen de ST: cualquier exponente público "e" debe ser coprimo con phi(n), por ejemplo e = 3 o e = 7.'
+          },
+          {
+            id: 'st-q2',
+            type: 'match_pairs',
+            prompt: 'Empareja cada protocolo de la capa de aplicación con su puerto TCP por defecto:',
+            pairs: [
+              { left: 'HTTP', right: 'Puerto 80' },
+              { left: 'HTTPS (TLS)', right: 'Puerto 443' },
+              { left: 'DNS (Consultas)', right: 'Puerto 53 (UDP/TCP)' },
+              { left: 'SSH', right: 'Puerto 22' },
+            ],
+            explanation: '¡Excelente! Puertos esenciales que todo graduado de la FIUM debe conocer de memoria.',
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: SI (Sistemas Inteligentes) - Sugerencia de Pablo
+  // ==========================================
+  {
+    id: 'si-unit-1',
+    unitNumber: 1,
+    title: 'Algoritmo A* y Poda Alfa-Beta en Juegos',
+    description: 'Búsqueda informada óptima, heurísticas admisibles y poda de árboles Minimax.',
+    color: 'from-rose-600 to-pink-700',
+    borderColor: 'border-rose-500',
+    subjectId: 'si',
+    guideBook: {
+      title: 'Guía de SI: Búsqueda Heurística A* y Minimax',
+      keyPoints: [
+        'A* evalúa nodos con f(n) = g(n) + h(n).',
+        'Una heurística h(n) es admisible si nunca sobreestima el coste real al objetivo (h(n) <= h*(n)).',
+        'Una heurística es consistente (monótona) si h(n) <= c(n, a, n\') + h(n\'). La consistencia garantiza que el primer camino a un nodo sea el óptimo.',
+        'La Poda Alfa-Beta poda ramas cuando beta <= alfa (el adversario tiene una opción mejor en otro sitio).',
+      ],
+      commonMistakes: [
+        'Detener el algoritmo A* cuando el objetivo entra en Abiertos. ¡Error! Solo debe detenerse cuando se EXTRAE el objetivo de la cola.',
+      ],
+      essentialFormula: 'f(n) = g(n) + h(n) | Podar en Minimax si beta <= alfa',
+    },
+    lessons: [
+      {
+        id: 'si-u1-l1',
+        title: 'Heurísticas Admisibles y Función f(n)',
+        subtitle: 'Condición de optimalidad en búsqueda informada',
+        unitId: 'si-unit-1',
+        subjectId: 'si',
+        xpReward: 20,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'si-q1',
+            type: 'multiple_choice',
+            prompt: 'En el algoritmo A*, si usamos la heurística trivial h(n) = 0 para todos los nodos del espacio de estados, ¿en qué algoritmo de búsqueda se convierte exactamente?',
+            options: [
+              'Búsqueda de Coste Uniforme (Dijkstra / UCS)',
+              'Búsqueda en Profundidad (DFS)',
+              'Búsqueda Voraz Primero el Mejor (Greedy Best-First)',
+              'Búsqueda con Profundidad Iterativa (IDS)'
+            ],
+            correctIndex: 0,
+            explanation: 'Al ser h(n) = 0, la función f(n) = g(n) + 0 = g(n), que es exactamente el coste real acumulado desde el inicio. El algoritmo expande siempre el nodo de menor g(n), que es la definición de Búsqueda de Coste Uniforme (UCS).',
+            tip: 'Pregunta trampa recurrente en la FIUM: "A* con h=0 es UCS; A* con g=0 es Búsqueda Voraz".'
+          },
+          {
+            id: 'si-q2',
+            type: 'true_false',
+            prompt: 'En la Poda Alfa-Beta en árboles de juego de suma cero (Minimax), ¿se altera el valor numérico óptimo de la raíz respecto a Minimax estándar sin poda?',
+            statement: 'La poda Alfa-Beta devuelve exactamente la misma decisión y valor de utilidad que Minimax explorando todo el árbol.',
+            isTrue: true,
+            explanation: 'VERDADERO: La poda Alfa-Beta es una optimización EXACTA. Solo descarta ramas que matemáticamente nunca podrán ser elegidas por los jugadores racionales, garantizando el mismo resultado con mucho menos coste de cómputo.',
+          }
+        ]
+      }
+    ]
+  }
 ];
