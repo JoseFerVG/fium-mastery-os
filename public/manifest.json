@@ -1,0 +1,17 @@
+{
+  "short_name": "FIUM OS",
+  "name": "FIUM Mastery OS - Alto Rendimiento UMU",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#030712",
+  "theme_color": "#4f46e5",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/"
+}

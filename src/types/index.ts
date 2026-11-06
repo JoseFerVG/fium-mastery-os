@@ -9,6 +9,18 @@ export type SubjectId =
   | 'si'
   | 'st';
 
+export type SimulatorId =
+  | 'pipeline'
+  | 'cache'
+  | 'automata'
+  | 'virtual-memory'
+  | 'solid-doctor'
+  | 'cpu-scheduler'
+  | 'subnet-calc'
+  | 'rsa-crypto'
+  | 'astar-search'
+  | 'decision-tree';
+
 export interface Concept {
   id: string;
   title: string;
@@ -21,9 +33,9 @@ export interface Concept {
     analogy: string;
     formalTheory: string;
     keyFormulasOrRules?: string[];
-    examPitfalls: string[]; // Errores típicos donde los profesores restan puntos
+    examPitfalls: string[]; // Errores típicos donde los profesores restan puntos en la UMU
   };
-  interactiveDemoId?: 'pipeline' | 'cache' | 'automata' | 'virtual-memory' | 'solid-doctor';
+  interactiveDemoId?: SimulatorId;
   codeOrExample?: {
     language: string;
     code: string;
@@ -34,7 +46,7 @@ export interface Concept {
 export interface ExamProblem {
   id: string;
   subjectId: SubjectId;
-  courseYear: string; // e.g. "Examen Junio 2023 - UMU"
+  courseYear: string; // e.g. "Examen Junio 2024 - UMU"
   title: string;
   question: string;
   options: {
@@ -64,10 +76,54 @@ export interface Subject {
   };
 }
 
+export interface DailyQuest {
+  id: string;
+  title: string;
+  description: string;
+  xpReward: number;
+  gemsReward: number;
+  targetCount: number;
+  currentCount: number;
+  completed: boolean;
+  type: 'quiz' | 'fiumingo' | 'feynman' | 'simulator' | 'focus';
+}
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  xpReward: number;
+  gemsReward: number;
+  category: 'mastery' | 'streak' | 'exam' | 'speedrun' | 'focus';
+  unlocked: boolean;
+  unlockedAt?: string;
+}
+
+export interface Flashcard {
+  id: string;
+  subjectId: SubjectId;
+  topic: string;
+  question: string;
+  answer: string;
+  keyRule: string;
+  trap: string;
+}
+
 export interface UserProgress {
   topicMastery: Record<string, 'red' | 'yellow' | 'green'>;
   completedQuizzes: Record<string, number>; // questionId -> score/status
   studyStreakDays: number;
   totalStudyMinutes: number;
   lastActiveDate: string;
+  // Gamification extensions
+  xp: number;
+  gems: number;
+  level: number;
+  unlockedAchievements: string[];
+  dailyQuests: DailyQuest[];
+  survivalHighScore: number;
+  survivalTotalGames: number;
+  answeredFlashcards: Record<string, 'easy' | 'medium' | 'hard'>;
+  completedRescueDays?: number[];
 }

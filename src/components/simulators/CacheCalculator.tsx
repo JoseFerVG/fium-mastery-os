@@ -52,8 +52,11 @@ export const CacheCalculator: React.FC = () => {
       {/* Control Inputs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div>
-          <label className="text-xs font-semibold text-slate-400 block mb-1.5">Bits de Dirección</label>
+          <label htmlFor="cache-address-bits" className="text-xs font-semibold text-slate-400 block mb-1.5">Bits de Dirección</label>
           <select 
+            id="cache-address-bits"
+            name="addressBits"
+            aria-label="Bits de dirección de memoria"
             value={addressBits} 
             onChange={e => setAddressBits(Number(e.target.value))}
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 outline-none"
@@ -64,8 +67,11 @@ export const CacheCalculator: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-slate-400 block mb-1.5">Capacidad de Datos</label>
+          <label htmlFor="cache-size-kb" className="text-xs font-semibold text-slate-400 block mb-1.5">Capacidad de Datos</label>
           <select 
+            id="cache-size-kb"
+            name="cacheSizeKB"
+            aria-label="Capacidad de datos de la caché en KB"
             value={cacheSizeKB} 
             onChange={e => setCacheSizeKB(Number(e.target.value))}
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 outline-none"
@@ -79,8 +85,11 @@ export const CacheCalculator: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-slate-400 block mb-1.5">Tamaño de Bloque</label>
+          <label htmlFor="cache-block-size" className="text-xs font-semibold text-slate-400 block mb-1.5">Tamaño de Bloque</label>
           <select 
+            id="cache-block-size"
+            name="blockSizeB"
+            aria-label="Tamaño de bloque en bytes"
             value={blockSizeB} 
             onChange={e => setBlockSizeB(Number(e.target.value))}
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 outline-none"
@@ -93,8 +102,11 @@ export const CacheCalculator: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-slate-400 block mb-1.5">Asociatividad</label>
+          <label htmlFor="cache-ways" className="text-xs font-semibold text-slate-400 block mb-1.5">Asociatividad</label>
           <select 
+            id="cache-ways"
+            name="ways"
+            aria-label="Grado de asociatividad de la caché"
             value={ways} 
             onChange={e => setWays(Number(e.target.value))}
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:border-blue-500 outline-none"
@@ -110,12 +122,16 @@ export const CacheCalculator: React.FC = () => {
 
       {/* Hex Address Input */}
       <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 mb-6">
-        <label className="text-xs font-semibold text-slate-400 block mb-1.5 flex items-center justify-between">
+        <label htmlFor="cache-hex-address-input" className="text-xs font-semibold text-slate-400 block mb-1.5 flex items-center justify-between">
           <span>Probar una Dirección de Memoria (Hexadecimal):</span>
           <span className="text-xs text-blue-400 font-mono">Ej: 0x0040A56C</span>
         </label>
         <div className="flex gap-2">
           <input
+            id="cache-hex-address-input"
+            name="hexAddress"
+            aria-label="Dirección de memoria en hexadecimal"
+            autoComplete="off"
             type="text"
             value={hexAddress}
             onChange={e => setHexAddress(e.target.value)}

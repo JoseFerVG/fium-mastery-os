@@ -1,8 +1,9 @@
 import React from 'react';
 import { DuolingoUnit, DuolingoLesson } from '../../types/duolingo';
 import { DuoMascot } from './DuoMascot';
-import { Star, Lock, Check, BookOpen, Crown, Gift, Sparkles } from 'lucide-react';
+import { Star, Lock, Check, BookOpen, Gift, Sparkles, Zap } from 'lucide-react';
 import { soundManager } from '../../utils/soundEffects';
+import { motion } from 'motion/react';
 
 interface DuolingoPathProps {
   units: DuolingoUnit[];
@@ -17,20 +18,20 @@ export const DuolingoPath: React.FC<DuolingoPathProps> = ({
   onSelectLesson,
   onOpenGuide,
 }) => {
-  // Horizontal zig-zag offsets for classic Duolingo serpentine path
+  // Horizontal zig-zag offsets for classic Duolingo serpentine path (responsive for mobile)
   const xOffsets = [
     'translate-x-0',
-    'translate-x-12',
-    'translate-x-20',
-    'translate-x-12',
+    'translate-x-8 sm:translate-x-12',
+    'translate-x-12 sm:translate-x-20',
+    'translate-x-8 sm:translate-x-12',
     'translate-x-0',
-    '-translate-x-12',
-    '-translate-x-20',
-    '-translate-x-12',
+    '-translate-x-8 sm:-translate-x-12',
+    '-translate-x-12 sm:-translate-x-20',
+    '-translate-x-8 sm:-translate-x-12',
   ];
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8 space-y-12">
+    <div className="max-w-xl mx-auto px-4 py-8 space-y-12 overflow-x-hidden">
       {units.map((unit, unitIdx) => {
         return (
           <div key={unit.id} className="space-y-6">
@@ -89,7 +90,9 @@ export const DuolingoPath: React.FC<DuolingoPathProps> = ({
                     )}
 
                     {/* Circular 3D Node Button */}
-                    <button
+                    <motion.button
+                      whileHover={!isLocked ? { scale: 1.08, y: -4 } : undefined}
+                      whileTap={!isLocked ? { scale: 0.94 } : undefined}
                       onClick={() => {
                         if (!isLocked) {
                           soundManager.playClick();
@@ -97,7 +100,8 @@ export const DuolingoPath: React.FC<DuolingoPathProps> = ({
                         }
                       }}
                       disabled={isLocked}
-                      className={`w-20 h-20 rounded-full flex items-center justify-center transition-all transform ${
+                      aria-label={`Lección ${lessonIdx + 1}: ${lesson.title}${isCompleted ? ' (Completada)' : isCurrent ? ' (Siguiente lección)' : ' (Bloqueada)'}`}
+                      className={`w-20 h-20 rounded-full flex items-center justify-center transition-all ${
                         isCompleted
                           ? 'bg-amber-400 hover:bg-amber-300 text-amber-950 border-b-6 border-amber-600 active:border-b-0 active:translate-y-1 shadow-lg shadow-amber-500/20'
                           : isCurrent
@@ -112,12 +116,19 @@ export const DuolingoPath: React.FC<DuolingoPathProps> = ({
                       ) : (
                         <Lock className="w-7 h-7" />
                       )}
-                    </button>
+                    </motion.button>
 
-                    {/* Lesson Label */}
-                    <span className="text-[11px] font-black text-slate-300 mt-2 text-center max-w-32 truncate">
-                      {lesson.title}
-                    </span>
+                    {/* Lesson Label & XP badge */}
+                    <div className="flex flex-col items-center mt-2">
+                      <span className="text-[11px] font-black text-slate-300 text-center max-w-32 truncate">
+                        {lesson.title}
+                      </span>
+                      {!isLocked && (
+                        <span className="text-[10px] font-bold text-amber-400/90 flex items-center gap-0.5 mt-0.5">
+                          <Zap className="w-3 h-3 fill-amber-400" /> +{lesson.xpReward} XP
+                        </span>
+                      )}
+                    </div>
                   </div>
                 );
               })}

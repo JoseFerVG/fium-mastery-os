@@ -4,6 +4,7 @@ import { DuoMascot, MascotMood } from './DuoMascot';
 import { soundManager } from '../../utils/soundEffects';
 import confetti from 'canvas-confetti';
 import { X, Heart, CheckCircle2, AlertCircle, ArrowRight, RotateCcw, Sparkles, Award } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface DuolingoLessonModalProps {
   lesson: DuolingoLesson;
@@ -282,11 +283,18 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-950 text-slate-100 font-sans">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.98 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-50 flex flex-col bg-slate-950 text-slate-100 font-sans"
+    >
       {/* Top Bar with Progress & Hearts */}
       <div className="max-w-3xl w-full mx-auto px-4 py-4 flex items-center justify-between gap-4">
         <button
           onClick={onClose}
+          aria-label="Cerrar lección"
           className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 transition"
         >
           <X className="w-6 h-6" />
@@ -486,7 +494,7 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
 
       {/* Bottom Sticky Action / Feedback Drawer (Authentic Duolingo Bottom Sheet) */}
       <div
-        className={`border-t-2 p-5 transition-all duration-300 ${
+        className={`border-t-2 p-5 pb-safe transition-all duration-300 ${
           answerStatus === 'correct'
             ? 'bg-green-950/90 border-green-600/80'
             : answerStatus === 'incorrect'
@@ -554,6 +562,6 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

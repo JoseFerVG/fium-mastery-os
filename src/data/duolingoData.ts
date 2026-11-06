@@ -999,5 +999,317 @@ export const DUOLINGO_UNITS: DuolingoUnit[] = [
         ]
       }
     ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: ALF - Unidad 2: Gramáticas y Autómatas con Pila
+  // ==========================================
+  {
+    id: 'alf-unit-2',
+    unitNumber: 2,
+    title: 'Gramáticas Libres del Contexto & Autómatas con Pila',
+    description: 'Árboles de derivación sintáctica, ambigüedad y diseño de AP por pila vacía.',
+    color: 'from-amber-600 to-yellow-600',
+    borderColor: 'border-amber-500',
+    subjectId: 'alf',
+    guideBook: {
+      title: 'Guía de GLC y Autómatas con Pila',
+      keyPoints: [
+        'Una GLC es ambigua si existe al menos una palabra con dos o más árboles de derivación sintáctica distintos.',
+        'La Forma Normal de Chomsky (FNC) restringe las producciones a la forma A -> BC o A -> a.',
+        'Los Autómatas con Pila aceptan lenguajes de Tipo 2 (Libres del Contexto).',
+        'Aceptación por estado final y por pila vacía tienen idéntica potencia de cómputo en APND.'
+      ],
+      commonMistakes: [
+        'Confundir AP Deterministas (APD) con No Deterministas (APND): los APND son estrictamente más potentes.',
+        'Olvidar vaciar el símbolo inicial Z0 de la pila en los autómatas por pila vacía.'
+      ],
+      essentialFormula: 'FNC: A -> BC | A -> a | Pasos de derivación = 2|w| - 1'
+    },
+    lessons: [
+      {
+        id: 'alf-u2-l1',
+        title: 'Árboles de Derivación & Ambigüedad',
+        subtitle: 'Detección de gramáticas ambiguas',
+        unitId: 'alf-unit-2',
+        subjectId: 'alf',
+        xpReward: 25,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'alf-u2-q1',
+            type: 'multiple_choice',
+            prompt: 'Dada la gramática E -> E + E | E * E | num, ¿es ambigua para la cadena "2 + 3 * 4"?',
+            options: [
+              'Sí, porque admite dos árboles de derivación distintos según la precedencia elegida.',
+              'No, porque la multiplicación siempre tiene prioridad matemática universal.',
+              'No, porque solo tiene 3 reglas de producción.',
+              'Solo es ambigua si num toma valores negativos.'
+            ],
+            correctIndex: 0,
+            explanation: '¡Exacto! La gramática no define precedencia en sus reglas, permitiendo derivar tanto (2 + 3) * 4 = 20 como 2 + (3 * 4) = 14 con dos árboles sintácticos diferentes.',
+            tip: 'Para eliminar la ambigüedad en compiladores se desglosa E en Términos (T) y Factores (F).'
+          },
+          {
+            id: 'alf-u2-q2',
+            type: 'match_pairs',
+            prompt: 'Empareja cada clase de la Jerarquía de Chomsky con su autómata reconocedor:',
+            pairs: [
+              { left: 'Tipo 3 (Regulares)', right: 'Autómata Finito (AFD/AFND)' },
+              { left: 'Tipo 2 (Libres Contexto)', right: 'Autómata con Pila (APND)' },
+              { left: 'Tipo 1 (Sensibles Contexto)', right: 'Autómata Linealmente Acotado' },
+              { left: 'Tipo 0 (Recursivos Enum.)', right: 'Máquina de Turing' }
+            ],
+            explanation: 'La jerarquía fundamental de Noam Chomsky para teoría de lenguajes formales y computabilidad.'
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: AR - Unidad 2: Encaminamiento & TCP Avanzado
+  // ==========================================
+  {
+    id: 'ar-unit-2',
+    unitNumber: 2,
+    title: 'Encaminamiento OSPF & Control de Congestión TCP',
+    description: 'Algoritmo de Dijkstra en enlaces, estados OSPF y algoritmos TCP Tahoe vs Reno.',
+    color: 'from-sky-600 to-indigo-700',
+    borderColor: 'border-sky-500',
+    subjectId: 'ar',
+    guideBook: {
+      title: 'Guía de OSPF y Congestión TCP',
+      keyPoints: [
+        'OSPF utiliza el algoritmo de Dijkstra para calcular el árbol de caminos más cortos sin bucles.',
+        'Todos los routers en una misma área OSPF mantienen una base de datos topológica (LSDB) idéntica.',
+        'TCP Slow Start duplica la ventana cwnd cada RTT hasta alcanzar ssthresh.',
+        'Ante 3 ACKs duplicados, TCP Reno entra en Fast Recovery y mantiene cwnd a la mitad (no cae a 1).'
+      ],
+      commonMistakes: [
+        'Pensar que TCP Reno reinicia cwnd a 1 ante 3 DUPACKs: solo reinicia a 1 si la pérdida es por TIMEOUT.'
+      ],
+      essentialFormula: 'Métrica OSPF = 10^8 / Ancho_Banda | Reno: ssthresh = cwnd / 2'
+    },
+    lessons: [
+      {
+        id: 'ar-u2-l1',
+        title: 'Mecánica de Fast Retransmit en TCP Reno',
+        subtitle: 'Detección temprana de paquetes perdidos',
+        unitId: 'ar-unit-2',
+        subjectId: 'ar',
+        xpReward: 25,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'ar-u2-q1',
+            type: 'true_false',
+            prompt: 'En TCP Reno, ¿provoca la llegada de 3 ACKs duplicados que la ventana cwnd se reduzca a 1 MSS?',
+            statement: 'La recepción de 3 ACKs duplicados reinicia el algoritmo a Slow Start con cwnd = 1 MSS.',
+            isTrue: false,
+            explanation: 'FALSO: Eso es lo que hacía el antiguo TCP Tahoe. TCP Reno implementa Fast Recovery (Recuperación Rápida): reduce ssthresh a la mitad, ajusta cwnd = ssthresh + 3 MSS y continúa en Evitación de Congestión sin caer a 1.',
+            tip: 'Pregunta estrella en los exámenes de AR: Tahoe cae a 1, Reno se mantiene a la mitad.'
+          },
+          {
+            id: 'ar-u2-q2',
+            type: 'code_reorder',
+            prompt: 'Ordena la secuencia de fases del control de congestión TCP estándar:',
+            tokens: ['Slow Start (Exponencial)', 'Alcanzar ssthresh', 'Congestion Avoidance (+1 MSS/RTT)', 'Detección de Pérdida', 'Fast Retransmit & Recovery'],
+            correctSequence: ['Slow Start (Exponencial)', 'Alcanzar ssthresh', 'Congestion Avoidance (+1 MSS/RTT)', 'Detección de Pérdida', 'Fast Retransmit & Recovery'],
+            explanation: 'Flujo completo de adaptación de tasa de transferencia de TCP ante las condiciones del enlace.'
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: AC - Unidad 2: Evaluación y Curvas ROC
+  // ==========================================
+  {
+    id: 'ac-unit-2',
+    unitNumber: 2,
+    title: 'Evaluación de Clasificadores, ROC y AUC',
+    description: 'Métricas contra el sesgo: Precisión, Sensibilidad, F1 y compromiso de falsas alarmas.',
+    color: 'from-pink-600 to-rose-700',
+    borderColor: 'border-pink-500',
+    subjectId: 'ac',
+    guideBook: {
+      title: 'Guía de Evaluación de Modelos y ROC',
+      keyPoints: [
+        'Accuracy es engañosa en clases desbalanceadas.',
+        'Sensibilidad (Recall / TPR) = TP / (TP + FN).',
+        'Precisión = TP / (TP + FP).',
+        'La curva ROC grafica TPR frente a FPR para todos los umbrales. El clasificador perfecto tiene AUC = 1.0.'
+      ],
+      commonMistakes: [
+        'Calcular Especificidad usando FN en el denominador (es TN / (TN + FP)).'
+      ],
+      essentialFormula: 'F1 = 2 * (Prec * Rec) / (Prec + Rec) | FPR = 1 - Especificidad'
+    },
+    lessons: [
+      {
+        id: 'ac-u2-l1',
+        title: 'Sensibilidad vs Precisión',
+        subtitle: 'Elección de métricas según el coste del error',
+        unitId: 'ac-unit-2',
+        subjectId: 'ac',
+        xpReward: 25,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'ac-u2-q1',
+            type: 'multiple_choice',
+            prompt: 'En un modelo de predicción médica de cáncer donde el 99% de los pacientes están sanos, un modelo tonto predice siempre "Sano". ¿Qué ocurre con sus métricas?',
+            options: [
+              'Accuracy = 99%, pero Sensibilidad (Recall) = 0% (Inútil clínicamente).',
+              'Accuracy = 50% y Sensibilidad = 50%.',
+              'Tanto Accuracy como Sensibilidad son del 99%.',
+              'El F1-Score será de 0.99.'
+            ],
+            correctIndex: 0,
+            explanation: 'Como predice siempre "Sano", acierta en los sanos (99% de exactitud), pero de los enfermos reales (positivos) no detecta a ninguno (TP = 0), por lo que Recall = 0 / Positivos = 0%.',
+            tip: 'Ejemplo canónico que siempre ponen en el examen de AC para justificar el uso de AUC o F1.'
+          },
+          {
+            id: 'ac-u2-q2',
+            type: 'match_pairs',
+            prompt: 'Empareja cada métrica con su fórmula analítica:',
+            pairs: [
+              { left: 'Sensibilidad (TPR)', right: 'TP / (TP + FN)' },
+              { left: 'Precisión (PPV)', right: 'TP / (TP + FP)' },
+              { left: 'Especificidad (TNR)', right: 'TN / (TN + FP)' },
+              { left: 'F1-Score', right: 'Media armónica Prec y Rec' }
+            ],
+            explanation: 'Las 4 métricas cardinales que rigen la evaluación en Machine Learning.'
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: SI - Unidad 2: Juegos y Algoritmos Genéticos
+  // ==========================================
+  {
+    id: 'si-unit-2',
+    unitNumber: 2,
+    title: 'Poda Alfa-Beta & Algoritmos Genéticos',
+    description: 'Árboles de decisión en juegos de suma cero y optimización evolutiva en N-Reinas.',
+    color: 'from-yellow-600 to-amber-700',
+    borderColor: 'border-yellow-500',
+    subjectId: 'si',
+    guideBook: {
+      title: 'Guía de Minimax, Alfa-Beta y Algoritmos Genéticos',
+      keyPoints: [
+        'MAX maximiza la puntuación; MIN la minimiza.',
+        'La poda ocurre cuando alfa >= beta.',
+        'Un Algoritmo Genético requiere: cromosomas, función de aptitud (fitness), operadores de cruce y mutación.',
+        'La mutación introduce diversidad para escapar de óptimos locales.'
+      ],
+      commonMistakes: [
+        'Actualizar alfa en un nodo MIN o beta en un nodo MAX.'
+      ],
+      essentialFormula: 'Corte Alfa-Beta si alfa >= beta | P(ruleta) = fitness_i / sum(fitness)'
+    },
+    lessons: [
+      {
+        id: 'si-u2-l1',
+        title: 'Condición de Poda Alfa-Beta',
+        subtitle: 'Optimización de árboles de decisión en profundidad',
+        unitId: 'si-unit-2',
+        subjectId: 'si',
+        xpReward: 25,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'si-u2-q1',
+            type: 'multiple_choice',
+            prompt: 'En un nodo MIN con valor beta actual de 4, uno de sus hijos devuelve un valor de 6. ¿Qué ocurre?',
+            options: [
+              'Beta no cambia, sigue siendo 4 (MIN busca el mínimo y 4 < 6).',
+              'Beta se actualiza a 6.',
+              'Se produce una poda alfa de inmediato.',
+              'El nodo se convierte en MAX.'
+            ],
+            correctIndex: 0,
+            explanation: 'Un nodo MIN calcula beta = min(beta, valor). Como min(4, 6) = 4, el valor de beta no varía y se continúa evaluando el siguiente hijo.',
+            tip: 'Los nodos MIN solo bajan o mantienen su valor de beta; nunca suben.'
+          },
+          {
+            id: 'si-u2-q2',
+            type: 'true_false',
+            prompt: 'En un Algoritmo Genético para resolver el problema de las N-Reinas, ¿puede una tasa de mutación del 90% mejorar la convergencia hacia la solución óptima?',
+            statement: 'Una tasa de mutación muy alta (cercana al 100%) ayuda al algoritmo a encontrar la solución más rápido.',
+            isTrue: false,
+            explanation: 'FALSO: Una tasa de mutación tan destructiva convierte el algoritmo genético en una búsqueda aleatoria pura sin memoria evolutiva, destruyendo los bloques constructores que la selección natural había acumulado.',
+            tip: 'La tasa de mutación óptima en GAlib suele rondar entre el 1% y el 5%.'
+          }
+        ]
+      }
+    ]
+  },
+
+  // ==========================================
+  // ASIGNATURA: ST - Unidad 2: Rendimiento HTTP & Handshake TLS
+  // ==========================================
+  {
+    id: 'st-unit-2',
+    unitNumber: 2,
+    title: 'Rendimiento HTTP, RTT & Handshake TLS',
+    description: 'Cálculo de tiempos de descarga de páginas web y negociación de claves simétricas.',
+    color: 'from-violet-600 to-indigo-800',
+    borderColor: 'border-violet-500',
+    subjectId: 'st',
+    guideBook: {
+      title: 'Guía de Rendimiento Web y TLS',
+      keyPoints: [
+        'Cada nueva conexión TCP cuesta 1 RTT por el handshake de 3 vías (SYN, SYN-ACK, ACK).',
+        'HTTP/1.1 con Pipelining permite pedir todos los objetos embebidos en 1 solo RTT acumulado.',
+        'En el Handshake TLS con RSA, el cliente cifra el Pre-Master Secret con la clave pública del servidor.',
+        'La sesión cifrada posterior utiliza cifrado simétrico (como AES) por eficiencia computacional.'
+      ],
+      commonMistakes: [
+        'Olvidar sumar el RTT del handshake TCP al calcular el retardo en HTTP no persistente.'
+      ],
+      essentialFormula: 'T_no_pers = 2 RTT + sum(2 RTT_obj) | T_pers_pipe = 2 RTT + 1 RTT_objs'
+    },
+    lessons: [
+      {
+        id: 'st-u2-l1',
+        title: 'Cálculo de RTTs en Descarga Web',
+        subtitle: 'Comparación no persistente vs persistente con pipelining',
+        unitId: 'st-unit-2',
+        subjectId: 'st',
+        xpReward: 25,
+        gemReward: 5,
+        questions: [
+          {
+            id: 'st-u2-q1',
+            type: 'multiple_choice',
+            prompt: 'Una página HTML contiene 3 imágenes. Si el tiempo de ida y vuelta es RTT, ¿cuántos RTTs mínimos se requieren para descargar toda la página usando HTTP/1.1 persistente con pipelining?',
+            options: [
+              '3 RTTs (1 para TCP + 1 para HTML + 1 para las 3 imágenes en pipeline)',
+              '8 RTTs',
+              '5 RTTs',
+              '1 RTT'
+            ],
+            correctIndex: 0,
+            explanation: '1 RTT para abrir la conexión TCP + 1 RTT para pedir y recibir el HTML base + 1 RTT para solicitar y recibir las 3 imágenes a la vez en una única ráfaga en pipeline. Total = 3 RTTs.',
+            tip: 'Problema extraído directamente de los ejercicios de examen del Tema 2 de Servicios Telemáticos.'
+          },
+          {
+            id: 'st-u2-q2',
+            type: 'true_false',
+            prompt: 'En el protocolo HTTPS (TLS/SSL), ¿se cifran los mensajes HTTP normales (como GET /index.html) con la clave pública RSA del servidor?',
+            statement: 'Todos los datos transferidos en una sesión HTTPS se cifran mediante criptografía asimétrica RSA.',
+            isTrue: false,
+            explanation: 'FALSO: El cifrado asimétrico RSA es extremadamente lento y costoso para la CPU. TLS solo utiliza RSA en el handshake inicial para autenticar y acordar una clave simétrica (Pre-Master Secret). Todo el tráfico HTTP posterior se cifra con un algoritmo simétrico de alta velocidad como AES-GCM.',
+            tip: 'Pregunta trampa favorita de los tribunales de examen de seguridad.'
+          }
+        ]
+      }
+    ]
   }
+
 ];

@@ -130,10 +130,14 @@ export const AutomataSimulator: React.FC = () => {
       <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="w-full md:w-auto flex-1">
-            <label className="text-xs font-semibold text-slate-400 block mb-1">
+            <label htmlFor="automata-input-string" className="text-xs font-semibold text-slate-400 block mb-1">
               Cadena de entrada (Alfabeto permitido: {dfa.alphabet.join(', ')}):
             </label>
             <input
+              id="automata-input-string"
+              name="automataInputString"
+              aria-label="Cadena de entrada para el autómata"
+              autoComplete="off"
               type="text"
               value={inputString}
               onChange={e => {

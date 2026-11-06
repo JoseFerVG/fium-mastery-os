@@ -145,8 +145,11 @@ export const MemoryVirtualSimulator: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-slate-400 block mb-1.5">Marcos de Memoria Física (Frames)</label>
+          <label htmlFor="memory-frames-select" className="text-xs font-semibold text-slate-400 block mb-1.5">Marcos de Memoria Física (Frames)</label>
           <select
+            id="memory-frames-select"
+            name="memoryFrames"
+            aria-label="Marcos de memoria física"
             value={numFrames}
             onChange={e => { setNumFrames(Number(e.target.value)); setCurrentStep(0); }}
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
@@ -158,8 +161,12 @@ export const MemoryVirtualSimulator: React.FC = () => {
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-slate-400 block mb-1.5">Cadena de Referencias</label>
+          <label htmlFor="memory-ref-string" className="text-xs font-semibold text-slate-400 block mb-1.5">Cadena de Referencias</label>
           <input
+            id="memory-ref-string"
+            name="memoryRefString"
+            aria-label="Cadena de referencias de páginas solicitadas"
+            autoComplete="off"
             type="text"
             value={refString}
             onChange={e => { setRefString(e.target.value); setCurrentStep(0); }}

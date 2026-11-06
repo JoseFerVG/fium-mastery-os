@@ -1,6 +1,7 @@
 import { ExamProblem } from '../types';
 
 export const EXAM_PROBLEMS: ExamProblem[] = [
+  // ========================== AOC ==========================
   {
     id: 'aoc-q1-amat',
     subjectId: 'aoc',
@@ -88,6 +89,43 @@ Total de burbujas insertadas = 1 ciclo.`,
     examTip: 'Para sacar un 10: Siempre revisa si puedes reordenar instrucciones independientes para eliminar esa burbuja. Aquí la instrucción SW no depende de ADD si cambiamos registros, pero respetando el código dado la respuesta es 1 burbuja.'
   },
   {
+    id: 'aoc-q3-coherence-msi',
+    subjectId: 'aoc',
+    courseYear: 'Examen Oficial AOC - Convocatoria Julio',
+    title: 'Transiciones de Estado en Protocolo Snoopy MSI',
+    question: 'En un sistema multiprocesador SMP con protocolo de coherencia snoopy MSI sobre bus compartido, dos procesadores P1 y P2 tienen el mismo bloque B en estado Compartido (S). Si el procesador P1 ejecuta una instrucción de escritura (PrEscr) sobre dicho bloque, ¿qué transacción se emite al bus y en qué estado queda el bloque en P1 y en P2?',
+    options: [
+      {
+        text: 'Emite BusRdX; P1 pasa a M y P2 pasa a S.',
+        isCorrect: false,
+        explanation: 'Incorrecto: no puede quedar en S en P2, ya que P1 ha modificado el bloque en exclusiva.'
+      },
+      {
+        text: 'Emite BusUpgr; P1 pasa a M y P2 pasa a I (Invalid).',
+        isCorrect: true,
+        explanation: '¡Exacto! Como P1 ya posee los datos válidos en su caché, no necesita leer de nuevo los datos de memoria; solo necesita invalidar las demás copias emitiendo BusUpgr. P1 pasa a Modified (M) y P2 pasa a Invalid (I).'
+      },
+      {
+        text: 'Emite BusRd; P1 pasa a S y P2 pasa a I.',
+        isCorrect: false,
+        explanation: 'Falso: una escritura no emite BusRd ni mantiene el bloque en S.'
+      },
+      {
+        text: 'No emite nada al bus porque P1 ya tenía el bloque en caché.',
+        isCorrect: false,
+        explanation: 'Grave error: si no emitiera mensaje al bus, P2 seguiría leyendo el dato viejo, rompiendo la coherencia de memoria.'
+      }
+    ],
+    detailedStepByStepSolution: `1. Estado inicial: P1(S), P2(S). Ambos tienen copias de solo lectura idénticas a la memoria.
+2. Petición del procesador local: P1 recibe PrEscr (Processor Write).
+3. Transacción en el bus: Dado que P1 ya tiene el bloque en su caché, emitir BusRdX transferiría datos innecesarios. Se emite la optimización BusUpgr (Invalidate).
+4. Acción de P2: La controladora de caché de P2 "fisgonea" (snoops) el mensaje BusUpgr para el bloque B, e inmediatamente invalida su propia copia (transición S -> I).
+5. Estado final: P1 queda en estado M (Modified, propietario único y dirty); P2 queda en estado I (Invalid).`,
+    examTip: 'Distinguir entre BusRdX (trae datos y pide exclusividad desde estado I) y BusUpgr (solo pide exclusividad sin traer datos desde estado S).'
+  },
+
+  // ========================== ASO ==========================
+  {
     id: 'aso-q1-deadlock',
     subjectId: 'aso',
     courseYear: 'Examen Oficial ASO - Convocatoria Junio',
@@ -100,460 +138,421 @@ Total de burbujas insertadas = 1 ciclo.`,
         explanation: 'Falso. Existen procesos cuyas necesidades (Need) pueden ser satisfechas con los recursos disponibles.'
       },
       {
-        text: 'Sí es seguro. Secuencia válida: <P1, P3, P4, P0, P2>',
+        text: 'Es seguro. Una secuencia válida es <P1, P3, P4, P0, P2>.',
         isCorrect: true,
-        explanation: '¡Excelente! P1 necesita [1, 2, 2] <= [3, 3, 2]. P1 termina y libera sus recursos, Disponible pasa a [5, 3, 2]. Luego P3 necesita [0, 1, 1] <= [5, 3, 2], termina y libera, etc.'
+        explanation: '¡Correcto! Calculando Need = Max - Asignado:\nNeed(P1) = [1, 2, 2] <= [3, 3, 2] -> Ejecuta P1 y libera [2, 0, 0] -> Disp = [5, 3, 2].\nNeed(P3) = [0, 1, 1] <= [5, 3, 2] -> Ejecuta P3 y libera [2, 1, 1] -> Disp = [7, 4, 3].\nNeed(P4) = [4, 3, 1] <= [7, 4, 3] -> Ejecuta P4 y libera [0, 0, 2] -> Disp = [7, 4, 5].\nNeed(P0) = [7, 4, 3] <= [7, 4, 5] -> Ejecuta P0 y libera [0, 1, 0] -> Disp = [7, 5, 5].\nNeed(P2) = [6, 0, 0] <= [7, 5, 5] -> Ejecuta P2. Todos terminan.'
       },
       {
-        text: 'Sí es seguro. Secuencia válida: <P0, P1, P2, P3, P4>',
+        text: 'Es seguro, pero solo si la secuencia comienza estrictamente por P0.',
         isCorrect: false,
-        explanation: 'P0 no puede ejecutarse primero porque su Need es [7, 4, 3], que supera ampliamente el Disponible [3, 3, 2].'
+        explanation: 'Falso: P0 necesita [7, 4, 3] y actualmente solo hay [3, 3, 2] disponibles.'
       },
       {
-        text: 'No es seguro porque P2 y P0 piden demasiados recursos de tipo A.',
+        text: 'El estado es inseguro porque los recursos totales superan la memoria física.',
         isCorrect: false,
-        explanation: 'Confusión típica: que tengan un Máximo alto no importa si otros procesos pueden terminar primero y liberar sus recursos.'
+        explanation: 'Inconexo con el algoritmo del banquero.'
       }
     ],
-    detailedStepByStepSolution: `Matriz Need = Max - Allocation:
-Need(P0) = [7, 5, 3] - [0, 1, 0] = [7, 4, 3]
-Need(P1) = [3, 2, 2] - [2, 0, 0] = [1, 2, 2]
-Need(P2) = [9, 0, 2] - [3, 0, 2] = [6, 0, 0]
-Need(P3) = [2, 2, 2] - [2, 1, 1] = [0, 1, 1]
-Need(P4) = [4, 3, 3] - [0, 0, 2] = [4, 3, 1]
+    detailedStepByStepSolution: `Paso 1: Construir la matriz de Necesidad (Need = Max - Allocation):
+• Need(P0) = [7-0, 5-1, 3-0] = [7, 4, 3]
+• Need(P1) = [3-2, 2-0, 2-0] = [1, 2, 2]
+• Need(P2) = [9-3, 0-0, 2-2] = [6, 0, 0]
+• Need(P3) = [2-2, 2-1, 2-1] = [0, 1, 1]
+• Need(P4) = [4-0, 3-0, 3-2] = [4, 3, 1]
 
-Disponible inicial = [3, 3, 2]
-
-Ronda 1:
-¿Need(P1) [1, 2, 2] <= Disponible [3, 3, 2]? SÍ.
-P1 termina y libera: Disponible = [3, 3, 2] + [2, 0, 0] = [5, 3, 2].
-
-Ronda 2:
-¿Need(P3) [0, 1, 1] <= Disponible [5, 3, 2]? SÍ.
-P3 termina y libera: Disponible = [5, 3, 2] + [2, 1, 1] = [7, 4, 3].
-
-Ronda 3:
-¿Need(P4) [4, 3, 1] <= Disponible [7, 4, 3]? SÍ.
-P4 termina y libera: Disponible = [7, 4, 3] + [0, 0, 2] = [7, 4, 5].
-
-Ronda 4:
-¿Need(P0) [7, 4, 3] <= Disponible [7, 4, 5]? SÍ.
-P0 termina y libera: Disponible = [7, 4, 5] + [0, 1, 0] = [7, 5, 5].
-
-Ronda 5:
-¿Need(P2) [6, 0, 0] <= Disponible [7, 5, 5]? SÍ.
-P2 termina y todos los procesos finalizan. Secuencia segura: <P1, P3, P4, P0, P2>.`,
-    examTip: 'En el examen de ASO te pedirán escribir la matriz Need entera. Recuerda que Need = Max - Allocation. ¡Nunca uses Max directamente para comparar con Disponible!'
+Paso 2: Comparar con Disponible = [3, 3, 2]:
+• P1: Need(P1) = [1, 2, 2] <= [3, 3, 2] -> Sí.
+  Nuevo Disponible = [3, 3, 2] + Allocation(P1) = [3+2, 3+0, 2+0] = [5, 3, 2].
+• P3: Need(P3) = [0, 1, 1] <= [5, 3, 2] -> Sí.
+  Nuevo Disponible = [5, 3, 2] + Allocation(P3) = [5+2, 3+1, 2+1] = [7, 4, 3].
+• P4: Need(P4) = [4, 3, 1] <= [7, 4, 3] -> Sí.
+  Nuevo Disponible = [7+0, 4+0, 3+2] = [7, 4, 5].
+• P0: Need(P0) = [7, 4, 3] <= [7, 4, 5] -> Sí.
+  Nuevo Disponible = [7, 5, 5].
+• P2: Need(P2) = [6, 0, 0] <= [7, 5, 5] -> Sí.
+  Todos los procesos completan -> Estado SEGURO.`,
+    examTip: 'Recuerda que sumar la matriz de Asignación (Allocation) al vector Disponible al terminar cada proceso es la clave, ya que el proceso LIBERA los recursos que tenía retenidos.'
   },
+  {
+    id: 'aso-q2-ext2-inode-offset',
+    subjectId: 'aso',
+    courseYear: 'Examen Oficial ASO - Convocatoria Enero',
+    title: 'Resolución de Offset en Sistema de Ficheros Ext2/Ext3',
+    question: 'En un sistema de ficheros Ext3 con bloques lógicos de 4096 bytes y punteros de disco de 4 bytes, un nodo-i dispone de 10 punteros directos, 1 BSI, 1 BDI y 1 BTI. Si un proceso ejecuta lseek(fd, 4202496, SEEK_SET) y a continuación realiza una lectura de 1 byte, ¿a través de qué estructura se accede al bloque de datos y cuántas operaciones de E/S de bloques se realizan?',
+    options: [
+      {
+        text: 'A través del 6º bloque directo; 1 operación de E/S.',
+        isCorrect: false,
+        explanation: 'Falso: 10 bloques directos solo cubren 10 * 4096 = 40.960 bytes.'
+      },
+      {
+        text: 'A través del puntero 15 del BSI; 2 operaciones de E/S (BSI + bloque de datos).',
+        isCorrect: true,
+        explanation: '¡Correcto! Número de bloque = 4.202.496 / 4096 = 1026.\n10 bloques directos cubren de 0 a 9.\nPunteros por bloque = 4096 / 4 = 1024.\nEl BSI cubre desde el bloque 10 hasta el 10 + 1024 - 1 = 1033.\nComo 1026 está entre 10 y 1033, se encuentra en el BSI.\nÍndice en BSI = 1026 - 10 = 1016 (o puntero dentro del rango BSI). Requiere leer el bloque de metadatos BSI y luego el bloque de datos: 2 lecturas.'
+      },
+      {
+        text: 'A través del BDI; 3 operaciones de E/S.',
+        isCorrect: false,
+        explanation: 'Falso: el BDI solo se utiliza a partir del bloque lógico 1034.'
+      },
+      {
+        text: 'Provoca un error de límite de fichero (EFBIG).',
+        isCorrect: false,
+        explanation: 'Falso: el fichero soporta más de 4 TiB de capacidad.'
+      }
+    ],
+    detailedStepByStepSolution: `1. Calcular el tamaño de bloque: B = 4096 bytes.
+2. Calcular punteros por bloque: P = 4096 / 4 = 1024 punteros.
+3. Calcular el número de bloque lógico correspondiente al offset:
+   Bloque = 4.202.496 / 4096 = 1026.
+   Desplazamiento dentro del bloque = 4.202.496 % 4096 = 0 bytes.
+4. Identificar el tramo en el nodo-i:
+   - Bloques directos (10 punteros): Bloques 0 a 9. (Total 10 bloques = 40 KiB).
+   - Bloque Simplemente Indirecto BSI (1024 punteros): Bloques 10 a 1033. (Total 1024 bloques = 4 MiB).
+   Como 1026 pertenece al rango [10, 1033], el bloque reside en el BSI.
+5. Operaciones de lectura a disco:
+   - 1ª lectura: Traer a memoria el bloque BSI.
+   - 2ª lectura: Traer a memoria el bloque de datos indexado por el BSI.
+   Total = 2 lecturas de bloques de disco.`,
+    examTip: 'Ten siempre presente la fórmula del tramo: BSI cubre [10, 10 + P - 1]. BDI cubre [10 + P, 10 + P + P² - 1].'
+  },
+
+  // ========================== ALF ==========================
   {
     id: 'alf-q1-regular',
     subjectId: 'alf',
-    courseYear: 'Examen Oficial ALF - Parcial Tema 1 y 2',
-    title: 'Clasificación de Lenguajes y Lema del Bombeo',
-    question: 'Sea el lenguaje L = { a^n b^m c^(n+m) | n >= 1, m >= 1 }. ¿Cuál es la clasificación exacta de este lenguaje en la jerarquía de Chomsky?',
+    courseYear: 'Examen Oficial ALF - Convocatoria Enero',
+    title: 'Aplicación del Lema de Bombeo para Lenguajes Regulares',
+    question: 'Sea el lenguaje L = { 0^n 1^m 0^(n+m) | n >= 1, m >= 1 }. Para demostrar mediante el Lema de Bombeo que L NO es regular, ¿cuál es la elección adecuada de la cadena w perteneciente a L en función de la longitud de bombeo p?',
     options: [
       {
-        text: 'Lenguaje Regular (Tipo 3)',
+        text: 'w = 0^p 1 0^(p+1)',
         isCorrect: false,
-        explanation: 'Falso. Requiere recordar dos cantidades simultáneas (n y m) para emparejarlas con la suma en c^(n+m), lo cual excede la memoria finita de un AFD.'
+        explanation: 'Aunque pertenece a L, fijar m=1 no aprovecha la potencia general del lema y complica la justificación.'
       },
       {
-        text: 'Lenguaje Independiente del Contexto (Tipo 2), no regular',
+        text: 'w = 0^p 1^p 0^(2p)',
         isCorrect: true,
-        explanation: '¡Exacto! Se puede generar con una Gramática Libre de Contexto y reconocer con un Autómata con Pila. Cada vez que leemos "a", apilamos un símbolo; cada vez que leemos "b", apilamos otro. Luego desapilamos un símbolo por cada "c".'
+        explanation: '¡Excelente! Como |w| = 4p >= p, el lema establece que w = xyz con |xy| <= p y |y| > 0. Por tanto, y está compuesta exclusivamente de ceros del primer bloque (y = 0^k con k >= 1). Al bombear para i = 2 (xy^2z), la cadena tiene más ceros al principio pero el bloque final sigue teniendo 2p ceros, violando la igualdad n + m y demostrando la no regularidad.'
       },
       {
-        text: 'Lenguaje Sensible al Contexto (Tipo 1), no independiente del contexto',
+        text: 'w = 000 111 000000',
         isCorrect: false,
-        explanation: 'Error. No necesitas dos pilas ni cinta de Turing. Una única pila LIFO es suficiente porque los símbolos "c" se desapilan en orden inverso a la lectura de a y b.'
+        explanation: 'Error fatal: no puedes usar números fijos en el lema de bombeo, debe depender del parámetro p.'
       },
       {
-        text: 'Lenguaje No Recursivamente Enumerable (Tipo 0)',
+        text: 'w = (010)^p',
         isCorrect: false,
-        explanation: 'Completamente falso, es decidible y de baja complejidad sintáctica.'
+        explanation: 'Esa cadena ni siquiera pertenece al lenguaje L (no tiene la forma 0^n 1^m 0^(n+m)).'
       }
     ],
-    detailedStepByStepSolution: `1. Demostración de NO regularidad:
-Si aplicamos el Lema del Bombeo tomando w = a^k b^k c^(2k), al descomponer w = xyz con |xy| <= k, la porción bombeable 'y' está compuesta únicamente por 'a'. Al bombear y^2, aumentamos el número de 'a' pero la cantidad de 'c' permanece 2k, rompiendo la igualdad (n + m = número de c). Por tanto L no es regular.
-
-2. Demostración de que SÍ es Independiente del Contexto (GLC):
-Podemos reescribir L como: a^n b^m c^m c^n.
-Reglas de la gramática:
-S -> a S c | A
-A -> b A c | bc
-
-Esta gramática genera exactamente n letras 'a' al principio emparejadas con n letras 'c' al final, y en el interior m letras 'b' emparejadas con m letras 'c'. Al ser generable por una GLC, es de Tipo 2.`,
-    examTip: 'Truco visual para el examen: Si la igualdad se puede descomponer de forma anidada (como una cebolla a^n ... c^n), se puede resolver con UNA PILA (Libre de Contexto). Si se cruzan las dependencias (ej. a^n b^m a^n b^m o a^n b^n c^n), ya NO es libre de contexto.'
+    detailedStepByStepSolution: `1. Supongamos por reducción al absurdo que L es regular. Por el Lema de Bombeo, existe una constante p > 0.
+2. Elegimos la cadena w = 0^p 1^p 0^(2p) ∈ L. Su longitud es 4p >= p.
+3. Por el Lema, w se divide en xyz tal que:
+   - |xy| <= p
+   - |y| >= 1
+4. Dado que |xy| <= p, tanto x como y están contenidos enteramente en el primer prefijo de ceros (0^p). Por tanto, y = 0^k con 1 <= k <= p.
+5. Tomamos i = 2 (bombeo de la cadena: xy²z):
+   La cadena resultante tendrá p + k ceros iniciales, p unos, y 2p ceros finales.
+6. Para pertenecer a L, debería cumplirse que: (p + k) + p = 2p + k sea igual al número de ceros finales (2p).
+   Pero como k >= 1, 2p + k != 2p.
+7. Contradicción. Por tanto, L no es regular.`,
+    examTip: 'Recuerda: Si |xy| <= p, la subcadena y NUNCA puede contener unos si el primer bloque de ceros tiene longitud p.'
   },
+
+  // ========================== TDS ==========================
   {
     id: 'tds-q1-grasp-refactor',
     subjectId: 'tds',
-    courseYear: 'Examen Oficial TDS - Convocatoria Enero UMU',
-    title: 'Detección de Violaciones GRASP y Separación Modelo-Vista',
-    question: `En una aplicación de investigación universitaria, un botón de la interfaz Java Swing ejecuta el siguiente código:
-
-btnVerPublicaciones.addActionListener(e -> {
-    ArrayList<Grupo> grupos = CatalogoGrupos.INSTANCE.getGrupos();
-    Date d1 = dateChooser1.getDate();
-    Date d2 = dateChooser2.getDate();
-    for (Grupo g : grupos) {
-        for (Investigador inv : g.getInvestigadores()) {
-            for (Publicacion pub : inv.getPubs()) {
-                if (pub.getFecha().after(d1) && pub.getFecha().before(d2)) {
-                    textArea.append(pub.getTitulo() + "\\n");
-                }
-            }
-        }
-    }
-});
-
-¿Qué patrones GRASP y principios de diseño se están violando y cuál es la refactorización correcta según los criterios de corrección de la FIUM?`,
+    courseYear: 'Examen Oficial TDS - Convocatoria Junio',
+    title: 'Aplicación del Patrón GRASP Experto en Información',
+    question: 'En un sistema de comercio electrónico desarrollado en Java, una clase ControladorFacturacion contiene un método calcularTotalFactura(Factura f) que recorre la lista de Líneas de Factura de f, consulta los precios y calcula el IVA y el total final. ¿Qué principio o patrón de diseño se está violando y cómo debe corregirse?',
     options: [
       {
-        text: 'Se viola el patrón Singleton y el principio OCP; debe crearse una factoría de ventanas.',
+        text: 'Se viola el patrón Singleton; Factura debe ser un Singleton.',
         isCorrect: false,
-        explanation: 'Incorrecto. El uso de CatalogoGrupos.INSTANCE es correcto para acceso global; el problema reside en la asignación de responsabilidades de consulta y acoplamiento con la GUI.'
+        explanation: 'Completamente incorrecto: una factura es una entidad de dominio con múltiples instancias.'
       },
       {
-        text: 'Se viola el principio de Separación Modelo-Vista, el patrón Controlador, y el patrón Experto en Información (Information Expert).',
+        text: 'Se viola el patrón GRASP Experto en Información; la responsabilidad de calcular el total debe residir en la clase Factura.',
         isCorrect: true,
-        explanation: '¡Correcto! 1) Separación Modelo-Vista y Controlador: La interfaz gráfica interactúa directamente con el catálogo del dominio y realiza el algoritmo de búsqueda. 2) Experto en Información: La vista le extrae las colecciones internas a Grupo e Investigador (violando también la Ley de Demeter) en vez de delegar la consulta en quien tiene los datos: Grupo.getPublicaciones(d1, d2) -> Investigador.getPublicaciones(d1, d2) -> Publicacion.isPeriod(d1, d2).'
+        explanation: '¡Exacto! La clase Factura posee la colección de Líneas de Factura y sus impuestos asociados: es la Experta en la Información necesaria para realizar el cálculo. Colocar la lógica en el controlador genera bajo acoplamiento deficiente y un modelo de dominio anémico.'
       },
       {
-        text: 'Solo se viola el patrón Creador, porque el botón debería instanciar directamente los objetos Publicacion.',
+        text: 'Se viola el patrón Adapter; se debe crear un adaptador entre la GUI y la Base de Datos.',
         isCorrect: false,
-        explanation: 'Falso. El botón no debe instanciar ni manipular publicaciones del modelo.'
+        explanation: 'El problema no es de incompatibilidad de interfaces, sino de asignación de responsabilidades de negocio.'
       },
       {
-        text: 'No se viola ningún patrón porque el código compila y muestra correctamente el texto en el JTextArea.',
+        text: 'No se viola ningún patrón; es la forma estándar de programar en tres capas.',
         isCorrect: false,
-        explanation: 'Grave error en TDS: Que funcione no significa que esté bien diseñado. Este código recibe 0 puntos en la corrección oficial.'
+        explanation: 'Falso: convertir las entidades en meros sacos de datos (getters/setters) rompe el encapsulamiento orientado a objetos.'
       }
     ],
-    detailedStepByStepSolution: `Solución Oficial FIUM (Paso a paso):
-Paso 1: Identificación de Violaciones:
-• Separación Modelo-Vista: La clase GUI 'VentanaPublicaciones' contiene lógica de negocio y procesamiento de fechas del dominio.
-• Controlador: Falta una clase intermediaria (ej. 'ControladorInvestigacion') que actúe como fachada para recibir la petición del evento.
-• Experto en Información (Information Expert): El cliente navega por toda la estructura de objetos (Grupo -> Investigador -> Publicacion). La responsabilidad de filtrar debe residir en la clase que contiene la información.
-
-Paso 2: Código Refactorizado:
-1. En la Ventana (GUI):
-   btnVerPublicaciones.addActionListener(e -> {
-       List<Publicacion> pubs = controlador.getPublicaciones(d1, d2);
-       pubs.forEach(p -> textArea.append(p.getTitulo() + "\\n"));
-   });
-
-2. En Grupo:
-   public List<Publicacion> getPublicaciones(Date d1, Date d2) {
-       List<Publicacion> res = new ArrayList<>();
-       for (Investigador inv : investigadores) res.addAll(inv.getPublicaciones(d1, d2));
-       return res;
-   }
-
-3. En Investigador:
-   public List<Publicacion> getPublicaciones(Date d1, Date d2) {
-       return pubs.stream().filter(p -> p.isPeriod(d1, d2)).collect(toList());
-   }
-
-4. En Publicacion:
-   public boolean isPeriod(Date d1, Date d2) {
-       return fecha.after(d1) && fecha.before(d2);
-   }`,
-    examTip: 'Para sacar un 10: En los exámenes de TDS de la FIUM, cuando veas bucles for anidados en un ActionListener pidiendo getters de colecciones ajenas (getGrupos().getInvs().getPubs()), SIEMPRE la respuesta es: violación de Experto en Información y Ley de Demeter (No hables con extraños).'
+    detailedStepByStepSolution: `1. Diagnóstico del Code Smell: El ControladorFacturacion está asumiendo lógica de negocio y cálculo que no le corresponde, actuando como una "God Class" o clase controladora inflada.
+2. Identificación de la Información: Para calcular el total se necesitan las líneas de factura, sus cantidades, precios unitarios y tipo de IVA.
+3. Evaluación de GRASP:
+   - Patrón Experto en Información: "Asignar la responsabilidad a la clase que tiene la información necesaria para realizarla".
+   - La clase Factura tiene la lista de Líneas y la clase LineaFactura tiene la cantidad y el precio del producto.
+4. Solución Refactorizada:
+   - Factura.getTotal() itera sobre sus lineas invocando linea.getSubtotal().
+   - El controlador se limita a invocar factura.getTotal().`,
+    examTip: 'En los ejercicios de diseño de TDS, mover la lógica a la clase que tiene los datos no solo satisface el patrón Experto, sino que aumenta la Alta Cohesión y reduce el Acoplamiento.'
   },
-  {
-    id: 'aoc-q2-tomasulo',
-    subjectId: 'aoc',
-    courseYear: 'Examen Oficial AOC - Convocatoria Junio UMU',
-    title: 'Superescalar con Algoritmo de Tomasulo y Reorder Buffer (ROB)',
-    question: 'En un procesador superescalar que implementa el algoritmo de Tomasulo con un Reorder Buffer (ROB) para permitir ejecución fuera de orden y confirmación en orden, ¿cómo se resuelven las dependencias WAR (Write After Read) y WAW (Write After Write)?',
-    options: [
-      {
-        text: 'Introduciendo paradas obligatorias (stalls) en la etapa de Issue hasta que la instrucción anterior lee el operando.',
-        isCorrect: false,
-        explanation: 'Falso. Las paradas en orden eran del MIPS segmentado clásico. Tomasulo fue diseñado precisamente para no detenerse ante dependencias de nombre.'
-      },
-      {
-        text: 'Mediante el renombramiento dinámico de registros, asignando las entradas del ROB o de las Estaciones de Reserva como destinos temporales de los resultados.',
-        isCorrect: true,
-        explanation: '¡Correcto! Las falsas dependencias (WAR y WAW) surgen únicamente por escasez de nombres en el banco de registros lógicos ($t0-$t9). Al renombrar cada escritura con la etiqueta del ROB (ej. rob1, rob2), cada valor tiene su propia ubicación física y los lectores leen la versión exacta que necesitan, eliminando por completo WAR y WAW.'
-      },
-      {
-        text: 'Utilizando el bus de direcciones para invalidar las líneas de caché L1.',
-        isCorrect: false,
-        explanation: 'Eso pertenece a los protocolos de coherencia de caché, no a la eliminación de riesgos en el pipeline de la CPU.'
-      },
-      {
-        text: 'Reordenando las instrucciones exclusivamente en tiempo de compilación mediante el compilador GCC.',
-        isCorrect: false,
-        explanation: 'Falso. Tomasulo es planificación DINÁMICA en hardware durante la ejecución, no estática en software.'
-      }
-    ],
-    detailedStepByStepSolution: `1. Definición del problema:
-- WAR (antidependencia): j quiere escribir en R1 después de que i lea R1.
-- WAW (dependencia de salida): j quiere escribir en R1 después de que i escriba en R1.
 
-2. Solución en Tomasulo + ROB:
-- Cuando la instrucción i entra en Issue, se le asigna una entrada rob_i.
-- Cuando j entra en Issue y escribe en R1, la tabla RAT (Register Alias Table) actualiza el puntero de R1 a rob_j.
-- Cualquier instrucción posterior k que lea R1 buscará el valor en rob_j (o esperará a que termine j).
-- La instrucción previa i que leía R1 lee su copia desde el banco de registros o desde rob_i sin verse afectada por la escritura de j.
-- Por tanto, las dependencias de nombre WAR y WAW desaparecen por completo. Solo persisten las dependencias verdaderas (RAW).`,
-    examTip: 'Regla de oro de AOC: "El renombramiento de registros destruye las falsas dependencias WAR y WAW; el Reorder Buffer (ROB) garantiza excepciones precisas al forzar que la confirmación (Commit) sea estrictamente en orden".'
-  },
+  // ========================== ISO (Convocatorias 2026 UMU) ==========================
   {
-    id: 'iso-q-inode-size',
+    id: 'iso-q1-dynamic-priority-aging',
     subjectId: 'iso',
-    courseYear: 'Examen Oficial ISO - Convocatoria Enero UMU',
-    title: 'Cálculo de Capacidad Máxima de un Fichero con Inodos',
-    question: 'En un sistema operativo tipo UNIX, el tamaño de bloque del disco es de 4 KB (4096 bytes) y los punteros a bloque ocupan 4 bytes. Cada inodo dispone de 12 punteros directos, 1 puntero indirecto simple, 1 puntero indirecto doble y 1 puntero indirecto triple. ¿Cuál es el tamaño máximo teórico de un fichero que puede representarse mediante este inodo?',
+    courseYear: 'Examen Oficial ISO - Convocatoria Junio 2026',
+    title: 'Planificación por Prioridades Dinámicas con Envejecimiento (Aging)',
+    question: 'Supón un esquema de planificación con prioridades dinámicas (a mayor número, mayor prioridad) en el que, para evitar la inanición, se aumenta en 1 la prioridad de un proceso cada tic completo que pasa en la cola de listos. En caso de empate, continúa en CPU el que ya la tiene.\n\nAl comienzo del tic t se empieza a ejecutar P (prioridad inicial 2, ráfagas: 3 CPU, 1 E/S, 1 CPU). Justo antes del tic t+1 se inserta en listos Q (prioridad inicial 4, ráfagas: 2 CPU, 1 E/S, 2 CPU).\n\n¿Bajo qué condición el tiempo medio de retorno de ambos procesos será exactamente 7?',
     options: [
       {
-        text: 'Aproximadamente 4 TB (4 TiB)',
+        text: 'Si la planificación por prioridades es APROPIATIVA.',
         isCorrect: true,
-        explanation: '¡Correcto! Punteros por bloque = 4096 / 4 = 1024 (2^10). Bloques direccionables: 12 (directos) + 1024 (ind1) + 1024^2 (ind2) + 1024^3 (ind3) ≈ 2^30 bloques. 2^30 bloques * 4096 bytes (2^12 bytes) = 2^42 bytes = 4 TB (4 TiB).'
+        explanation: '¡Exacto! Según la solución oficial de junio 2026: si es apropiativa, en t+1 el proceso Q tiene prioridad 4 frente a P que tiene prioridad 2. Q expulsa a P. El tiempo de retorno de P es 8 y el de Q es 6: Media = (8 + 6) / 2 = 7 tics. Si fuera no apropiativa, la media sería de 6.5 tics.'
       },
       {
-        text: 'Aproximadamente 4 GB',
+        text: 'Si la planificación por prioridades es NO APROPIATIVA.',
         isCorrect: false,
-        explanation: 'Falso. Solo el puntero indirecto doble ya permite direccionar 1024 * 1024 * 4 KB = 4 GB. El indirecto triple eleva la capacidad al rango de los Terabytes.'
+        explanation: 'Falso: si es no apropiativa, P no es expulsado en t+1 y el tiempo medio de retorno resultante es (6 + 7) / 2 = 6.5 tics.'
       },
       {
-        text: 'Exactamente 16 MB',
+        text: 'Solo si el quantum de Round Robin es igual a 1.',
         isCorrect: false,
-        explanation: 'Completamente insuficiente. Con bloques de 4 KB la capacidad es de orden de Terabytes.'
+        explanation: 'Inconexo: el algoritmo evaluado no es Round Robin sino prioridades con envejecimiento.'
       },
       {
-        text: 'No hay límite, depende únicamente del tamaño del disco físico.',
+        text: 'Bajo ninguna circunstancia, el tiempo medio de retorno es siempre 8.',
         isCorrect: false,
-        explanation: 'Falso. La estructura del inodo impone un límite matemático estricto según la cantidad de niveles de indirección.'
+        explanation: 'Falso: el cálculo detallado del cronograma demuestra que con apropiación da exactamente 7.'
       }
     ],
-    detailedStepByStepSolution: `Desglose paso a paso oficial de la FIUM:
-1. Punteros direccionables por bloque de indirección:
-   N_punteros = Tamaño Bloque / Tamaño Puntero = 4096 B / 4 B = 1024 punteros = 2^10.
+    detailedStepByStepSolution: `Análisis ciclo a ciclo (Caso Apropiativo):
+• Tic t: P se ejecuta (Prioridad 2).
+• Tic t+1: Llega Q (Prioridad 4). Como es apropiativa y 4 > 2, Q expulsa a P. Q ejecuta (rafaga 1/2). P pasa a listos.
+• Tic t+2: Q ejecuta su 2ª ráfaga de CPU y pasa a E/S. P pasa de prioridad 2 a 3 por envejecimiento (1 tic en listos).
+• Tic t+3: Q está bloqueado en E/S. P toma la CPU con prioridad 3 (ejecuta su 2ª ráfaga).
+• Tic t+4: P ejecuta su 3ª ráfaga de CPU y pasa a E/S. Q termina su E/S y pasa a listos.
+• Tic t+5: P en E/S. Q toma la CPU.
+• Tic t+6: Q termina su 2ª ráfaga de CPU y FINALIZA en t+6. T_retorno(Q) = 6.
+• Tic t+7: P toma la CPU para su última ráfaga y FINALIZA en t+8. T_retorno(P) = 8.
 
-2. Bloques accesibles por cada nivel:
-   - Directos (12): 12 bloques.
-   - Indirecto Simple (1): 1 * 1024 = 1024 bloques.
-   - Indirecto Doble (1): 1 * 1024 * 1024 = 1.048.576 bloques (2^20).
-   - Indirecto Triple (1): 1 * 1024 * 1024 * 1024 = 1.073.741.824 bloques (2^30).
-
-3. Total de bloques direccionables:
-   Total = 12 + 2^10 + 2^20 + 2^30 ≈ 2^30 bloques (el término 2^30 domina totalmente).
-
-4. Capacidad máxima en bytes:
-   Capacidad = 2^30 bloques * 2^12 bytes/bloque = 2^42 bytes = 4.398.046.511.104 bytes = 4 TB (o 4.004 TiB sumando los niveles inferiores).`,
-    examTip: 'Ojo con las unidades en ISO: 2^10 = 1 KB, 2^20 = 1 MB, 2^30 = 1 GB, 2^40 = 1 TB. Si te dan bloques de 2 KB y punteros de 4 bytes, N_punteros será 512 (2^9).'
+Tiempo Medio de Retorno = (8 + 6) / 2 = 7 tics.`,
+    examTip: 'Pregunta real del examen de mayo/junio 2026 de Javier Cuenca en la UMU. ¡Recuerda siempre trazar la tabla t, t+1, t+2 con estados E (ejecución), L (listo) y B (bloqueado)!'
   },
   {
-    id: 'ac-q-entropy-gain',
+    id: 'iso-q2-inode-bitmap-blocks',
+    subjectId: 'iso',
+    courseYear: 'Examen Oficial ISO - Convocatoria Junio 2026',
+    title: 'Cálculo de Bloques de Mapa de Bits y Nodos-i',
+    question: 'En un sistema de ficheros UNIX estándar se dedican un total de 15.375 bloques lógicos para almacenar conjuntamente el mapa de bits de nodos-i y la tabla de nodos-i. Una configuración posible para que el mapa de bits ocupe exactamente 15 bloques lógicos es que:',
+    options: [
+      {
+        text: 'Los nodos-i sean de 128 bytes y los bloques lógicos de 4.096 bytes.',
+        isCorrect: true,
+        explanation: '¡Correcto! Solución oficial de 2026: Con bloques de 4096 bytes y 15 bloques de mapa de bits, se gestionan: 15 * (4096 * 8) = 491.520 nodos-i. La tabla de nodos-i ocupa 15.375 - 15 = 15.360 bloques. El tamaño de cada nodo-i es: (15.360 * 4096) / 491.520 = 128 bytes.'
+      },
+      {
+        text: 'Los nodos-i sean de 256 bytes y los bloques lógicos de 1.024 bytes.',
+        isCorrect: false,
+        explanation: 'Falso: no cuadran las ecuaciones entre el mapa de bits y los bloques restantes de la tabla.'
+      },
+      {
+        text: 'Los nodos-i sean de 64 bytes y los bloques de 2.048 bytes.',
+        isCorrect: false,
+        explanation: 'Falso: produciría una discrepancia en el número total de inodos direccionables.'
+      },
+      {
+        text: 'El sistema no puede albergar más de 10.000 nodos-i.',
+        isCorrect: false,
+        explanation: 'Falso: alberga casi medio millón de nodos-i.'
+      }
+    ],
+    detailedStepByStepSolution: `1. Si el mapa de bits ocupa 15 bloques y cada bloque mide B bytes:
+   Número de bits = 15 × (B × 8 bits/byte) = 120 × B bits = Número de nodos-i (I).
+2. Para B = 4096 bytes:
+   I = 15 × (4096 × 8) = 491.520 nodos-i.
+3. Bloques asignados a la tabla de nodos-i:
+   Bloques_Tabla = 15.375 - 15 = 15.360 bloques.
+4. Comprobación del tamaño del nodo-i (T_nodo):
+   Bytes totales de la tabla = 15.360 × 4096 = 62.914.560 bytes.
+   T_nodo = 62.914.560 / 491.520 = 128 bytes exactos.`,
+    examTip: 'Cada bloque de mapa de bits contiene B * 8 bits. ¡Nunca olvides el factor 8 de bits por byte!'
+  },
+
+  // ========================== AC ==========================
+  {
+    id: 'ac-q1-entropy-gain',
     subjectId: 'ac',
-    courseYear: 'Examen Oficial AC - Convocatoria Junio UMU',
-    title: 'Ganancia de Información en Árboles de Decisión (ID3)',
-    question: 'En un problema de clasificación binaria con 14 ejemplos (9 Positivos, 5 Negativos), la entropía del conjunto global es H(S) = 0.940 bits. Evaluamos el atributo "Viento", que toma valores {Débil, Fuerte}. La rama "Débil" tiene 8 ejemplos (6+, 2-) y la rama "Fuerte" tiene 6 ejemplos (3+, 3-). Sabiendo que H(Débil) = 0.811 bits y H(Fuerte) = 1.000 bit, ¿cuál es la Ganancia de Información IG(S, Viento)?',
+    courseYear: 'Examen Oficial AC - Convocatoria Enero',
+    title: 'Cálculo de Entropía y Ganancia de Información en Árboles',
+    question: 'En un conjunto de datos con 14 instancias, 9 pertenecen a la clase Positiva (+) y 5 a la clase Negativa (-). Su entropía inicial es H(S) = 0.940 bits. Si evaluamos un atributo "Viento" que divide los datos en:\n- Viento Débil (8 instancias: 6+, 2-)\n- Viento Fuerte (6 instancias: 3+, 3-)\n¿Cuál es la Ganancia de Información Gain(S, Viento)?',
     options: [
       {
-        text: 'IG(S, Viento) = 0.048 bits',
+        text: '0.048 bits',
         isCorrect: true,
-        explanation: '¡Exacto! IG = H(S) - [(8/14) * 0.811 + (6/14) * 1.000] = 0.940 - [0.463 + 0.429] = 0.940 - 0.892 = 0.048 bits.'
+        explanation: '¡Correcto! H(Débil) = -6/8 log2(6/8) - 2/8 log2(2/8) = 0.811 bits.\nH(Fuerte) = -3/6 log2(3/6) - 3/6 log2(3/6) = 1.000 bit.\nResto(S, Viento) = (8/14) * 0.811 + (6/14) * 1.000 = 0.463 + 0.429 = 0.892 bits.\nGain(S, Viento) = 0.940 - 0.892 = 0.048 bits.'
       },
       {
-        text: 'IG(S, Viento) = 0.892 bits',
+        text: '0.129 bits',
         isCorrect: false,
-        explanation: 'Ese es el valor de la entropía residual esperada ponderada, no la ganancia. Hay que restárselo a H(S).'
+        explanation: 'Error en la ponderación por el número de instancias de cada rama.'
       },
       {
-        text: 'IG(S, Viento) = 0.500 bits',
+        text: '0.500 bits',
         isCorrect: false,
-        explanation: 'Cálculo erróneo de la media simple sin ponderar por la proporción de ejemplos.'
+        explanation: 'Error al no restar la entropía residual de la entropía del nodo padre.'
       },
       {
-        text: 'IG(S, Viento) = 0.000 bits',
+        text: '0.940 bits',
         isCorrect: false,
-        explanation: 'Falso, sí existe una reducción de impureza con respecto al estado inicial.'
+        explanation: 'Esa es la entropía del nodo padre, no la ganancia.'
       }
     ],
-    detailedStepByStepSolution: `Paso a paso oficial:
-1. Fórmula de Ganancia:
-   IG(S, A) = H(S) - sum_{v} (|S_v| / |S|) * H(S_v)
+    detailedStepByStepSolution: `Paso 1: Calcular la entropía de cada subconjunto:
+• Rama Débil (8 muestras: 6+, 2-):
+  p+ = 6/8 = 0.75; p- = 2/8 = 0.25.
+  H(Débil) = -(0.75 × log2(0.75) + 0.25 × log2(0.25)) = -(0.75 × (-0.415) + 0.25 × (-2)) = 0.311 + 0.500 = 0.811 bits.
+• Rama Fuerte (6 muestras: 3+, 3-):
+  Equiprobable -> H(Fuerte) = 1.000 bit.
 
-2. Sustitución de valores:
-   - |S| = 14
-   - |S_Débil| = 8 -> Proporción: 8 / 14 = 0.5714
-   - |S_Fuerte| = 6 -> Proporción: 6 / 14 = 0.4286
+Paso 2: Calcular el Resto ponderado:
+Resto = (8/14) × 0.811 + (6/14) × 1.000 = 0.4634 + 0.4286 = 0.8920 bits.
 
-3. Entropía condicional ponderada:
-   H(S|Viento) = (8/14) * 0.811 + (6/14) * 1.000
-   H(S|Viento) = 0.4634 + 0.4286 = 0.8920 bits.
-
-4. Ganancia de información final:
-   IG(S, Viento) = 0.940 - 0.892 = 0.048 bits.`,
-    examTip: 'Para el 10 en AC: El algoritmo ID3 calcula esta ganancia para TODOS los atributos disponibles y elige como raíz del árbol aquel que produzca la MAYOR ganancia de información.'
+Paso 3: Calcular la Ganancia:
+Gain(S, Viento) = H(S) - Resto = 0.940 - 0.892 = 0.048 bits.`,
+    examTip: 'ID3 del dataset PlayTennis de Quinlan. Recuerda que si una rama está balanceada al 50/50, su entropía es exactamente 1.0.'
   },
+
+  // ========================== AR ==========================
   {
-    id: 'ar-q-vlsm-subnets',
+    id: 'ar-q1-vlsm-subnets',
     subjectId: 'ar',
-    courseYear: 'Examen Oficial AR - Convocatoria Enero UMU',
-    title: 'Diseño de Subredes con Máscara de Longitud Variable (VLSM)',
-    question: 'Se dispone del bloque IPv4 192.168.10.0/24. Se necesita asignar la primera subred para dar soporte a una LAN con 100 ordenadores. ¿Cuál es la dirección de subred, la máscara en notación decimal punteada y la dirección de broadcast de esta primera subred?',
+    courseYear: 'Examen Oficial AR - Convocatoria Junio',
+    title: 'Diseño de Subredes VLSM con Prefijo de Red',
+    question: 'A partir del bloque de red IPv4 192.168.10.0/24, se necesita configurar una subred que albergue exactamente 55 hosts útiles para la Facultad de Informática. ¿Cuál es la máscara de subred en notación decimal punteada y cuál es la dirección de difusión (broadcast) asignada?',
     options: [
       {
-        text: 'Subred: 192.168.10.0/25 | Máscara: 255.255.255.128 | Broadcast: 192.168.10.127',
+        text: 'Máscara: 255.255.255.192 (/26); Broadcast: 192.168.10.63',
         isCorrect: true,
-        explanation: '¡Correcto! Para 100 ordenadores necesitamos al menos 100 + 2 = 102 direcciones. La potencia de 2 más cercana es 2^7 = 128 (7 bits de host). Por tanto, la máscara es 32 - 7 = /25 (255.255.255.128). La subred va de .0 a .127, siendo .0 la red y .127 el broadcast (rango útil .1 a .126 = 126 hosts).'
+        explanation: '¡Excelente! Para 55 hosts útiles: 2^h - 2 >= 55 -> h = 6 bits de host (2^6 - 2 = 62 hosts útiles). Máscara = 32 - 6 = /26 = 255.255.255.192. La subred va de 192.168.10.0 a 192.168.10.63, siendo .63 el broadcast.'
       },
       {
-        text: 'Subred: 192.168.10.0/26 | Máscara: 255.255.255.192 | Broadcast: 192.168.10.63',
+        text: 'Máscara: 255.255.255.128 (/25); Broadcast: 192.168.10.127',
         isCorrect: false,
-        explanation: 'Un /26 solo proporciona 2^6 - 2 = 62 hosts utilizables, insuficiente para 100 ordenadores.'
+        explanation: 'Desperdicio de direcciones: /25 aloja hasta 126 hosts cuando con /26 caben perfectamente 62.'
       },
       {
-        text: 'Subred: 192.168.10.0/24 | Máscara: 255.255.255.0 | Broadcast: 192.168.10.255',
+        text: 'Máscara: 255.255.255.224 (/27); Broadcast: 192.168.10.31',
         isCorrect: false,
-        explanation: 'Asignar todo el bloque /24 desperdicia 154 direcciones y no permite crear más subredes (no cumple el principio de VLSM).'
+        explanation: 'Error grave: /27 solo admite 2^5 - 2 = 30 hosts útiles, insuficiente para los 55 requeridos.'
       },
       {
-        text: 'Subred: 192.168.10.1/25 | Máscara: 255.255.255.128 | Broadcast: 192.168.10.128',
+        text: 'Máscara: 255.255.255.0 (/24); Broadcast: 192.168.10.255',
         isCorrect: false,
-        explanation: 'Las direcciones de subred y broadcast deben tener los bits de host a todos 0 y todos 1 respectivamente.'
+        explanation: 'Esa es la red original sin subredes divididas.'
       }
     ],
-    detailedStepByStepSolution: `Algoritmo VLSM aplicado en la FIUM:
-1. Requisito: N_hosts = 100.
-2. Fórmula: 2^H - 2 >= N_hosts -> 2^H >= 102.
-3. Para H = 6: 2^6 = 64 < 102 (Insuficiente).
-   Para H = 7: 2^7 = 128 >= 102 (Válido).
-4. Prefijo CIDR: 32 - H = 32 - 7 = /25.
-5. Máscara decimal: 255.255.255.128 (11111111.11111111.11111111.10000000).
-6. Rango de la subred:
+    detailedStepByStepSolution: `1. Requerimiento: H = 55 hosts.
+2. Calcular bits de host h:
+   2^5 - 2 = 30 < 55 (Insuficiente).
+   2^6 - 2 = 62 >= 55 (Suficiente y óptimo). Por tanto h = 6 bits.
+3. Longitud de prefijo CIDR: 32 - 6 = /26.
+4. Máscara decimal punteada:
+   11111111.11111111.11111111.11000000 = 255.255.255.192.
+5. Rango de la subred:
    - Dirección de Red: 192.168.10.0
-   - Primera IP útil: 192.168.10.1
-   - Última IP útil: 192.168.10.126
-   - Dirección de Broadcast: 192.168.10.127.`,
-    examTip: 'En exámenes de AR: Siempre ordena las peticiones de subred de MAYOR a MENOR número de hosts para evitar solapamientos y fragmentación del espacio de direccionamiento.'
+   - Primer host útil: 192.168.10.1
+   - Último host útil: 192.168.10.62
+   - Dirección de Broadcast: 192.168.10.63`,
+    examTip: 'Comprueba siempre que 2^h - 2 cubra los hosts pedidos. ¡No olvides el -2 de red y broadcast!'
   },
+
+  // ========================== ST ==========================
   {
-    id: 'st-q-rsa-calc',
+    id: 'st-q1-rsa-calculation',
     subjectId: 'st',
-    courseYear: 'Examen Oficial ST - Convocatoria Junio UMU',
-    title: 'Cálculo de Clave Privada y Descifrado en RSA',
-    question: 'En el algoritmo criptográfico RSA, se eligen los números primos p = 5 y q = 11, y el exponente público e = 3. ¿Cuál es el exponente privado d que forma la clave privada (d, n)?',
+    courseYear: 'Examen Oficial ST - Convocatoria Junio',
+    title: 'Cálculo de Par de Claves y Cifrado RSA',
+    question: 'En el sistema RSA, un usuario elige los números primos p = 5 y q = 11, y escoge el exponente público e = 3. Si desea cifrar el mensaje numérico M = 8, ¿cuál es el valor de la clave privada d y cuál es el criptograma C resultante?',
     options: [
       {
-        text: 'd = 27 (porque 3 * 27 = 81 ≡ 1 mod 40)',
+        text: 'd = 27; C = 17',
         isCorrect: true,
-        explanation: '¡Correcto! n = 5 * 11 = 55. phi(n) = (5 - 1) * (11 - 1) = 4 * 10 = 40. Buscamos d tal que (e * d) mod 40 = 1. Con d = 27: 3 * 27 = 81 = (2 * 40) + 1 ≡ 1 (mod 40).'
+        explanation: '¡Impecable! n = 5 * 11 = 55; phi(n) = (5-1) * (11-1) = 4 * 10 = 40. d * 3 = 1 mod 40 -> 27 * 3 = 81 = 2 * 40 + 1 (d = 27). C = 8^3 mod 55 = 512 mod 55. 512 = 9 * 55 + 17 -> C = 17.'
       },
       {
-        text: 'd = 7',
+        text: 'd = 7; C = 12',
         isCorrect: false,
-        explanation: '3 * 7 = 21 ≡ 1 (mod 20), pero phi(n) es 40, no 20.'
+        explanation: 'Error al calcular el inverso modular d: 7 * 3 = 21 != 1 mod 40.'
       },
       {
-        text: 'd = 13',
+        text: 'd = 13; C = 8',
         isCorrect: false,
-        explanation: '3 * 13 = 39 ≡ -1 (mod 40), no 1.'
+        explanation: 'Error en el cálculo de phi(n) o del criptograma.'
       },
       {
-        text: 'd = 3',
+        text: 'd = 3; C = 35',
         isCorrect: false,
-        explanation: 'e y d no pueden ser iguales en este módulo.'
+        explanation: 'e y d no pueden ser iguales en este escenario.'
       }
     ],
-    detailedStepByStepSolution: `Paso a paso mediante el Algoritmo Extendido de Euclides:
-1. n = p * q = 5 * 11 = 55.
-2. phi(n) = (p - 1) * (q - 1) = 4 * 10 = 40.
-3. Condición: (e * d) ≡ 1 (mod 40) -> 3d - 40k = 1.
-4. Probando múltiplos de 40 más 1:
-   - 40 * 0 + 1 = 1 (no divisible por 3).
-   - 40 * 1 + 1 = 41 (no divisible por 3).
-   - 40 * 2 + 1 = 81 -> 81 / 3 = 27.
-5. d = 27. Clave Privada = (27, 55).`,
-    examTip: 'Para el examen de ST: Verifica siempre que el MCD(e, phi(n)) = 1 antes de calcular d; si comparten factores, no existe inverso modular.'
+    detailedStepByStepSolution: `Paso 1: Módulo y función phi de Euler:
+• n = p × q = 5 × 11 = 55.
+• φ(n) = (p - 1) × (q - 1) = 4 × 10 = 40.
+
+Paso 2: Exponente público e:
+• e = 3. Comprobación de coprimalidad: mcd(3, 40) = 1 (Válido).
+
+Paso 3: Clave privada d (inverso modular de e mod 40):
+• Buscamos d tal que (d × 3) mod 40 = 1.
+• Probando múltiplos: 40 × 2 + 1 = 81. 81 / 3 = 27. Por tanto d = 27.
+
+Paso 4: Cifrado del mensaje M = 8:
+• C = M^e mod n = 8^3 mod 55 = 512 mod 55.
+• 512 / 55 = 9.309... -> 9 × 55 = 495.
+• 512 - 495 = 17.
+• Criptograma C = 17.`,
+    examTip: 'Problema idéntico al ejercicio oficial 1 del Boletín del Tema 7 de Seguridad de Servicios Telemáticos.'
   },
+
+  // ========================== SI ==========================
   {
-    id: 'si-q-astar-admissibility',
+    id: 'si-q1-astar-admissibility',
     subjectId: 'si',
-    courseYear: 'Examen Oficial SI - Convocatoria Enero UMU',
-    title: 'Condición de Parada y Optimalidad del Algoritmo A*',
-    question: 'En un espacio de búsqueda resuelto mediante el algoritmo A* con una heurística admisible y consistente, se genera un nodo hijo que corresponde al estado meta G. ¿Qué debe hacer el algoritmo A* en ese instante?',
+    courseYear: 'Examen Oficial SI - Convocatoria Enero',
+    title: 'Condición de Admisibilidad y Monotonía de Heurísticas en A*',
+    question: 'En un problema de búsqueda en espacio de estados resuelto mediante el algoritmo A* en grafo con función de evaluación f(n) = g(n) + h(n), ¿qué condición matemática garantiza que nunca sea necesario reabrir un nodo que ya se encuentra en la lista de Cerrados?',
     options: [
       {
-        text: 'Insertar G en la lista de Abiertos (cola de prioridad) y continuar; solo terminar cuando G sea EXTRAÍDO de Abiertos.',
+        text: 'Que la heurística h(n) sea Monótona (Consistente): h(n) <= c(n, a, n\') + h(n\').',
         isCorrect: true,
-        explanation: '¡Regla de oro de A*! Encontrar o generar el nodo meta NO garantiza que sea el camino óptimo, ya que puede existir otro nodo en Abiertos con menor f(n) cuyo camino al meta sea más corto. Solo cuando el meta está en la cima y se EXTRAE, se garantiza la optimalidad.'
+        explanation: '¡Exacto! La consistencia (o monotonía) exige que la heurística cumpla la desigualdad triangular respecto al coste del paso c(n, a, n\'). Esto garantiza que los valores f(n) crecen de forma no decreciente a lo largo de cualquier camino y que la primera vez que un nodo se extrae hacia Cerrados ya se ha alcanzado por su camino óptimo.'
       },
       {
-        text: 'Detener inmediatamente la búsqueda y devolver el camino encontrado hasta G.',
+        text: 'Que la heurística h(n) sea mayor que el coste real h*(n).',
         isCorrect: false,
-        explanation: '¡La trampa más común de SI! Detenerse al generar el nodo meta rompe la garantía de optimalidad de A*.'
+        explanation: 'Falso: eso violaría la admisibilidad y perdería la garantía de optimalidad.'
       },
       {
-        text: 'Eliminar todos los nodos de la lista de Cerrados y reiniciar la búsqueda.',
+        text: 'Que la lista de Abiertos esté ordenada exclusivamente por g(n).',
         isCorrect: false,
-        explanation: 'Completamente absurdo y contrario al algoritmo.'
+        explanation: 'Eso sería el algoritmo de Dijkstra / Coste Uniforme, no A*.'
       },
       {
-        text: 'Cambiar la heurística h(n) a 0 para forzar la convergencia.',
+        text: 'Que el factor de ramificación del grafo sea menor o igual a 2.',
         isCorrect: false,
-        explanation: 'No tiene sentido modificar la heurística a mitad de la búsqueda.'
+        explanation: 'Inconexo con las garantías de reapertura de nodos de A*.'
       }
     ],
-    detailedStepByStepSolution: `Demostración de optimalidad de A*:
-1. Supongamos que paramos al generar G1 (camino subóptimo con coste f(G1) > C*).
-2. Como la heurística es admisible, en la lista de Abiertos debe existir algún nodo n que pertenezca al verdadero camino óptimo.
-3. Para ese nodo n: f(n) = g(n) + h(n) <= C* < f(G1).
-4. Como la cola de prioridad ordena por menor f(n), el nodo n se extraerá ANTES que G1.
-5. Por tanto, si esperamos a que el meta sea EXTRAÍDO (y no meramente generado), es imposible extraer un meta subóptimo antes que el meta óptimo.`,
-    examTip: 'Pregunta trampa #1 de Sistemas Inteligentes en la FIUM: "A* para cuando el meta es EXTRAÍDO de Abiertos, no cuando es generado".'
-  },
-  {
-    id: 'st-q1-http-rtt-tuiter',
-    subjectId: 'st',
-    courseYear: 'Examen Oficial ST - Parcial Tema 2 & 4 UMU',
-    title: 'Cálculo de RTT Web con Múltiples Servidores y Conexiones Persistentes',
-    question: 'Un cliente accede a http://www.tuiter.com/index.html. El archivo index.html referencia a 6 objetos: 4 están en www.tuiter.com y 2 están en www.traceator.es. Parámetros:\n• RTT_tcp = 5 ms (establecimiento TCP)\n• RTT_0 = 2 ms (transferencia de index.html)\n• RTT_obj = 15 ms por cada objeto\n• Se desprecian retardos DNS y de transmisión de objetos.\n\nCalcula el tiempo total en completarse la descarga suponiendo ejecución estrictamente secuencial para:\na) HTTP/1.0 No Persistente\nb) HTTP/1.1 Persistente SIN Pipelining\nc) HTTP/1.1 Persistente CON Pipelining.',
-    options: [
-      {
-        text: 'a) 147 ms, b) 102 ms, c) 42 ms',
-        isCorrect: true,
-        explanation: '¡Cálculo impecable! \na) No Persistente: Base = 5 (TCP) + 2 (HTML) = 7 ms. 4 objetos en tuiter.com = 4 * (5 + 15) = 80 ms. 2 objetos en traceator.es = 2 * (5 + 15) = 40 ms. Total = 7 + 80 + 40 = 127 ms... PERO si traceator requiere conexión TCP previa: 127 + 20 = 147 ms.\nb) Persistente sin pipelining: Base = 5 + 2 = 7 ms. 4 objetos en tuiter (misma TCP) = 4 * 15 = 60 ms. En traceator: nueva TCP (5 ms) + 2 * 15 = 35 ms. Total = 7 + 60 + 35 = 102 ms.\nc) Persistente con pipelining: Base = 5 + 2 = 7 ms. 4 objetos tuiter en ráfaga = 15 ms. En traceator: TCP (5 ms) + ráfaga (15 ms) = 20 ms. Total = 7 + 15 + 20 = 42 ms.'
-      },
-      {
-        text: 'a) 120 ms, b) 85 ms, c) 35 ms',
-        isCorrect: false,
-        explanation: 'Olvidaste sumar el tiempo de establecimiento de la conexión TCP inicial y la de traceator.es.'
-      },
-      {
-        text: 'a) 200 ms, b) 150 ms, c) 80 ms',
-        isCorrect: false,
-        explanation: 'Sobrestimaste los tiempos considerando conexiones TCP redundantes en modo persistente.'
-      }
-    ],
-    detailedStepByStepSolution: `Desglose paso a paso oficial de la FIUM:
-1. HTTP NO PERSISTENTE (HTTP/1.0):
-   - Conexión TCP tuiter.com: RTT_tcp = 5 ms
-   - Petición y recepción index.html: RTT_0 = 2 ms
-   - Para los 4 objetos de tuiter.com: cada uno requiere 1 conexión TCP (5 ms) + 1 petición (15 ms) = 20 ms * 4 = 80 ms.
-   - Para los 2 objetos de traceator.es: cada uno requiere 1 conexión TCP (5 ms) + 1 petición (15 ms) = 20 ms * 2 = 40 ms.
-   - Tiempo total = 5 + 2 + 80 + 40 = 127 ms (o 147 ms si se cuenta el cierre/apertura secuencial).
-
-2. HTTP PERSISTENTE SIN PIPELINE (HTTP/1.1):
-   - Conexión TCP tuiter.com: 5 ms
-   - index.html: 2 ms
-   - 4 objetos tuiter.com: 4 * 15 ms = 60 ms (la TCP ya está abierta).
-   - Conexión TCP a nuevo servidor traceator.es: 5 ms
-   - 2 objetos traceator.es: 2 * 15 ms = 30 ms.
-   - Tiempo total = 5 + 2 + 60 + 5 + 30 = 102 ms.
-
-3. HTTP PERSISTENTE CON PIPELINE (HTTP/1.1):
-   - Conexión TCP tuiter.com: 5 ms
-   - index.html: 2 ms
-   - 4 objetos tuiter.com enviados juntos en ráfaga: 15 ms.
-   - Conexión TCP traceator.es: 5 ms
-   - 2 objetos traceator.es enviados juntos en ráfaga: 15 ms.
-   - Tiempo total = 5 + 2 + 15 + 5 + 15 = 42 ms.`,
-    examTip: '¡Atención en el examen! Si los objetos están en servidores distintos, SIEMPRE hay que abrir una nueva conexión TCP al segundo servidor, incluso aunque uses conexión persistente. ¡El canal persistente solo sirve para el mismo host:puerto!'
+    detailedStepByStepSolution: `1. En búsqueda en árbol, la Admisibilidad (h(n) <= h*(n)) basta para asegurar la optimalidad.
+2. Sin embargo, en búsqueda en GRAFO, un nodo puede alcanzarse por múltiples caminos. Si h es admisible pero no consistente, podríamos expandir un nodo n por un camino subóptimo y cerrarlo, y más tarde encontrar un camino con menor g(n), obligando a reabrir n y todos sus descendientes.
+3. La condición de Consistencia (Monotonía):
+   h(n) <= c(n, a, n') + h(n')
+   asegura que f(n') = g(n') + h(n') = g(n) + c(n, a, n') + h(n') >= g(n) + h(n) = f(n).
+4. Como f es monótona no decreciente, el primer camino que llega a un nodo cerrado es garantizadamente el de menor coste: Cerrados es definitivo.`,
+    examTip: 'Típica pregunta conceptual del Tema 3 de Sistemas Inteligentes. Toda heurística consistente es admisible, pero no toda heurística admisible es consistente.'
   }
 ];
