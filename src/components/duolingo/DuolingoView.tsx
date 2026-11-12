@@ -131,7 +131,7 @@ export const DuolingoView: React.FC<DuolingoViewProps> = ({
               <div className="text-5xl">🦉</div>
               <h3 className="text-xl font-black text-[#4B4B4B]">Unidades en Preparación</h3>
               <p className="text-xs text-[#777777] font-bold">
-                Estamos volcando los apuntes y exámenes de esta asignatura del Aula Virtual al formato gamificado. ¡Prueba mientras tanto con AOC, ASO, ALF o TDS!
+                Estamos volcando los apuntes y exámenes de esta asignatura del Aula Virtual al formato gamificado. ¡Prueba mientras tanto con cualquiera de las asignaturas del 1º Cuatrimestre: AOC, ASO, ALF, TDS o ISO!
               </p>
               <button
                 onClick={() => handleSelectSubject('aoc')}
