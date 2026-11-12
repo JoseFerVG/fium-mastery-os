@@ -277,35 +277,35 @@ export const CpuSchedulerSimulator: React.FC = () => {
     : 1;
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+    <div className="duo-card p-6 sm:p-8 bg-white border-2 border-b-[6px] border-[#E5E5E5] text-[#4B4B4B] space-y-6 font-sans">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#E5E5E5] pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-indigo-500/10 text-indigo-400 rounded-2xl border border-indigo-500/20">
-            <Cpu className="w-6 h-6" />
+          <div className="p-3 bg-[#E5F6FD] text-[#1CB0F6] rounded-2xl border-2 border-[#84D8FF]">
+            <Cpu className="w-6 h-6 stroke-[2.5]" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-white">Simulador de Planificación de CPU (Gantt Interactivo)</h3>
-            <p className="text-xs text-slate-400">Algoritmos oficiales de examen en ISO y ASO: FCFS, SJF, SRTF, Round Robin y Prioridades</p>
+            <h3 className="text-xl sm:text-2xl font-black text-[#4B4B4B]">Planificador de CPU & Diagrama de Gantt</h3>
+            <p className="text-xs text-[#777777] font-bold mt-0.5">Algoritmos oficiales de examen en ISO y ASO: FCFS, SJF, SRTF, Round Robin y Prioridades</p>
           </div>
         </div>
 
         <button
           onClick={handleReset}
-          className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition self-start sm:self-auto"
+          className="duo-btn-white px-4 py-2 text-xs"
         >
-          <RotateCcw className="w-3.5 h-3.5" /> Reiniciar Caso Típico
+          <RotateCcw className="w-3.5 h-3.5 mr-1" /> Reiniciar Caso Típico
         </button>
       </div>
 
       {/* Algorithm Selector */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
         {[
-          { id: 'rr', name: 'Round Robin (RR)', desc: 'Apropiativo por quantum de tiempo' },
-          { id: 'sjf', name: 'SJF (No apropiativo)', desc: 'Ráfaga más corta primero' },
-          { id: 'srtf', name: 'SRTF (Apropiativo)', desc: 'Tiempo restante más corto primero' },
-          { id: 'fcfs', name: 'FCFS', desc: 'Primero en llegar, primero en salir' },
-          { id: 'priority', name: 'Prioridades', desc: 'Menor número = Más prioridad' }
+          { id: 'rr', name: 'Round Robin (RR)', desc: 'Apropiativo por quantum' },
+          { id: 'sjf', name: 'SJF (No apropiativo)', desc: 'Ráfaga corta primero' },
+          { id: 'srtf', name: 'SRTF (Apropiativo)', desc: 'Tiempo restante menor' },
+          { id: 'fcfs', name: 'FCFS', desc: 'Primero en llegar' },
+          { id: 'priority', name: 'Prioridades', desc: 'Menor valor = Más prioridad' }
         ].map(item => (
           <button
             key={item.id}
@@ -313,45 +313,45 @@ export const CpuSchedulerSimulator: React.FC = () => {
               setAlgorithm(item.id as typeof algorithm);
               soundManager.playClick();
             }}
-            className={`p-3 rounded-2xl text-left border transition ${
+            className={`p-3.5 rounded-2xl text-left border-2 border-b-4 transition cursor-pointer ${
               algorithm === item.id
-                ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-lg shadow-indigo-500/10'
-                : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                ? 'bg-[#E5F6FD] border-[#84D8FF] text-[#1CB0F6]'
+                : 'bg-white border-[#E5E5E5] text-[#4B4B4B] hover:bg-[#F7F7F7]'
             }`}
           >
-            <div className="text-xs font-bold text-white">{item.name}</div>
-            <div className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{item.desc}</div>
+            <div className="text-xs font-black">{item.name}</div>
+            <div className="text-[10px] text-[#777777] font-bold mt-0.5 line-clamp-1">{item.desc}</div>
           </button>
         ))}
       </div>
 
       {algorithm === 'rr' && (
-        <div className="flex items-center gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-          <span className="text-xs font-bold text-slate-300">Quantum (Q):</span>
+        <div className="flex items-center gap-4 bg-[#F7F7F7] p-4 rounded-2xl border-2 border-[#E5E5E5]">
+          <span className="text-xs font-black text-[#4B4B4B]">Quantum (Q):</span>
           <input
             type="range"
             min={1}
             max={8}
             value={quantum}
             onChange={e => setQuantum(Number(e.target.value))}
-            className="flex-1 accent-indigo-500 cursor-pointer"
+            className="flex-1 accent-[#58CC02] cursor-pointer"
           />
-          <span className="px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-mono font-bold text-xs rounded-lg">
+          <span className="px-3.5 py-1 bg-[#D7FFB8] text-[#58A700] border-2 border-[#58CC02] font-mono font-black text-xs rounded-xl">
             {quantum} ciclos de reloj
           </span>
         </div>
       )}
 
       {/* Visual Gantt Chart */}
-      <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
-        <div className="flex items-center justify-between text-xs font-bold text-slate-400">
+      <div className="bg-[#F7F7F7] p-5 rounded-2xl border-2 border-[#E5E5E5] space-y-3">
+        <div className="flex items-center justify-between text-xs font-black text-[#777777] uppercase tracking-wider">
           <span>DIAGRAMA DE GANTT (Tiempo total: {totalCycles} ciclos)</span>
-          <span className="text-[11px] font-mono text-indigo-400 font-semibold">T_llegada &le; T_ejecución</span>
+          <span className="text-[11px] font-mono text-[#1CB0F6] font-black">T_llegada ≤ T_ejecución</span>
         </div>
 
         {/* Timeline Bar */}
         <div className="relative overflow-x-auto pb-2">
-          <div className="flex min-w-[500px] h-12 bg-slate-900 rounded-xl overflow-hidden border border-slate-800 p-1 gap-1">
+          <div className="flex min-w-[500px] h-14 bg-white rounded-2xl overflow-hidden border-2 border-[#E5E5E5] p-1 gap-1">
             {simulationResult.timeline.map((slot, idx) => {
               const duration = slot.end - slot.start;
               const widthPct = (duration / totalCycles) * 100;
@@ -359,18 +359,18 @@ export const CpuSchedulerSimulator: React.FC = () => {
                 <div
                   key={idx}
                   style={{ width: `${widthPct}%` }}
-                  className={`${slot.color} h-full rounded-lg flex flex-col items-center justify-center text-white font-bold text-xs shadow-inner transition-all relative group`}
+                  className={`${slot.color} h-full rounded-xl flex flex-col items-center justify-center text-white font-black text-xs shadow-sm transition-all relative group border-b-2 border-black/20`}
                   title={`${slot.processName}: [${slot.start} - ${slot.end}]`}
                 >
                   <span className="text-[11px] truncate px-1">{slot.processId}</span>
-                  <span className="text-[9px] font-mono opacity-80">{duration}c</span>
+                  <span className="text-[9px] font-mono opacity-90">{duration}c</span>
                 </div>
               );
             })}
           </div>
 
           {/* Time markers under Gantt */}
-          <div className="flex min-w-[500px] justify-between text-[10px] font-mono text-slate-500 mt-1 px-1">
+          <div className="flex min-w-[500px] justify-between text-[10px] font-mono font-bold text-[#AFAFAF] mt-1.5 px-1">
             <span>0</span>
             {simulationResult.timeline.map((slot, idx) => (
               <span key={idx} style={{ left: `${(slot.end / totalCycles) * 100}%` }}>
@@ -383,68 +383,68 @@ export const CpuSchedulerSimulator: React.FC = () => {
 
       {/* Metrics Summary & Averages */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-indigo-950/30 border border-indigo-900/40 p-4 rounded-2xl flex items-center justify-between">
+        <div className="duo-card p-5 border-2 border-b-4 border-[#84D8FF] bg-[#E5F6FD] flex items-center justify-between">
           <div>
-            <div className="text-xs font-bold text-indigo-300">Tiempo Medio de Espera (T_esp)</div>
-            <div className="text-[11px] text-slate-400">Espera en cola de listos (T_retorno - Ráfaga)</div>
+            <div className="text-xs font-black text-[#1CB0F6] uppercase tracking-wider">Tiempo Medio de Espera (T_esp)</div>
+            <div className="text-[11px] text-[#777777] font-bold">Espera en cola de listos (T_retorno - Ráfaga)</div>
           </div>
-          <div className="text-3xl font-black text-indigo-400 font-mono">
-            {simulationResult.avgWait} <span className="text-xs text-slate-400">ciclos</span>
+          <div className="text-3xl font-black text-[#1CB0F6] font-mono">
+            {simulationResult.avgWait} <span className="text-xs text-[#777777]">ciclos</span>
           </div>
         </div>
 
-        <div className="bg-emerald-950/30 border border-emerald-900/40 p-4 rounded-2xl flex items-center justify-between">
+        <div className="duo-card p-5 border-2 border-b-4 border-[#58CC02] bg-[#D7FFB8] flex items-center justify-between">
           <div>
-            <div className="text-xs font-bold text-emerald-300">Tiempo Medio de Retorno (T_ret)</div>
-            <div className="text-[11px] text-slate-400">Turnaround total (T_finalización - T_llegada)</div>
+            <div className="text-xs font-black text-[#58A700] uppercase tracking-wider">Tiempo Medio de Retorno (T_ret)</div>
+            <div className="text-[11px] text-[#777777] font-bold">Turnaround total (T_fin - T_llegada)</div>
           </div>
-          <div className="text-3xl font-black text-emerald-400 font-mono">
-            {simulationResult.avgTurnaround} <span className="text-xs text-slate-400">ciclos</span>
+          <div className="text-3xl font-black text-[#58A700] font-mono">
+            {simulationResult.avgTurnaround} <span className="text-xs text-[#777777]">ciclos</span>
           </div>
         </div>
       </div>
 
       {/* Process Table & Controller */}
-      <div className="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden">
-        <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-          <span className="text-xs font-bold text-white uppercase tracking-wider">Tabla de Procesos Activos</span>
-          <span className="text-xs text-slate-400">{processes.length} procesos en cola</span>
+      <div className="bg-white rounded-2xl border-2 border-b-4 border-[#E5E5E5] overflow-hidden">
+        <div className="p-4 bg-[#F7F7F7] border-b-2 border-[#E5E5E5] flex items-center justify-between">
+          <span className="text-xs font-black text-[#4B4B4B] uppercase tracking-wider">Tabla de Procesos Activos</span>
+          <span className="text-xs text-[#777777] font-bold">{processes.length} procesos en cola</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-slate-900/70 text-slate-400 uppercase font-mono text-[10px]">
+            <thead className="bg-[#F7F7F7] text-[#777777] uppercase font-mono text-[10px] font-bold border-b border-[#E5E5E5]">
               <tr>
-                <th className="p-3">Proceso</th>
-                <th className="p-3">Llegada</th>
-                <th className="p-3">Ráfaga CPU</th>
-                <th className="p-3">Prioridad</th>
-                <th className="p-3">Fin</th>
-                <th className="p-3">T. Retorno</th>
-                <th className="p-3">T. Espera</th>
-                <th className="p-3 text-right">Acción</th>
+                <th className="p-3 font-black">Proceso</th>
+                <th className="p-3 font-black">Llegada</th>
+                <th className="p-3 font-black">Ráfaga CPU</th>
+                <th className="p-3 font-black">Prioridad</th>
+                <th className="p-3 font-black">Fin</th>
+                <th className="p-3 font-black">T. Retorno</th>
+                <th className="p-3 font-black">T. Espera</th>
+                <th className="p-3 text-right font-black">Acción</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-mono">
+            <tbody className="divide-y divide-[#E5E5E5] font-mono">
               {simulationResult.stats.map(p => (
-                <tr key={p.id} className="hover:bg-slate-900/40 transition">
-                  <td className="p-3 font-sans font-bold flex items-center gap-2 text-white">
-                    <span className={`w-2.5 h-2.5 rounded-full ${p.color}`} />
+                <tr key={p.id} className="hover:bg-[#F7F7F7] transition">
+                  <td className="p-3 font-sans font-black flex items-center gap-2 text-[#4B4B4B]">
+                    <span className={`w-3 h-3 rounded-full ${p.color}`} />
                     {p.name}
                   </td>
-                  <td className="p-3 text-slate-300">{p.arrivalTime}</td>
-                  <td className="p-3 text-indigo-400 font-bold">{p.burstTime}</td>
-                  <td className="p-3 text-amber-400">{p.priority}</td>
-                  <td className="p-3 text-slate-300">{p.finishTime}</td>
-                  <td className="p-3 text-emerald-400 font-bold">{p.turnaroundTime}</td>
-                  <td className="p-3 text-cyan-400 font-bold">{p.waitingTime}</td>
+                  <td className="p-3 text-[#4B4B4B] font-bold">{p.arrivalTime}</td>
+                  <td className="p-3 text-[#1CB0F6] font-black">{p.burstTime}</td>
+                  <td className="p-3 text-[#FF9600] font-black">{p.priority}</td>
+                  <td className="p-3 text-[#4B4B4B] font-bold">{p.finishTime}</td>
+                  <td className="p-3 text-[#58A700] font-black">{p.turnaroundTime}</td>
+                  <td className="p-3 text-[#1CB0F6] font-black">{p.waitingTime}</td>
                   <td className="p-3 text-right">
                     <button
                       onClick={() => handleRemoveProcess(p.id)}
-                      className="p-1 rounded text-slate-500 hover:text-rose-400 transition"
+                      className="p-1 rounded text-[#AFAFAF] hover:text-[#FF4B4B] transition cursor-pointer"
                       title="Eliminar proceso"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </td>
                 </tr>
@@ -454,7 +454,7 @@ export const CpuSchedulerSimulator: React.FC = () => {
         </div>
 
         {/* Add process inline bar */}
-        <div className="p-4 bg-slate-900/40 border-t border-slate-800 flex flex-wrap gap-2 items-center text-xs">
+        <div className="p-4 bg-[#F7F7F7] border-t-2 border-[#E5E5E5] flex flex-wrap gap-2 items-center text-xs">
           <input
             type="text"
             id="cpu-new-process-name"
@@ -464,10 +464,10 @@ export const CpuSchedulerSimulator: React.FC = () => {
             placeholder="Nombre (ej. P5)"
             value={newName}
             onChange={e => setNewName(e.target.value)}
-            className="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 flex-1 min-w-[120px]"
+            className="px-3.5 py-2 bg-white border-2 border-b-4 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-bold placeholder-[#AFAFAF] focus:outline-none focus:border-[#1CB0F6] flex-1 min-w-[120px]"
           />
-          <div className="flex items-center gap-1">
-            <label htmlFor="cpu-new-process-arrival" className="text-slate-500 text-[11px]">Llegada:</label>
+          <div className="flex items-center gap-1.5">
+            <label htmlFor="cpu-new-process-arrival" className="text-[#777777] font-bold text-xs">Llegada:</label>
             <input
               type="number"
               id="cpu-new-process-arrival"
@@ -476,11 +476,11 @@ export const CpuSchedulerSimulator: React.FC = () => {
               min={0}
               value={newArrival}
               onChange={e => setNewArrival(Number(e.target.value))}
-              className="w-16 px-2 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono"
+              className="w-16 px-2.5 py-2 bg-white border-2 border-b-4 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono font-bold"
             />
           </div>
-          <div className="flex items-center gap-1">
-            <label htmlFor="cpu-new-process-burst" className="text-slate-500 text-[11px]">Ráfaga:</label>
+          <div className="flex items-center gap-1.5">
+            <label htmlFor="cpu-new-process-burst" className="text-[#777777] font-bold text-xs">Ráfaga:</label>
             <input
               type="number"
               id="cpu-new-process-burst"
@@ -489,11 +489,11 @@ export const CpuSchedulerSimulator: React.FC = () => {
               min={1}
               value={newBurst}
               onChange={e => setNewBurst(Number(e.target.value))}
-              className="w-16 px-2 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono"
+              className="w-16 px-2.5 py-2 bg-white border-2 border-b-4 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono font-bold"
             />
           </div>
-          <div className="flex items-center gap-1">
-            <label htmlFor="cpu-new-process-priority" className="text-slate-500 text-[11px]">Prioridad:</label>
+          <div className="flex items-center gap-1.5">
+            <label htmlFor="cpu-new-process-priority" className="text-[#777777] font-bold text-xs">Prioridad:</label>
             <input
               type="number"
               id="cpu-new-process-priority"
@@ -501,24 +501,24 @@ export const CpuSchedulerSimulator: React.FC = () => {
               aria-label="Prioridad del proceso"
               value={newPriority}
               onChange={e => setNewPriority(Number(e.target.value))}
-              className="w-16 px-2 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono"
+              className="w-16 px-2.5 py-2 bg-white border-2 border-b-4 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono font-bold"
             />
           </div>
           <button
             onClick={handleAddProcess}
-            className="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold flex items-center gap-1 transition"
+            className="duo-btn-green px-4 py-2 text-xs"
           >
-            <Plus className="w-3.5 h-3.5" /> Añadir Proceso
+            <Plus className="w-3.5 h-3.5 mr-1" /> Añadir Proceso
           </button>
         </div>
       </div>
 
       {/* Tip for exams */}
-      <div className="bg-amber-950/20 border border-amber-900/40 p-4 rounded-2xl flex items-start gap-3 text-xs text-amber-200/90">
-        <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+      <div className="bg-[#FFF4D0] border-2 border-b-4 border-[#FFC800] p-4 rounded-2xl flex items-start gap-3 text-xs text-[#E08500] font-bold">
+        <Info className="w-5 h-5 text-[#FF9600] shrink-0 mt-0.5" />
         <div>
-          <span className="font-bold text-amber-300">Regla de Oro en Examen de FIUM:</span>
-          {' '}En Round Robin, cuando un proceso agota su quantum exactamente en el mismo instante en que un nuevo proceso llega al sistema,
+          <span className="font-black text-[#FF9600] uppercase tracking-wider block mb-0.5">Regla de Oro en Examen de FIUM:</span>
+          En Round Robin, cuando un proceso agota su quantum exactamente en el mismo instante en que un nuevo proceso llega al sistema,
           el nuevo proceso que llega entra en la cola de listos ANTES de que el proceso que agotó el quantum vuelva a colocarse al final.
         </div>
       </div>

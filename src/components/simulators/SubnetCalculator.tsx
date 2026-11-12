@@ -107,42 +107,57 @@ export const SubnetCalculator: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+    <div className="bg-white border-2 border-b-[6px] border-[#E5E5E5] rounded-3xl p-6 sm:p-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-sky-500/10 text-sky-400 rounded-2xl border border-sky-500/20">
-            <Network className="w-6 h-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#E5E5E5] pb-5">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#DDF4FF] border-2 border-b-4 border-[#84D8FF] flex items-center justify-center text-[#1CB0F6] shrink-0">
+            <Network className="w-7 h-7" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-white">Calculadora Visual de Subredes & VLSM (IPv4)</h3>
-            <p className="text-xs text-slate-400">Dominio de direccionamiento CIDR, máscaras de longitud variable y rangos útiles para Arquitectura de Redes</p>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-widest uppercase bg-[#E5F6FD] text-[#1CB0F6] border border-[#84D8FF]">
+                AR / REDES
+              </span>
+              <span className="text-xs font-bold text-[#AFAFAF] uppercase">Calculadora IPv4</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-[#4B4B4B] uppercase tracking-tight mt-0.5">
+              Calculadora Visual de Subredes & VLSM
+            </h3>
+            <p className="text-xs text-[#777777] font-semibold">
+              Direccionamiento CIDR, máscaras de longitud variable y rangos útiles para Arquitectura de Redes
+            </p>
           </div>
         </div>
       </div>
 
       {/* Presets from actual FIUM exams */}
       <div>
-        <div className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Casos Reales de Examen FIUM (Boletín 3 AR):</div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+        <div className="text-xs font-black text-[#AFAFAF] mb-3 uppercase tracking-wider flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-[#FFC800]" />
+          Casos Reales de Examen FIUM (Boletín 3 AR):
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {PRESETS.map((p, idx) => (
             <button
               key={idx}
               onClick={() => handleSelectPreset(p)}
-              className="p-3 bg-slate-950/70 hover:bg-slate-800/80 border border-slate-800 rounded-2xl text-left transition group"
+              className="p-3.5 bg-white hover:bg-[#F7F7F7] active:translate-y-1 border-2 border-b-4 border-[#E5E5E5] hover:border-[#1CB0F6] rounded-2xl text-left transition group cursor-pointer"
             >
-              <div className="text-xs font-bold text-sky-300 group-hover:text-white transition">{p.name}</div>
-              <div className="text-[11px] font-mono text-slate-400 mt-0.5">{p.ip}/{p.cidr}</div>
-              <div className="text-[10px] text-slate-500 mt-1 line-clamp-2">{p.description}</div>
+              <div className="text-xs font-black text-[#4B4B4B] group-hover:text-[#1CB0F6] transition">{p.name}</div>
+              <div className="text-xs font-mono font-bold text-[#1CB0F6] mt-0.5">{p.ip}/{p.cidr}</div>
+              <div className="text-[11px] text-[#777777] font-medium mt-1 line-clamp-2">{p.description}</div>
             </button>
           ))}
         </div>
       </div>
 
       {/* Inputs Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-950 p-5 rounded-2xl border border-slate-800 items-end">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#F7F7F7] p-5 rounded-3xl border-2 border-[#E5E5E5] items-end">
         <div>
-          <label htmlFor="subnet-ip-input" className="block text-xs font-bold text-slate-300 mb-1">Dirección IP Base:</label>
+          <label htmlFor="subnet-ip-input" className="block text-xs font-black text-[#4B4B4B] uppercase tracking-wider mb-1.5">
+            Dirección IP Base:
+          </label>
           <input
             id="subnet-ip-input"
             name="ipAddress"
@@ -150,15 +165,15 @@ export const SubnetCalculator: React.FC = () => {
             type="text"
             value={ipStr}
             onChange={e => setIpStr(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono text-sm focus:outline-none focus:border-sky-500"
+            className="w-full px-4 py-2.5 bg-white border-2 border-b-4 border-[#E5E5E5] rounded-2xl text-[#4B4B4B] font-mono text-sm font-bold focus:outline-none focus:border-[#1CB0F6] transition"
             placeholder="192.168.1.0"
           />
         </div>
 
         <div>
-          <div className="flex justify-between text-xs font-bold text-slate-300 mb-1">
-            <label htmlFor="subnet-cidr-range">Máscara de Red (CIDR):</label>
-            <span className="text-sky-400 font-mono">/{cidr} ({results.netmask})</span>
+          <div className="flex justify-between text-xs font-black text-[#4B4B4B] uppercase tracking-wider mb-1.5">
+            <label htmlFor="subnet-cidr-range">Máscara (CIDR):</label>
+            <span className="text-[#1CB0F6] font-mono font-black">/{cidr} ({results.netmask})</span>
           </div>
           <input
             id="subnet-cidr-range"
@@ -169,9 +184,9 @@ export const SubnetCalculator: React.FC = () => {
             max={32}
             value={cidr}
             onChange={e => setCidr(Number(e.target.value))}
-            className="w-full accent-sky-500 cursor-pointer"
+            className="w-full accent-[#1CB0F6] cursor-pointer"
           />
-          <div className="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+          <div className="flex justify-between text-[11px] text-[#AFAFAF] font-mono font-bold mt-1">
             <span>/1</span>
             <span>/16</span>
             <span>/24</span>
@@ -180,16 +195,16 @@ export const SubnetCalculator: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+        <div className="flex items-center gap-3 bg-white p-3.5 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
           <div>
-            <div className="text-[10px] uppercase font-bold text-slate-400">Hosts Útiles:</div>
-            <div className="text-2xl font-black text-sky-400 font-mono">
+            <div className="text-[10px] uppercase font-black text-[#AFAFAF] tracking-wider">Hosts Útiles:</div>
+            <div className="text-2xl font-black text-[#58CC02] font-mono">
               {results.usableHosts.toLocaleString()}
             </div>
           </div>
           <div className="ml-auto text-right">
-            <div className="text-[10px] uppercase font-bold text-slate-500">Bits Red / Host</div>
-            <div className="text-xs font-mono font-bold text-slate-300">
+            <div className="text-[10px] uppercase font-black text-[#AFAFAF] tracking-wider">Bits Red / Host</div>
+            <div className="text-sm font-mono font-black text-[#4B4B4B]">
               {results.networkBits} / {results.hostBits}
             </div>
           </div>
@@ -199,50 +214,49 @@ export const SubnetCalculator: React.FC = () => {
       {/* Core Results Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { label: 'Dirección de Red', val: results.networkAddress, desc: 'Identificador del segmento (no asignable a host)' },
-          { label: 'Primer Host Útil', val: results.firstUsableHost, desc: 'Típicamente asignada a gateway o router' },
-          { label: 'Último Host Útil', val: results.lastUsableHost, desc: 'Última IP asignable a terminal o servidor' },
-          { label: 'Dirección de Broadcast', val: results.broadcastAddress, desc: 'Difusión a todos los equipos de la subred' }
+          { label: 'Dirección de Red', val: results.networkAddress, desc: 'Identificador del segmento (no asignable)' },
+          { label: 'Primer Host Útil', val: results.firstUsableHost, desc: 'Típicamente asignada a gateway / router' },
+          { label: 'Último Host Útil', val: results.lastUsableHost, desc: 'Última IP asignable a terminal o host' },
+          { label: 'Dirección de Broadcast', val: results.broadcastAddress, desc: 'Difusión a todos los equipos' }
         ].map((item, idx) => (
-          <div key={idx} className="bg-slate-950 p-4 rounded-2xl border border-slate-800 relative group">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{item.label}</div>
-            <div className="text-lg font-black text-white font-mono mt-1 flex items-center justify-between">
+          <div key={idx} className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5] relative group">
+            <div className="text-[10px] font-black uppercase tracking-wider text-[#AFAFAF]">{item.label}</div>
+            <div className="text-lg font-black text-[#4B4B4B] font-mono mt-1 flex items-center justify-between">
               <span>{item.val}</span>
               <button
                 onClick={() => copyToClipboard(item.val, item.label)}
-                className="opacity-0 group-hover:opacity-100 transition p-1 text-slate-500 hover:text-white"
+                className="opacity-70 group-hover:opacity-100 transition p-1 text-[#777777] hover:text-[#1CB0F6] cursor-pointer"
                 title="Copiar"
               >
-                {copiedField === item.label ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                {copiedField === item.label ? <Check className="w-4 h-4 text-[#58CC02]" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
-            <div className="text-[10px] text-slate-500 mt-1">{item.desc}</div>
+            <div className="text-[11px] text-[#777777] font-semibold mt-1">{item.desc}</div>
           </div>
         ))}
       </div>
 
       {/* Binary Breakdown Visualization */}
-      <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
-        <div className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+      <div className="bg-[#F7F7F7] p-5 rounded-3xl border-2 border-[#E5E5E5] space-y-4">
+        <div className="text-xs font-black text-[#4B4B4B] uppercase tracking-wider flex items-center gap-2">
           <span>Desglose Binario de Bits (32 bits)</span>
-          <span className="text-[10px] font-normal text-slate-500 font-sans">
+          <span className="text-[11px] font-bold text-[#777777] font-sans">
             (Azul = Bits de Red, Gris = Bits de Host)
           </span>
         </div>
 
         {/* IP Binary */}
-        <div className="font-mono text-xs space-y-1">
-          <div className="text-[11px] text-slate-400 font-semibold">IP: {ipStr}</div>
-          <div className="p-3 bg-slate-900 rounded-xl overflow-x-auto whitespace-nowrap tracking-widest text-sm">
+        <div className="font-mono text-xs space-y-1.5">
+          <div className="text-xs text-[#4B4B4B] font-bold">IP: {ipStr}</div>
+          <div className="p-3 bg-white border-2 border-[#E5E5E5] rounded-2xl overflow-x-auto whitespace-nowrap tracking-widest text-sm font-bold">
             {results.binaryIp.split('').map((char, i) => {
-              if (char === '.') return <span key={i} className="text-slate-600 px-1">.</span>;
-              // determine bit index excluding dots
+              if (char === '.') return <span key={i} className="text-[#AFAFAF] px-1 font-black">.</span>;
               const bitIdx = Math.floor(i - Math.floor(i / 9));
               const isNet = bitIdx < cidr;
               return (
                 <span
                   key={i}
-                  className={`font-black ${isNet ? 'text-sky-400 bg-sky-500/10 px-0.5 rounded' : 'text-slate-500'}`}
+                  className={`font-black ${isNet ? 'text-[#1CB0F6] bg-[#DDF4FF] px-0.5 rounded' : 'text-[#AFAFAF]'}`}
                 >
                   {char}
                 </span>
@@ -252,17 +266,17 @@ export const SubnetCalculator: React.FC = () => {
         </div>
 
         {/* Mask Binary */}
-        <div className="font-mono text-xs space-y-1">
-          <div className="text-[11px] text-slate-400 font-semibold">Máscara: {results.netmask}</div>
-          <div className="p-3 bg-slate-900 rounded-xl overflow-x-auto whitespace-nowrap tracking-widest text-sm">
+        <div className="font-mono text-xs space-y-1.5">
+          <div className="text-xs text-[#4B4B4B] font-bold">Máscara: {results.netmask}</div>
+          <div className="p-3 bg-white border-2 border-[#E5E5E5] rounded-2xl overflow-x-auto whitespace-nowrap tracking-widest text-sm font-bold">
             {results.binaryMask.split('').map((char, i) => {
-              if (char === '.') return <span key={i} className="text-slate-600 px-1">.</span>;
+              if (char === '.') return <span key={i} className="text-[#AFAFAF] px-1 font-black">.</span>;
               const bitIdx = Math.floor(i - Math.floor(i / 9));
               const isNet = bitIdx < cidr;
               return (
                 <span
                   key={i}
-                  className={`font-black ${isNet ? 'text-emerald-400' : 'text-slate-600'}`}
+                  className={`font-black ${isNet ? 'text-[#58CC02] bg-[#D7FFB8] px-0.5 rounded' : 'text-[#CECECE]'}`}
                 >
                   {char}
                 </span>
@@ -273,11 +287,13 @@ export const SubnetCalculator: React.FC = () => {
       </div>
 
       {/* Exam Pitfall alert */}
-      <div className="bg-sky-950/20 border border-sky-900/40 p-4 rounded-2xl flex items-start gap-3 text-xs text-sky-200/90">
-        <AlertCircle className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-        <div>
-          <span className="font-bold text-sky-300">Trampa Clásica de Examen de AR (VLSM):</span>
-          {' '}En ejercicios donde se pide diseñar el direccionamiento de varias sedes, SIEMPRE debes ordenar los bloques de subred
+      <div className="bg-[#E5F6FD] border-2 border-b-4 border-[#84D8FF] p-5 rounded-3xl flex items-start gap-3.5 text-xs text-[#1899D6] font-bold">
+        <AlertCircle className="w-5 h-5 text-[#1CB0F6] shrink-0 mt-0.5" />
+        <div className="leading-relaxed">
+          <span className="font-black text-[#1CB0F6] uppercase tracking-wide block mb-1">
+            Trampa Clásica de Examen de AR (VLSM):
+          </span>
+          En ejercicios donde se pide diseñar el direccionamiento de varias sedes, SIEMPRE debes ordenar los bloques de subred
           de MAYOR requerimiento de hosts a MENOR requerimiento. Si intentas asignar subredes pequeñas al principio, fragmentarás el espacio de direcciones y será matemáticamente imposible asignar los bloques grandes sin solapamiento.
         </div>
       </div>

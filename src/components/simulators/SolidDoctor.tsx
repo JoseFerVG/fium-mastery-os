@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Stethoscope, CheckCircle2, XCircle, ArrowRight, Code2, Sparkles } from 'lucide-react';
+import { soundManager } from '../../utils/soundEffects';
 
 interface CaseStudy {
   id: string;
@@ -181,14 +182,14 @@ export const SolidDoctor: React.FC = () => {
   const current = CASES[selectedCase];
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-      <div className="flex items-center gap-2 mb-6">
-        <span className="p-2 bg-purple-500/10 text-purple-400 rounded-lg">
-          <Stethoscope className="w-5 h-5" />
+    <div className="duo-card p-6 sm:p-8 bg-white border-2 border-b-[6px] border-[#E5E5E5] text-[#4B4B4B] font-sans">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#E5E5E5]">
+        <span className="p-2.5 bg-[#F5EAFF] text-[#CE82FF] rounded-2xl border-2 border-[#CE82FF]">
+          <Stethoscope className="w-5 h-5 stroke-[2.5]" />
         </span>
         <div>
-          <h3 className="text-xl font-bold text-white">SOLID Code Doctor (TDS & Patrones GoF)</h3>
-          <p className="text-sm text-slate-400">Compara código sucio vs arquitectura limpia con las reglas de corrección del profesor.</p>
+          <h3 className="text-xl sm:text-2xl font-black text-[#4B4B4B]">SOLID Code Doctor (TDS & Patrones GoF)</h3>
+          <p className="text-xs text-[#777777] font-bold mt-0.5">Compara código sucio vs arquitectura limpia con las reglas de corrección del profesor.</p>
         </div>
       </div>
 
@@ -197,25 +198,28 @@ export const SolidDoctor: React.FC = () => {
         {CASES.map((c, idx) => (
           <button
             key={c.id}
-            onClick={() => setSelectedCase(idx)}
-            className={`p-3 text-left rounded-xl border transition ${
+            onClick={() => {
+              soundManager.playClick();
+              setSelectedCase(idx);
+            }}
+            className={`p-3.5 text-left rounded-2xl border-2 border-b-4 transition cursor-pointer ${
               selectedCase === idx
-                ? 'bg-purple-600/15 border-purple-500 text-white'
-                : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                ? 'bg-[#F5EAFF] border-[#CE82FF] text-[#A559D9]'
+                : 'bg-white border-[#E5E5E5] text-[#4B4B4B] hover:bg-[#F7F7F7]'
             }`}
           >
-            <div className="text-xs font-bold text-purple-400 uppercase tracking-wider">{c.principle.split('-')[0]}</div>
-            <div className="font-semibold text-sm text-slate-200 mt-1">{c.name}</div>
+            <div className="text-xs font-black text-[#CE82FF] uppercase tracking-wider">{c.principle.split('-')[0]}</div>
+            <div className="font-black text-sm text-[#4B4B4B] mt-1">{c.name}</div>
           </button>
         ))}
       </div>
 
       {/* Case Header */}
-      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6">
-        <div className="text-xs font-bold text-purple-400 uppercase tracking-wider">{current.principle}</div>
-        <h4 className="text-lg font-bold text-white mt-1">{current.name}</h4>
-        <p className="text-xs text-rose-300 mt-1.5 flex items-center gap-1.5 font-medium">
-          <XCircle className="w-4 h-4 shrink-0 text-rose-400" />
+      <div className="bg-[#F7F7F7] p-5 rounded-2xl border-2 border-[#E5E5E5] mb-6">
+        <div className="text-xs font-black text-[#CE82FF] uppercase tracking-wider">{current.principle}</div>
+        <h4 className="text-lg font-black text-[#4B4B4B] mt-1">{current.name}</h4>
+        <p className="text-xs text-[#EA2B2B] mt-1.5 flex items-center gap-1.5 font-bold">
+          <XCircle className="w-4 h-4 shrink-0 text-[#FF4B4B]" />
           <span>Síntoma: {current.symptom}</span>
         </p>
       </div>
@@ -223,27 +227,27 @@ export const SolidDoctor: React.FC = () => {
       {/* Side-by-side Code Comparison */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 font-mono text-xs">
         {/* Bad Code */}
-        <div className="bg-slate-950 rounded-xl border border-rose-900/40 overflow-hidden">
-          <div className="bg-rose-950/40 px-4 py-2 border-b border-rose-900/40 flex items-center justify-between text-rose-300 font-bold font-sans">
+        <div className="bg-[#FFF0F0] rounded-2xl border-2 border-b-4 border-[#FF4B4B] overflow-hidden">
+          <div className="bg-[#FFE5E5] px-4 py-2.5 border-b border-[#FFD0D0] flex items-center justify-between text-[#EA2B2B] font-black font-sans">
             <span className="flex items-center gap-1.5">
-              <XCircle className="w-4 h-4 text-rose-400" /> Antipatrón (Suspenso en TDS)
+              <XCircle className="w-4 h-4 text-[#FF4B4B]" /> Antipatrón (Suspenso en TDS)
             </span>
-            <span className="text-[10px] bg-rose-500/20 px-2 py-0.5 rounded text-rose-300">CÓDIGO ACOPLADO</span>
+            <span className="text-[10px] bg-[#FFDFE0] px-2 py-0.5 rounded-full text-[#EA2B2B] font-black">CÓDIGO ACOPLADO</span>
           </div>
-          <pre className="p-4 text-slate-300 overflow-x-auto leading-relaxed whitespace-pre-wrap">
+          <pre className="p-4 text-[#EA2B2B] overflow-x-auto leading-relaxed whitespace-pre-wrap font-bold">
             {current.badCode}
           </pre>
         </div>
 
         {/* Clean Code */}
-        <div className="bg-slate-950 rounded-xl border border-emerald-900/40 overflow-hidden">
-          <div className="bg-emerald-950/40 px-4 py-2 border-b border-emerald-900/40 flex items-center justify-between text-emerald-300 font-bold font-sans">
+        <div className="bg-[#F0FFF4] rounded-2xl border-2 border-b-4 border-[#58CC02] overflow-hidden">
+          <div className="bg-[#D7FFB8] px-4 py-2.5 border-b border-[#B2E690] flex items-center justify-between text-[#58A700] font-black font-sans">
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Solución Profesional (Nota 10)
+              <CheckCircle2 className="w-4 h-4 text-[#58CC02]" /> Solución Profesional (Nota 10)
             </span>
-            <span className="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded text-emerald-300">DESACOPLADO & TESTABLE</span>
+            <span className="text-[10px] bg-[#EAFBEA] px-2 py-0.5 rounded-full text-[#58A700] font-black">DESACOPLADO & TESTABLE</span>
           </div>
-          <pre className="p-4 text-emerald-200 overflow-x-auto leading-relaxed whitespace-pre-wrap">
+          <pre className="p-4 text-[#58A700] overflow-x-auto leading-relaxed whitespace-pre-wrap font-bold">
             {current.cleanCode}
           </pre>
         </div>
@@ -251,17 +255,17 @@ export const SolidDoctor: React.FC = () => {
 
       {/* Diagnosis & Exam Advice */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-slate-300">
-          <div className="font-bold text-white mb-1 flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-purple-400" />
+        <div className="bg-[#F5EAFF] p-4 rounded-2xl border-2 border-b-4 border-[#CE82FF] text-[#A559D9] font-bold">
+          <div className="font-black text-[#A559D9] mb-1 flex items-center gap-1.5 uppercase tracking-wider">
+            <Sparkles className="w-4 h-4 text-[#CE82FF]" />
             <span>Diagnóstico Arquitectónico:</span>
           </div>
-          <p className="text-slate-400 leading-relaxed">{current.diagnosis}</p>
+          <p className="leading-relaxed opacity-90">{current.diagnosis}</p>
         </div>
 
-        <div className="bg-slate-950 p-4 rounded-xl border border-amber-500/30 text-amber-200">
-          <div className="font-bold text-amber-400 mb-1 flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4" />
+        <div className="bg-[#FFF4D0] p-4 rounded-2xl border-2 border-b-4 border-[#FFC800] text-[#E08500] font-bold">
+          <div className="font-black text-[#FF9600] mb-1 flex items-center gap-1.5 uppercase tracking-wider">
+            <CheckCircle2 className="w-4 h-4 text-[#FF9600]" />
             <span>Criterio de Evaluación en el Proyecto UMU:</span>
           </div>
           <p className="leading-relaxed opacity-90">{current.examRule}</p>

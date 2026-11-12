@@ -84,29 +84,39 @@ export const RsaCryptolab: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+    <div className="bg-white border-2 border-b-[6px] border-[#E5E5E5] rounded-3xl p-6 sm:p-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-purple-500/10 text-purple-400 rounded-2xl border border-purple-500/20">
-            <Key className="w-6 h-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#E5E5E5] pb-5">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#F2E5FF] border-2 border-b-4 border-[#CE82FF] flex items-center justify-center text-[#A559D9] shrink-0">
+            <Key className="w-7 h-7" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-white">Laboratorio Criptográfico RSA (Servicios Telemáticos)</h3>
-            <p className="text-xs text-slate-400">Generación de claves asimétricas, aritmética modular y cifrado paso a paso</p>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-widest uppercase bg-[#F2E5FF] text-[#A559D9] border border-[#CE82FF]">
+                SSTT / SEGURIDAD
+              </span>
+              <span className="text-xs font-bold text-[#AFAFAF] uppercase">Criptografía Asimétrica</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-[#4B4B4B] uppercase tracking-tight mt-0.5">
+              Laboratorio Criptográfico RSA
+            </h3>
+            <p className="text-xs text-[#777777] font-semibold">
+              Generación de claves asimétricas, aritmética modular y cifrado paso a paso
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={loadExamPreset}
-            className="px-3 py-1.5 rounded-xl bg-purple-600/20 border border-purple-500/40 text-purple-300 hover:text-white text-xs font-bold transition"
+            className="duo-btn-purple text-xs px-3.5 py-2 cursor-pointer"
           >
-            📋 Cargar Ejercicio de Examen (p=5, q=11)
+            📋 Caso Examen (p=5, q=11)
           </button>
           <button
             onClick={loadLargerPreset}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
+            className="duo-btn-white text-xs px-3.5 py-2 cursor-pointer"
           >
             Caso p=13, q=17
           </button>
@@ -114,9 +124,11 @@ export const RsaCryptolab: React.FC = () => {
       </div>
 
       {/* Setup Step 1: Primes Selection */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-950 p-5 rounded-2xl border border-slate-800">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#F7F7F7] p-5 rounded-3xl border-2 border-[#E5E5E5]">
         <div>
-          <label htmlFor="rsa-prime-p" className="block text-xs font-bold text-slate-300 mb-1">Primo p:</label>
+          <label htmlFor="rsa-prime-p" className="block text-xs font-black text-[#4B4B4B] uppercase tracking-wider mb-1.5">
+            Primo p (Secreto):
+          </label>
           <input
             id="rsa-prime-p"
             name="primeP"
@@ -126,13 +138,15 @@ export const RsaCryptolab: React.FC = () => {
             max={97}
             value={p}
             onChange={ev => setP(Number(ev.target.value))}
-            className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono text-sm focus:outline-none focus:border-purple-500"
+            className="w-full px-4 py-2.5 bg-white border-2 border-b-4 border-[#E5E5E5] rounded-2xl text-[#4B4B4B] font-mono text-sm font-black focus:outline-none focus:border-[#CE82FF] transition"
           />
-          <span className="text-[10px] text-slate-500 mt-0.5 block">Primer factor primo secreto</span>
+          <span className="text-[11px] text-[#777777] font-medium mt-1 block">Primer factor primo secreto</span>
         </div>
 
         <div>
-          <label htmlFor="rsa-prime-q" className="block text-xs font-bold text-slate-300 mb-1">Primo q:</label>
+          <label htmlFor="rsa-prime-q" className="block text-xs font-black text-[#4B4B4B] uppercase tracking-wider mb-1.5">
+            Primo q (Secreto):
+          </label>
           <input
             id="rsa-prime-q"
             name="primeQ"
@@ -142,13 +156,15 @@ export const RsaCryptolab: React.FC = () => {
             max={97}
             value={q}
             onChange={ev => setQ(Number(ev.target.value))}
-            className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono text-sm focus:outline-none focus:border-purple-500"
+            className="w-full px-4 py-2.5 bg-white border-2 border-b-4 border-[#E5E5E5] rounded-2xl text-[#4B4B4B] font-mono text-sm font-black focus:outline-none focus:border-[#CE82FF] transition"
           />
-          <span className="text-[10px] text-slate-500 mt-0.5 block">Segundo factor primo secreto</span>
+          <span className="text-[11px] text-[#777777] font-medium mt-1 block">Segundo factor primo secreto</span>
         </div>
 
         <div>
-          <label htmlFor="rsa-public-e" className="block text-xs font-bold text-slate-300 mb-1">Exponente Público e:</label>
+          <label htmlFor="rsa-public-e" className="block text-xs font-black text-[#4B4B4B] uppercase tracking-wider mb-1.5">
+            Exponente Público e:
+          </label>
           <input
             id="rsa-public-e"
             name="publicE"
@@ -157,56 +173,56 @@ export const RsaCryptolab: React.FC = () => {
             min={2}
             value={e}
             onChange={ev => setE(Number(ev.target.value))}
-            className={`w-full px-3 py-2 bg-slate-900 border rounded-xl text-white font-mono text-sm focus:outline-none ${
-              rsa.isEValid ? 'border-slate-800 focus:border-purple-500' : 'border-rose-500 text-rose-300'
+            className={`w-full px-4 py-2.5 bg-white border-2 border-b-4 rounded-2xl text-[#4B4B4B] font-mono text-sm font-black focus:outline-none transition ${
+              rsa.isEValid ? 'border-[#E5E5E5] focus:border-[#CE82FF]' : 'border-[#FF4B4B] text-[#FF4B4B]'
             }`}
           />
-          <span className={`text-[10px] mt-0.5 block ${rsa.isEValid ? 'text-emerald-400' : 'text-rose-400 font-bold'}`}>
-            {rsa.isEValid ? `mcd(e, ${rsa.phi}) = 1 (Válido)` : `Inválido: no es coprimo con phi=${rsa.phi}`}
+          <span className={`text-[11px] mt-1 block font-bold ${rsa.isEValid ? 'text-[#58CC02]' : 'text-[#FF4B4B]'}`}>
+            {rsa.isEValid ? `✓ mcd(e, ${rsa.phi}) = 1 (Válido)` : `✗ Inválido: no es coprimo con phi=${rsa.phi}`}
           </span>
         </div>
       </div>
 
       {/* Step-by-Step Mathematical Derivations */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-          <div className="text-[10px] uppercase font-bold text-slate-400">1. Módulo n (Público)</div>
-          <div className="text-xl font-black text-white font-mono mt-1">n = {rsa.n}</div>
-          <div className="text-[11px] text-slate-500 font-mono mt-1">n = p &times; q = {p} &times; {q}</div>
+        <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
+          <div className="text-[10px] uppercase font-black tracking-wider text-[#AFAFAF]">1. Módulo n (Público)</div>
+          <div className="text-xl font-black text-[#4B4B4B] font-mono mt-1">n = {rsa.n}</div>
+          <div className="text-[11px] text-[#777777] font-mono font-bold mt-1">n = p &times; q = {p} &times; {q}</div>
         </div>
 
-        <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-          <div className="text-[10px] uppercase font-bold text-slate-400">2. Función Euler &phi;(n)</div>
-          <div className="text-xl font-black text-amber-400 font-mono mt-1">&phi;(n) = {rsa.phi}</div>
-          <div className="text-[11px] text-slate-500 font-mono mt-1">(p-1)(q-1) = {p-1} &times; {q-1}</div>
+        <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
+          <div className="text-[10px] uppercase font-black tracking-wider text-[#AFAFAF]">2. Función Euler &phi;(n)</div>
+          <div className="text-xl font-black text-[#FF9600] font-mono mt-1">&phi;(n) = {rsa.phi}</div>
+          <div className="text-[11px] text-[#777777] font-mono font-bold mt-1">(p-1)(q-1) = {p-1} &times; {q-1}</div>
         </div>
 
-        <div className="bg-slate-950 p-4 rounded-2xl border border-purple-500/30">
-          <div className="text-[10px] uppercase font-bold text-purple-300">3. Clave Pública (e, n)</div>
-          <div className="text-xl font-black text-purple-400 font-mono mt-1">({e}, {rsa.n})</div>
-          <div className="text-[11px] text-slate-500 mt-1">Conocida por todo el mundo</div>
+        <div className="bg-[#F2E5FF] p-4 rounded-2xl border-2 border-b-4 border-[#CE82FF]">
+          <div className="text-[10px] uppercase font-black tracking-wider text-[#A559D9]">3. Clave Pública (e, n)</div>
+          <div className="text-xl font-black text-[#A559D9] font-mono mt-1">({e}, {rsa.n})</div>
+          <div className="text-[11px] text-[#777777] font-bold mt-1">Conocida por todo el mundo</div>
         </div>
 
-        <div className="bg-slate-950 p-4 rounded-2xl border border-rose-500/30">
-          <div className="text-[10px] uppercase font-bold text-rose-300">4. Clave Privada (d, n)</div>
-          <div className="text-xl font-black text-rose-400 font-mono mt-1">({rsa.d}, {rsa.n})</div>
-          <div className="text-[11px] text-slate-500 font-mono mt-1">e&times;d &equiv; 1 (mod &phi;) &rarr; {e}&times;{rsa.d} = {e * rsa.d}</div>
+        <div className="bg-[#FFF0F0] p-4 rounded-2xl border-2 border-b-4 border-[#FF4B4B]">
+          <div className="text-[10px] uppercase font-black tracking-wider text-[#EA2B2B]">4. Clave Privada (d, n)</div>
+          <div className="text-xl font-black text-[#EA2B2B] font-mono mt-1">({rsa.d}, {rsa.n})</div>
+          <div className="text-[11px] text-[#777777] font-mono font-bold mt-1">e&times;d &equiv; 1 (mod &phi;)</div>
         </div>
       </div>
 
       {/* Interactive Encryption & Decryption Pipeline */}
-      <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
-        <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-400" />
+      <div className="bg-[#F7F7F7] p-6 rounded-3xl border-2 border-[#E5E5E5] space-y-4">
+        <div className="text-xs font-black text-[#4B4B4B] uppercase tracking-wider flex items-center gap-2">
+          <ShieldCheck className="w-4 h-4 text-[#58CC02]" />
           <span>Prueba de Cifrado y Descifrado en Tiempo Real</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
           {/* Plaintext */}
-          <div className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-2">
-            <label htmlFor="rsa-message-input" className="flex items-center justify-between text-xs font-bold text-slate-300">
-              <span className="flex items-center gap-1.5"><Unlock className="w-3.5 h-3.5 text-sky-400" /> Mensaje Claro (M)</span>
-              <span className="text-[10px] text-slate-500">M &lt; n</span>
+          <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5] space-y-2">
+            <label htmlFor="rsa-message-input" className="flex items-center justify-between text-xs font-black text-[#4B4B4B] uppercase tracking-wider">
+              <span className="flex items-center gap-1.5"><Unlock className="w-3.5 h-3.5 text-[#1CB0F6]" /> Mensaje Claro (M)</span>
+              <span className="text-[10px] text-[#AFAFAF] font-mono font-bold">M &lt; n</span>
             </label>
             <input
               id="rsa-message-input"
@@ -217,48 +233,50 @@ export const RsaCryptolab: React.FC = () => {
               max={rsa.n - 1}
               value={message}
               onChange={ev => setMessage(Number(ev.target.value))}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono text-lg font-black focus:outline-none focus:border-sky-500"
+              className="w-full px-3 py-2 bg-[#F7F7F7] border-2 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono text-xl font-black focus:outline-none focus:border-[#1CB0F6] transition"
             />
-            <div className="text-[11px] text-slate-400">
-              Fórmula de cifrado: <code className="text-sky-300 font-bold">C = M^e mod n</code>
+            <div className="text-[11px] text-[#777777] font-bold">
+              Fórmula: <code className="text-[#1CB0F6]">C = M^e mod n</code>
             </div>
           </div>
 
           {/* Ciphertext */}
-          <div className="bg-purple-950/20 p-4 rounded-2xl border border-purple-500/40 space-y-2 text-center">
-            <div className="text-xs font-bold text-purple-300 flex items-center justify-center gap-1.5">
+          <div className="bg-[#F2E5FF] p-4 rounded-2xl border-2 border-b-4 border-[#CE82FF] space-y-2 text-center">
+            <div className="text-xs font-black text-[#A559D9] uppercase tracking-wider flex items-center justify-center gap-1.5">
               <Lock className="w-3.5 h-3.5" /> Texto Cifrado (C)
             </div>
-            <div className="text-3xl font-black text-purple-400 font-mono">
+            <div className="text-3xl font-black text-[#A559D9] font-mono">
               {rsa.ciphertext !== null ? rsa.ciphertext : '---'}
             </div>
-            <div className="text-[11px] font-mono text-purple-200/80">
+            <div className="text-[11px] font-mono font-bold text-[#A559D9]">
               {message}<sup>{e}</sup> mod {rsa.n} = {rsa.ciphertext}
             </div>
           </div>
 
           {/* Decrypted */}
-          <div className="bg-emerald-950/20 p-4 rounded-2xl border border-emerald-500/40 space-y-2">
-            <div className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Mensaje Descifrado (M')
+          <div className="bg-[#D7FFB8] p-4 rounded-2xl border-2 border-b-4 border-[#58CC02] space-y-2 text-center">
+            <div className="text-xs font-black text-[#58A700] uppercase tracking-wider flex items-center justify-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Descifrado (M')
             </div>
-            <div className="text-3xl font-black text-emerald-400 font-mono">
+            <div className="text-3xl font-black text-[#58A700] font-mono">
               {rsa.decryptedMessage !== null ? rsa.decryptedMessage : '---'}
             </div>
-            <div className="text-[11px] font-mono text-emerald-200/80">
-              C<sup>d</sup> mod n = {rsa.ciphertext}<sup>{rsa.d}</sup> mod {rsa.n} = <span className="font-bold underline">{rsa.decryptedMessage}</span>
+            <div className="text-[11px] font-mono font-bold text-[#58A700]">
+              C<sup>d</sup> mod n = <span className="underline font-black">{rsa.decryptedMessage}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Exam Pitfall alert */}
-      <div className="bg-purple-950/20 border border-purple-900/40 p-4 rounded-2xl flex items-start gap-3 text-xs text-purple-200/90">
-        <Sparkles className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
-        <div>
-          <span className="font-bold text-purple-300">Regla Clave del Examen de SSTT (RSA):</span>
-          {' '}Para calcular potencias grandes como 8³ mod 55 a mano en el examen, nunca eleves al número completo.
-          Aplica siempre la propiedad modular: <code className="text-purple-300">8³ = 8² &times; 8 = 64 &times; 8 &equiv; 9 &times; 8 = 72 &equiv; 17 (mod 55)</code>.
+      <div className="bg-[#F2E5FF] border-2 border-b-4 border-[#CE82FF] p-5 rounded-3xl flex items-start gap-3.5 text-xs text-[#A559D9] font-bold">
+        <Sparkles className="w-5 h-5 text-[#CE82FF] shrink-0 mt-0.5" />
+        <div className="leading-relaxed">
+          <span className="font-black text-[#A559D9] uppercase tracking-wide block mb-1">
+            Regla Clave del Examen de SSTT (RSA):
+          </span>
+          Para calcular potencias grandes como 8³ mod 55 a mano en el examen, nunca eleves al número completo.
+          Aplica siempre la propiedad modular: <code className="bg-white/80 px-1 py-0.5 rounded text-[#A559D9] font-black">8³ = 8² &times; 8 = 64 &times; 8 &equiv; 9 &times; 8 = 72 &equiv; 17 (mod 55)</code>.
           ¡El tribunal busca que demuestres simplificaciones intermedias paso a paso!
         </div>
       </div>

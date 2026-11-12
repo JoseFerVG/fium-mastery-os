@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GitBranch, Play, RotateCcw, Check, X, ArrowRight, CornerDownRight } from 'lucide-react';
+import { soundManager } from '../../utils/soundEffects';
 
 interface DFA {
   name: string;
@@ -93,14 +94,14 @@ export const AutomataSimulator: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-      <div className="flex items-center gap-2 mb-6">
-        <span className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">
-          <GitBranch className="w-5 h-5" />
+    <div className="duo-card p-6 sm:p-8 bg-white border-2 border-b-[6px] border-[#E5E5E5] text-[#4B4B4B] font-sans">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#E5E5E5]">
+        <span className="p-2.5 bg-[#D7FFB8] text-[#58A700] rounded-2xl border-2 border-[#58CC02]">
+          <GitBranch className="w-5 h-5 stroke-[2.5]" />
         </span>
         <div>
-          <h3 className="text-xl font-bold text-white">Simulador Interactivo de Autómatas Finitos (ALF)</h3>
-          <p className="text-sm text-slate-400">Prueba cadenas paso a paso y visualiza la cinta de lectura y los estados activos.</p>
+          <h3 className="text-xl sm:text-2xl font-black text-[#4B4B4B]">Simulador de Autómatas Finitos (ALF)</h3>
+          <p className="text-xs text-[#777777] font-bold mt-0.5">Prueba cadenas paso a paso y visualiza la cinta de lectura y los estados activos.</p>
         </div>
       </div>
 
@@ -110,27 +111,28 @@ export const AutomataSimulator: React.FC = () => {
           <button
             key={idx}
             onClick={() => {
+              soundManager.playClick();
               setSelectedDfaIndex(idx);
               setInputString(idx === 2 ? 'ababb' : '1001');
               setCurrentStep(0);
             }}
-            className={`p-3 text-left rounded-xl border transition ${
+            className={`p-4 text-left rounded-2xl border-2 border-b-4 transition cursor-pointer ${
               selectedDfaIndex === idx
-                ? 'bg-emerald-600/15 border-emerald-500 text-white'
-                : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                ? 'bg-[#D7FFB8] border-[#58CC02] text-[#58A700]'
+                : 'bg-white border-[#E5E5E5] text-[#4B4B4B] hover:bg-[#F7F7F7]'
             }`}
           >
-            <div className="font-semibold text-sm text-emerald-300">{item.name}</div>
-            <div className="text-xs text-slate-400 mt-1">{item.description}</div>
+            <div className="font-black text-sm text-[#58A700]">{item.name}</div>
+            <div className="text-xs text-[#777777] font-bold mt-1">{item.description}</div>
           </button>
         ))}
       </div>
 
       {/* Input Tape & Controls */}
-      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6">
+      <div className="bg-[#F7F7F7] p-5 rounded-2xl border-2 border-[#E5E5E5] mb-6">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="w-full md:w-auto flex-1">
-            <label htmlFor="automata-input-string" className="text-xs font-semibold text-slate-400 block mb-1">
+            <label htmlFor="automata-input-string" className="text-xs font-black text-[#777777] block mb-1.5 uppercase tracking-wider">
               Cadena de entrada (Alfabeto permitido: {dfa.alphabet.join(', ')}):
             </label>
             <input
@@ -144,31 +146,37 @@ export const AutomataSimulator: React.FC = () => {
                 setInputString(e.target.value);
                 setCurrentStep(0);
               }}
-              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 font-mono text-sm text-white focus:border-emerald-500 outline-none"
+              className="w-full bg-white border-2 border-b-4 border-[#E5E5E5] rounded-xl px-4 py-2.5 font-mono text-sm text-[#4B4B4B] font-black focus:border-[#58CC02] outline-none transition"
               placeholder="Introduce cadena..."
             />
           </div>
 
           <div className="flex items-center gap-2 self-end md:self-auto">
             <button
-              onClick={handleReset}
-              className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg transition"
+              onClick={() => {
+                soundManager.playClick();
+                handleReset();
+              }}
+              className="duo-btn-white px-3.5 py-2 text-xs"
             >
-              <RotateCcw className="w-3.5 h-3.5" /> Reiniciar
+              <RotateCcw className="w-3.5 h-3.5 mr-1" /> Reiniciar
             </button>
             <button
-              onClick={handleNextStep}
+              onClick={() => {
+                soundManager.playClick();
+                handleNextStep();
+              }}
               disabled={isFinished}
-              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-xs font-bold rounded-lg shadow-lg shadow-emerald-600/20 transition"
+              className="duo-btn-green px-4 py-2 text-xs"
             >
-              Leer Siguiente Símbolo <Play className="w-3.5 h-3.5" />
+              Leer Siguiente <Play className="w-3.5 h-3.5 ml-1" />
             </button>
           </div>
         </div>
 
         {/* Visual Tape Display */}
-        <div className="mt-4 pt-4 border-t border-slate-800/80">
-          <div className="text-xs text-slate-400 mb-2 font-semibold">Cinta de Entrada (Cabezal de lectura):</div>
+        <div className="mt-4 pt-4 border-t-2 border-[#E5E5E5]">
+          <div className="text-xs text-[#777777] mb-2 font-black uppercase tracking-wider">Cinta de Entrada (Cabezal de lectura):</div>
           <div className="flex gap-2 font-mono overflow-x-auto pb-2">
             {inputString.split('').map((char, idx) => {
               const isPast = idx < currentStep;
@@ -177,20 +185,20 @@ export const AutomataSimulator: React.FC = () => {
               return (
                 <div
                   key={idx}
-                  className={`w-10 h-12 flex flex-col items-center justify-center rounded-lg border text-base font-bold transition-all ${
+                  className={`w-12 h-14 flex flex-col items-center justify-center rounded-2xl border-2 text-base font-black transition-all ${
                     isCurrent
-                      ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 ring-2 ring-emerald-500/40 -translate-y-1'
+                      ? 'bg-[#D7FFB8] border-b-4 border-[#58CC02] text-[#58A700] ring-4 ring-[#58CC02]/20 -translate-y-1'
                       : isPast
-                      ? 'bg-slate-900 border-slate-800 text-slate-500'
-                      : 'bg-slate-950 border-slate-800 text-slate-300'
+                      ? 'bg-white border-[#E5E5E5] text-[#AFAFAF]'
+                      : 'bg-white border-b-4 border-[#E5E5E5] text-[#4B4B4B]'
                   }`}
                 >
                   <span>{char}</span>
-                  {isCurrent && <span className="text-[10px] text-emerald-400 font-normal">▲</span>}
+                  {isCurrent && <span className="text-[10px] text-[#58A700] font-black leading-none">▲</span>}
                 </div>
               );
             })}
-            <div className="w-10 h-12 flex items-center justify-center rounded-lg border border-dashed border-slate-800 text-slate-600 font-bold">
+            <div className="w-12 h-14 flex items-center justify-center rounded-2xl border-2 border-dashed border-[#CECECE] text-[#AFAFAF] font-black">
               λ
             </div>
           </div>
@@ -199,7 +207,7 @@ export const AutomataSimulator: React.FC = () => {
 
       {/* State Graph Visualizer (Nodes) */}
       <div className="mb-6">
-        <div className="text-xs font-semibold text-slate-400 mb-2">Estados del Autómata:</div>
+        <div className="text-xs font-black text-[#777777] uppercase tracking-wider mb-2">Estados del Autómata:</div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {dfa.states.map(state => {
             const isActive = currentItem.state === state;
@@ -209,21 +217,21 @@ export const AutomataSimulator: React.FC = () => {
             return (
               <div
                 key={state}
-                className={`p-4 rounded-xl border text-center transition-all ${
+                className={`p-4 rounded-2xl border-2 text-center transition-all ${
                   isActive
-                    ? 'bg-emerald-500/20 border-emerald-400 ring-2 ring-emerald-500/50 shadow-lg shadow-emerald-500/20 scale-105'
-                    : 'bg-slate-950 border-slate-800/80 text-slate-400'
+                    ? 'bg-[#D7FFB8] border-b-4 border-[#58CC02] text-[#58A700] shadow-sm scale-105'
+                    : 'bg-white border-b-4 border-[#E5E5E5] text-[#4B4B4B]'
                 }`}
               >
-                <div className="flex items-center justify-center gap-1.5 font-mono font-bold text-lg text-white">
-                  {isInitial && <ArrowRight className="w-4 h-4 text-emerald-400 inline" />}
+                <div className="flex items-center justify-center gap-1.5 font-mono font-black text-lg text-[#4B4B4B]">
+                  {isInitial && <ArrowRight className="w-4 h-4 text-[#58CC02] inline" />}
                   <span>{state}</span>
-                  {isAccept && <span className="text-xs text-emerald-400 ml-1 font-sans px-1.5 py-0.5 bg-emerald-500/10 rounded border border-emerald-500/30">FINAL</span>}
+                  {isAccept && <span className="text-xs text-[#58A700] ml-1 font-sans px-2 py-0.5 bg-[#D7FFB8] rounded-full border border-[#58CC02] font-black">FINAL</span>}
                 </div>
-                <div className="text-[11px] text-slate-500 mt-2 font-mono">
+                <div className="text-[11px] text-[#777777] mt-2 font-mono font-bold">
                   {dfa.alphabet.map(sym => (
                     <div key={sym}>
-                      con '{sym}' &rarr; <span className="text-slate-300">{dfa.transitions[state][sym]}</span>
+                      con '{sym}' &rarr; <span className="text-[#1CB0F6]">{dfa.transitions[state][sym]}</span>
                     </div>
                   ))}
                 </div>
@@ -236,20 +244,20 @@ export const AutomataSimulator: React.FC = () => {
       {/* Result Status Banner */}
       {isFinished && (
         <div
-          className={`p-4 rounded-xl border flex items-center justify-between text-sm font-bold ${
+          className={`p-4 rounded-2xl border-2 border-b-4 flex items-center justify-between text-sm font-black ${
             isAccepted
-              ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
-              : 'bg-rose-500/15 border-rose-500/40 text-rose-300'
+              ? 'bg-[#D7FFB8] border-[#58CC02] text-[#58A700]'
+              : 'bg-[#FFDFE0] border-[#FF4B4B] text-[#EA2B2B]'
           }`}
         >
           <div className="flex items-center gap-2">
-            {isAccepted ? <Check className="w-5 h-5 text-emerald-400" /> : <X className="w-5 h-5 text-rose-400" />}
+            {isAccepted ? <Check className="w-5 h-5 text-[#58CC02] stroke-[3]" /> : <X className="w-5 h-5 text-[#FF4B4B] stroke-[3]" />}
             <span>
               Resultado final: La cadena "{inputString}" ha sido{' '}
               <strong className="underline">{isAccepted ? 'ACEPTADA' : 'RECHAZADA'}</strong> por el autómata.
             </span>
           </div>
-          <span className="text-xs opacity-80 font-mono">Estado final: {currentItem.state}</span>
+          <span className="text-xs opacity-90 font-mono">Estado final: {currentItem.state}</span>
         </div>
       )}
     </div>

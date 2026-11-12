@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Layers, Play, RotateCcw, CheckCircle, AlertOctagon, HelpCircle } from 'lucide-react';
+import { soundManager } from '../../utils/soundEffects';
 
 export const MemoryVirtualSimulator: React.FC = () => {
   const [numFrames, setNumFrames] = useState<number>(3);
@@ -112,30 +113,34 @@ export const MemoryVirtualSimulator: React.FC = () => {
   const totalFaults = simSteps.slice(0, currentStep).filter(s => s.isFault).length;
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-      <div className="flex items-center gap-2 mb-6">
-        <span className="p-2 bg-amber-500/10 text-amber-400 rounded-lg">
-          <Layers className="w-5 h-5" />
+    <div className="duo-card p-6 sm:p-8 bg-white border-2 border-b-[6px] border-[#E5E5E5] text-[#4B4B4B] font-sans">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#E5E5E5]">
+        <span className="p-2.5 bg-[#FFF4D0] text-[#FF9600] rounded-2xl border-2 border-[#FFC800]">
+          <Layers className="w-5 h-5 stroke-[2.5]" />
         </span>
         <div>
-          <h3 className="text-xl font-bold text-white">Simulador de Reemplazo de Páginas (ASO)</h3>
-          <p className="text-sm text-slate-400">Comprueba paso a paso fallos de página con FIFO, LRU y el Algoritmo del Reloj.</p>
+          <h3 className="text-xl sm:text-2xl font-black text-[#4B4B4B]">Simulador de Reemplazo de Páginas (ASO)</h3>
+          <p className="text-xs text-[#777777] font-bold mt-0.5">Comprueba paso a paso fallos de página con FIFO, LRU y el Algoritmo del Reloj.</p>
         </div>
       </div>
 
       {/* Settings Bar */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
-          <label className="text-xs font-semibold text-slate-400 block mb-1.5">Algoritmo de Reemplazo</label>
-          <div className="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <label className="text-xs font-black text-[#777777] uppercase tracking-wider block mb-1.5">Algoritmo de Reemplazo</label>
+          <div className="grid grid-cols-3 gap-1.5 bg-[#F7F7F7] p-1.5 rounded-2xl border-2 border-[#E5E5E5]">
             {(['fifo', 'lru', 'clock'] as const).map(alg => (
               <button
                 key={alg}
-                onClick={() => { setAlgorithm(alg); setCurrentStep(0); }}
-                className={`py-1.5 text-xs font-bold uppercase rounded-lg transition ${
+                onClick={() => {
+                  soundManager.playClick();
+                  setAlgorithm(alg);
+                  setCurrentStep(0);
+                }}
+                className={`py-2 text-xs font-black uppercase rounded-xl transition cursor-pointer border-2 border-b-4 ${
                   algorithm === alg
-                    ? 'bg-amber-600 text-white shadow'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#FFF4D0] border-[#FFC800] text-[#E08500]'
+                    : 'bg-white border-[#E5E5E5] text-[#777777] hover:bg-[#F7F7F7]'
                 }`}
               >
                 {alg}
@@ -145,14 +150,18 @@ export const MemoryVirtualSimulator: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="memory-frames-select" className="text-xs font-semibold text-slate-400 block mb-1.5">Marcos de Memoria Física (Frames)</label>
+          <label htmlFor="memory-frames-select" className="text-xs font-black text-[#777777] uppercase tracking-wider block mb-1.5">Marcos de Memoria Física (Frames)</label>
           <select
             id="memory-frames-select"
             name="memoryFrames"
             aria-label="Marcos de memoria física"
             value={numFrames}
-            onChange={e => { setNumFrames(Number(e.target.value)); setCurrentStep(0); }}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+            onChange={e => {
+              soundManager.playClick();
+              setNumFrames(Number(e.target.value));
+              setCurrentStep(0);
+            }}
+            className="w-full bg-white border-2 border-b-4 border-[#E5E5E5] rounded-2xl px-4 py-2.5 text-xs font-black text-[#4B4B4B] focus:border-[#FF9600] outline-none transition"
           >
             <option value={3}>3 Marcos (Problema típico UMU)</option>
             <option value={4}>4 Marcos</option>
@@ -161,7 +170,7 @@ export const MemoryVirtualSimulator: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="memory-ref-string" className="text-xs font-semibold text-slate-400 block mb-1.5">Cadena de Referencias</label>
+          <label htmlFor="memory-ref-string" className="text-xs font-black text-[#777777] uppercase tracking-wider block mb-1.5">Cadena de Referencias</label>
           <input
             id="memory-ref-string"
             name="memoryRefString"
@@ -169,48 +178,55 @@ export const MemoryVirtualSimulator: React.FC = () => {
             autoComplete="off"
             type="text"
             value={refString}
-            onChange={e => { setRefString(e.target.value); setCurrentStep(0); }}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm font-mono text-white focus:border-amber-500 outline-none"
+            onChange={e => {
+              setRefString(e.target.value);
+              setCurrentStep(0);
+            }}
+            className="w-full bg-white border-2 border-b-4 border-[#E5E5E5] rounded-2xl px-4 py-2.5 text-xs font-mono font-black text-[#4B4B4B] focus:border-[#FF9600] outline-none transition"
           />
         </div>
       </div>
 
       {/* Stepper Controls */}
-      <div className="flex items-center justify-between bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6">
+      <div className="flex items-center justify-between bg-[#F7F7F7] p-4 rounded-2xl border-2 border-[#E5E5E5] mb-6">
         <div className="flex items-center gap-4">
           <div>
-            <span className="text-xs font-semibold text-slate-400 block">Paso:</span>
-            <span className="text-xl font-black text-amber-400 font-mono">{currentStep} / {pages.length}</span>
+            <span className="text-[11px] font-black text-[#777777] uppercase tracking-wider block">Paso:</span>
+            <span className="text-xl font-black text-[#FF9600] font-mono">{currentStep} / {pages.length}</span>
           </div>
-          <div className="h-8 w-px bg-slate-800" />
+          <div className="h-8 w-px bg-[#E5E5E5]" />
           <div>
-            <span className="text-xs font-semibold text-slate-400 block">Fallos de Página (Faults):</span>
-            <span className="text-xl font-black text-rose-400 font-mono">{totalFaults}</span>
+            <span className="text-[11px] font-black text-[#777777] uppercase tracking-wider block">Fallos de Página (Faults):</span>
+            <span className="text-xl font-black text-[#FF4B4B] font-mono">{totalFaults}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setCurrentStep(0)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg transition"
+            onClick={() => {
+              soundManager.playClick();
+              setCurrentStep(0);
+            }}
+            className="duo-btn-white px-3.5 py-2 text-xs"
           >
-            <RotateCcw className="w-3.5 h-3.5" /> Reiniciar
+            <RotateCcw className="w-3.5 h-3.5 mr-1" /> Reiniciar
           </button>
           <button
             onClick={() => {
+              soundManager.playClick();
               if (currentStep < pages.length) setCurrentStep(s => s + 1);
             }}
             disabled={currentStep >= pages.length}
-            className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white text-xs font-bold rounded-lg shadow-lg shadow-amber-600/20 transition"
+            className="duo-btn-blue px-4 py-2 text-xs"
           >
-            Avanzar Referencia <Play className="w-3.5 h-3.5" />
+            Avanzar Referencia <Play className="w-3.5 h-3.5 ml-1" />
           </button>
         </div>
       </div>
 
       {/* Reference Stream Display */}
       <div className="mb-6">
-        <div className="text-xs font-semibold text-slate-400 mb-2">Secuencia de Páginas Solicitadas:</div>
+        <div className="text-xs font-black text-[#777777] uppercase tracking-wider mb-2">Secuencia de Páginas Solicitadas:</div>
         <div className="flex gap-2 overflow-x-auto pb-2 font-mono">
           {pages.map((p, idx) => {
             const isCurrent = idx === currentStep - 1;
@@ -220,19 +236,19 @@ export const MemoryVirtualSimulator: React.FC = () => {
             return (
               <div
                 key={idx}
-                className={`flex-shrink-0 w-11 h-14 rounded-xl border flex flex-col items-center justify-center transition-all ${
+                className={`flex-shrink-0 w-12 h-16 rounded-2xl border-2 flex flex-col items-center justify-center transition-all ${
                   isCurrent
-                    ? 'bg-amber-500/20 border-amber-400 ring-2 ring-amber-500/50 -translate-y-1'
+                    ? 'bg-[#FFF4D0] border-b-4 border-[#FFC800] text-[#E08500] ring-4 ring-[#FF9600]/30 -translate-y-1'
                     : isDone
                     ? stepInfo.isFault
-                      ? 'bg-rose-950/30 border-rose-800/60 text-rose-300'
-                      : 'bg-emerald-950/30 border-emerald-800/60 text-emerald-300'
-                    : 'bg-slate-950 border-slate-800 text-slate-500'
+                      ? 'bg-[#FFDFE0] border-b-4 border-[#FF4B4B] text-[#EA2B2B]'
+                      : 'bg-[#D7FFB8] border-b-4 border-[#58CC02] text-[#58A700]'
+                    : 'bg-white border-b-4 border-[#E5E5E5] text-[#AFAFAF]'
                 }`}
               >
-                <span className="text-base font-bold">{p}</span>
+                <span className="text-base font-black">{p}</span>
                 {isDone && (
-                  <span className="text-[10px] font-bold">
+                  <span className="text-[10px] font-black">
                     {stepInfo.isFault ? 'F' : 'H'}
                   </span>
                 )}
@@ -243,8 +259,8 @@ export const MemoryVirtualSimulator: React.FC = () => {
       </div>
 
       {/* Physical RAM Frames State */}
-      <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6">
-        <div className="text-xs font-semibold text-slate-400 mb-3">Estado de la RAM Física (Marcos de Página):</div>
+      <div className="bg-[#F7F7F7] p-5 rounded-2xl border-2 border-[#E5E5E5] mb-6">
+        <div className="text-xs font-black text-[#777777] uppercase tracking-wider mb-3">Estado de la RAM Física (Marcos de Página):</div>
         <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
           {Array.from({ length: numFrames }).map((_, fIdx) => {
             const pageInFrame = currentStepData ? currentStepData.frames[fIdx] : null;
@@ -254,20 +270,20 @@ export const MemoryVirtualSimulator: React.FC = () => {
             return (
               <div
                 key={fIdx}
-                className={`p-4 rounded-xl border text-center font-mono transition ${
+                className={`p-4 rounded-2xl border-2 border-b-4 text-center font-mono transition ${
                   isJustLoaded
-                    ? 'bg-rose-500/20 border-rose-500 ring-2 ring-rose-500/40'
+                    ? 'bg-[#FFDFE0] border-[#FF4B4B] text-[#EA2B2B]'
                     : isHit
-                    ? 'bg-emerald-500/20 border-emerald-500 ring-2 ring-emerald-500/40'
-                    : 'bg-slate-900 border-slate-800 text-slate-300'
+                    ? 'bg-[#D7FFB8] border-[#58CC02] text-[#58A700]'
+                    : 'bg-white border-[#E5E5E5] text-[#4B4B4B]'
                 }`}
               >
-                <div className="text-[10px] text-slate-500 font-sans uppercase">Marco {fIdx}</div>
+                <div className="text-[10px] text-[#AFAFAF] font-sans font-black uppercase">Marco {fIdx}</div>
                 <div className="text-2xl font-black mt-1">
                   {pageInFrame !== null && pageInFrame !== undefined ? (
-                    <span className="text-white">Página {pageInFrame}</span>
+                    <span className="text-[#4B4B4B]">Pág {pageInFrame}</span>
                   ) : (
-                    <span className="text-slate-600 text-base font-normal">Vacío</span>
+                    <span className="text-[#CECECE] text-base font-normal">Vacío</span>
                   )}
                 </div>
               </div>
@@ -279,10 +295,10 @@ export const MemoryVirtualSimulator: React.FC = () => {
       {/* Last Action Explanatory Box */}
       {currentStep > 0 && currentStepData && (
         <div
-          className={`p-4 rounded-xl border text-xs flex items-center justify-between ${
+          className={`p-4 rounded-2xl border-2 border-b-4 text-xs font-black flex items-center justify-between ${
             currentStepData.isFault
-              ? 'bg-rose-500/10 border-rose-500/30 text-rose-200'
-              : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'
+              ? 'bg-[#FFDFE0] border-[#FF4B4B] text-[#EA2B2B]'
+              : 'bg-[#D7FFB8] border-[#58CC02] text-[#58A700]'
           }`}
         >
           <div>
@@ -292,7 +308,7 @@ export const MemoryVirtualSimulator: React.FC = () => {
             {currentStepData.victimPage !== null && currentStepData.victimPage !== undefined && (
               <span className="ml-1">
                 Víctima desalojada por {algorithm.toUpperCase()}:{' '}
-                <strong className="text-white">Página {currentStepData.victimPage}</strong>.
+                <strong className="text-[#4B4B4B]">Página {currentStepData.victimPage}</strong>.
               </span>
             )}
           </div>

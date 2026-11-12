@@ -189,24 +189,34 @@ export const AStarSearchVisualizer: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+    <div className="bg-white border-2 border-b-[6px] border-[#E5E5E5] rounded-3xl p-6 sm:p-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-amber-500/10 text-amber-400 rounded-2xl border border-amber-500/20">
-            <Navigation className="w-6 h-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#E5E5E5] pb-5">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#FFF4D9] border-2 border-b-4 border-[#FFD966] flex items-center justify-center text-[#FF9600] shrink-0">
+            <Navigation className="w-7 h-7" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-white">Visualizador de Búsqueda Heurística en Espacio de Estados (A*)</h3>
-            <p className="text-xs text-slate-400">Algoritmo A*, admisibilidad de heurísticas, frontera (abiertos) y lista de cerrados de Sistemas Inteligentes</p>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-widest uppercase bg-[#FFF4D9] text-[#FF9600] border border-[#FFD966]">
+                SSII / BÚSQUEDA
+              </span>
+              <span className="text-xs font-bold text-[#AFAFAF] uppercase">Espacio de Estados</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-[#4B4B4B] uppercase tracking-tight mt-0.5">
+              Visualizador Heurístico A* & Espacio de Estados
+            </h3>
+            <p className="text-xs text-[#777777] font-semibold">
+              Algoritmo A*, admisibilidad de heurísticas, frontera (abiertos) y lista de cerrados
+            </p>
           </div>
         </div>
 
         <button
           onClick={handleResetWalls}
-          className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition self-start sm:self-auto"
+          className="duo-btn-white text-xs px-3.5 py-2 flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
         >
-          <RotateCcw className="w-3.5 h-3.5" /> Limpiar Muros
+          <RotateCcw className="w-4 h-4" /> Limpiar Muros
         </button>
       </div>
 
@@ -215,10 +225,10 @@ export const AStarSearchVisualizer: React.FC = () => {
         {/* Algo Picker */}
         <div className="flex flex-wrap gap-2">
           {[
-            { id: 'astar_manhattan', label: 'A* (Manhattan)', desc: 'Admisible en rejilla 4-vecinos' },
-            { id: 'astar_euclidean', label: 'A* (Euclídea)', desc: 'Línea recta h(n) <= h*(n)' },
-            { id: 'greedy', label: 'Primero el Mejor (Greedy)', desc: 'Solo evalúa h(n), no óptimo' },
-            { id: 'dijkstra', label: 'Costo Uniforme / Dijkstra', desc: 'Solo evalúa g(n)' },
+            { id: 'astar_manhattan', label: 'A* (Manhattan)', desc: 'Admisible 4-vecinos' },
+            { id: 'astar_euclidean', label: 'A* (Euclídea)', desc: 'Línea recta h<=h*' },
+            { id: 'greedy', label: 'Primero el Mejor (Greedy)', desc: 'Solo h(n)' },
+            { id: 'dijkstra', label: 'Costo Uniforme / Dijkstra', desc: 'Solo g(n)' },
             { id: 'bfs', label: 'Anchura (BFS)', desc: 'No informado' }
           ].map(item => (
             <button
@@ -227,10 +237,10 @@ export const AStarSearchVisualizer: React.FC = () => {
                 setAlgorithm(item.id as typeof algorithm);
                 soundManager.playClick();
               }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition border ${
+              className={`px-3 py-1.5 rounded-2xl text-xs font-black uppercase transition border-2 border-b-4 cursor-pointer ${
                 algorithm === item.id
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-md shadow-amber-500/10'
-                  : 'bg-slate-950/60 text-slate-400 border-slate-800 hover:border-slate-700'
+                  ? 'bg-[#FFF4D9] text-[#FF9600] border-[#FFD966] translate-y-0.5'
+                  : 'bg-white text-[#777777] border-[#E5E5E5] hover:bg-[#F7F7F7]'
               }`}
             >
               {item.label}
@@ -239,23 +249,29 @@ export const AStarSearchVisualizer: React.FC = () => {
         </div>
 
         {/* Draw tool */}
-        <div className="flex items-center gap-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs">
-          <span className="text-[11px] font-bold text-slate-400 px-2">Modo Pincel:</span>
+        <div className="flex items-center gap-1.5 bg-[#F7F7F7] p-1.5 rounded-2xl border-2 border-[#E5E5E5] text-xs">
+          <span className="text-[11px] font-black uppercase text-[#AFAFAF] px-2">Modo:</span>
           <button
             onClick={() => setDrawMode('wall')}
-            className={`px-2.5 py-1 rounded-lg font-bold transition ${drawMode === 'wall' ? 'bg-slate-700 text-white' : 'text-slate-400'}`}
+            className={`px-3 py-1.5 rounded-xl font-black uppercase transition cursor-pointer ${
+              drawMode === 'wall' ? 'bg-[#4B4B4B] text-white shadow-sm' : 'text-[#777777] hover:text-[#4B4B4B]'
+            }`}
           >
             🧱 Muro
           </button>
           <button
             onClick={() => setDrawMode('start')}
-            className={`px-2.5 py-1 rounded-lg font-bold transition ${drawMode === 'start' ? 'bg-emerald-600 text-white' : 'text-slate-400'}`}
+            className={`px-3 py-1.5 rounded-xl font-black uppercase transition cursor-pointer ${
+              drawMode === 'start' ? 'bg-[#58CC02] text-white shadow-sm' : 'text-[#777777] hover:text-[#4B4B4B]'
+            }`}
           >
             🟢 Origen
           </button>
           <button
             onClick={() => setDrawMode('goal')}
-            className={`px-2.5 py-1 rounded-lg font-bold transition ${drawMode === 'goal' ? 'bg-rose-600 text-white' : 'text-slate-400'}`}
+            className={`px-3 py-1.5 rounded-xl font-black uppercase transition cursor-pointer ${
+              drawMode === 'goal' ? 'bg-[#FF4B4B] text-white shadow-sm' : 'text-[#777777] hover:text-[#4B4B4B]'
+            }`}
           >
             🎯 Destino
           </button>
@@ -263,26 +279,26 @@ export const AStarSearchVisualizer: React.FC = () => {
       </div>
 
       {/* Grid Canvas */}
-      <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex flex-col items-center overflow-x-auto">
+      <div className="bg-[#F7F7F7] p-5 rounded-3xl border-2 border-[#E5E5E5] flex flex-col items-center overflow-x-auto">
         <div className="grid grid-cols-13 gap-1.5 min-w-[580px]">
           {gridState.map((row, r) =>
             row.map((cell, c) => {
               const isStart = r === startPos[0] && c === startPos[1];
               const isGoal = r === goalPos[0] && c === goalPos[1];
 
-              let cellBg = 'bg-slate-900 border-slate-800/80 text-slate-600';
-              if (cell.isWall) cellBg = 'bg-slate-700 border-slate-600';
-              else if (isStart) cellBg = 'bg-emerald-600 border-emerald-400 text-white shadow-lg shadow-emerald-500/30';
-              else if (isGoal) cellBg = 'bg-rose-600 border-rose-400 text-white shadow-lg shadow-rose-500/30';
-              else if (cell.status === 'path') cellBg = 'bg-amber-400 border-amber-300 text-slate-950 font-black shadow-lg shadow-amber-400/20';
-              else if (cell.status === 'open') cellBg = 'bg-cyan-950/60 border-cyan-500/50 text-cyan-300';
-              else if (cell.status === 'closed') cellBg = 'bg-indigo-950/40 border-indigo-500/30 text-indigo-400';
+              let cellBg = 'bg-white border-2 border-[#E5E5E5] text-[#777777] hover:border-[#1CB0F6]';
+              if (cell.isWall) cellBg = 'bg-[#4B4B4B] border-2 border-[#333333] text-white';
+              else if (isStart) cellBg = 'bg-[#58CC02] border-2 border-b-4 border-[#58A700] text-white shadow-sm';
+              else if (isGoal) cellBg = 'bg-[#FF4B4B] border-2 border-b-4 border-[#EA2B2B] text-white shadow-sm';
+              else if (cell.status === 'path') cellBg = 'bg-[#FFC800] border-2 border-b-4 border-[#E5A500] text-[#4B4B4B] font-black shadow-sm';
+              else if (cell.status === 'open') cellBg = 'bg-[#DDF4FF] border-2 border-[#84D8FF] text-[#1CB0F6]';
+              else if (cell.status === 'closed') cellBg = 'bg-[#F2E5FF] border-2 border-[#CE82FF] text-[#A559D9]';
 
               return (
                 <button
                   key={`${r}-${c}`}
                   onClick={() => handleCellClick(r, c)}
-                  className={`w-11 h-11 rounded-lg border flex flex-col items-center justify-center transition-all duration-150 hover:scale-105 select-none ${cellBg}`}
+                  className={`w-11 h-11 rounded-xl flex flex-col items-center justify-center transition-all duration-150 active:scale-95 select-none cursor-pointer ${cellBg}`}
                 >
                   {isStart ? (
                     <span className="text-xs font-black">A</span>
@@ -294,7 +310,7 @@ export const AStarSearchVisualizer: React.FC = () => {
                     <span className="text-[10px] font-mono font-black">{cell.g}</span>
                   ) : cell.status === 'open' || cell.status === 'closed' ? (
                     <div className="text-[8px] font-mono leading-none flex flex-col items-center">
-                      <span className="font-bold">{cell.f !== Infinity ? Math.round(cell.f) : ''}</span>
+                      <span className="font-black">{cell.f !== Infinity ? Math.round(cell.f) : ''}</span>
                       <span className="opacity-70 text-[7px]">{cell.g}+{Math.round(cell.h)}</span>
                     </div>
                   ) : null}
@@ -305,43 +321,45 @@ export const AStarSearchVisualizer: React.FC = () => {
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400 mt-4">
-          <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-emerald-600 inline-block" /> Origen (A)</div>
-          <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-rose-600 inline-block" /> Objetivo (G)</div>
-          <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-slate-700 inline-block" /> Muro</div>
-          <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-cyan-950 border border-cyan-500 inline-block" /> Frontera (Abiertos)</div>
-          <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-indigo-950 border border-indigo-500 inline-block" /> Explorados (Cerrados)</div>
-          <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-amber-400 inline-block" /> Camino Óptimo</div>
+        <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-[#777777] mt-5">
+          <div className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-lg bg-[#58CC02] border border-[#58A700] inline-block" /> Origen (A)</div>
+          <div className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-lg bg-[#FF4B4B] border border-[#EA2B2B] inline-block" /> Objetivo (G)</div>
+          <div className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-lg bg-[#4B4B4B] inline-block" /> Muro</div>
+          <div className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-lg bg-[#DDF4FF] border border-[#84D8FF] inline-block" /> Abiertos (Frontera)</div>
+          <div className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-lg bg-[#F2E5FF] border border-[#CE82FF] inline-block" /> Cerrados (Explorados)</div>
+          <div className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 rounded-lg bg-[#FFC800] border border-[#E5A500] inline-block" /> Camino Óptimo</div>
         </div>
       </div>
 
       {/* Metrics Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-          <div className="text-[10px] uppercase font-bold text-slate-400">Coste Óptimo g*(G):</div>
-          <div className="text-2xl font-black text-amber-400 font-mono mt-0.5">{pathStats.cost} pasos</div>
+        <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
+          <div className="text-[10px] uppercase font-black tracking-wider text-[#AFAFAF]">Coste Óptimo g*(G):</div>
+          <div className="text-2xl font-black text-[#FF9600] font-mono mt-0.5">{pathStats.cost} pasos</div>
         </div>
 
-        <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-          <div className="text-[10px] uppercase font-bold text-slate-400">Nodos en Cerrados (Expandidos):</div>
-          <div className="text-2xl font-black text-indigo-400 font-mono mt-0.5">{pathStats.visitedCount} nodos</div>
+        <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
+          <div className="text-[10px] uppercase font-black tracking-wider text-[#AFAFAF]">Nodos en Cerrados (Expandidos):</div>
+          <div className="text-2xl font-black text-[#A559D9] font-mono mt-0.5">{pathStats.visitedCount} nodos</div>
         </div>
 
-        <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-          <div className="text-[10px] uppercase font-bold text-slate-400">Garantía de Optimalidad:</div>
-          <div className="text-xs font-bold text-emerald-400 mt-2 flex items-center gap-1">
-            <CheckCircle2 className="w-4 h-4" />
-            {algorithm.startsWith('astar') ? '100% Óptimo (h es admisible)' : 'No garantizada'}
+        <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
+          <div className="text-[10px] uppercase font-black tracking-wider text-[#AFAFAF]">Garantía de Optimalidad:</div>
+          <div className="text-xs font-black text-[#58CC02] mt-2 flex items-center gap-1.5 uppercase">
+            <CheckCircle2 className="w-4 h-4 text-[#58CC02]" />
+            {algorithm.startsWith('astar') ? '100% Óptimo (h admisible)' : 'No garantizada'}
           </div>
         </div>
       </div>
 
       {/* Exam Pitfall alert */}
-      <div className="bg-amber-950/20 border border-amber-900/40 p-4 rounded-2xl flex items-start gap-3 text-xs text-amber-200/90">
-        <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-        <div>
-          <span className="font-bold text-amber-300">Teorema de Admisibilidad y Monotonía (Examen FIUM SSII):</span>
-          {' '}Una heurística h(n) es <strong>admisible</strong> si nunca sobreestima el coste real: h(n) &le; h*(n), lo que garantiza que A* en árbol siempre halla la solución óptima.
+      <div className="bg-[#FFF4D9] border-2 border-b-4 border-[#FFD966] p-5 rounded-3xl flex items-start gap-3.5 text-xs text-[#B87A00] font-bold">
+        <Info className="w-5 h-5 text-[#FF9600] shrink-0 mt-0.5" />
+        <div className="leading-relaxed">
+          <span className="font-black text-[#FF9600] uppercase tracking-wide block mb-1">
+            Teorema de Admisibilidad y Monotonía (Examen FIUM SSII):
+          </span>
+          Una heurística h(n) es <strong>admisible</strong> si nunca sobreestima el coste real: h(n) &le; h*(n), lo que garantiza que A* en árbol siempre halla la solución óptima.
           Para que A* en <strong>grafo</strong> sea óptimo sin necesidad de reabrir nodos cerrados, h(n) debe ser además <strong>consistente (monótona)</strong>:
           h(n) &le; c(n, a, n') + h(n').
         </div>

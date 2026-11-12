@@ -102,42 +102,52 @@ export const DecisionTreePlayground: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+    <div className="bg-white border-2 border-b-[6px] border-[#E5E5E5] rounded-3xl p-6 sm:p-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-2xl border border-emerald-500/20">
-            <Calculator className="w-6 h-6" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#E5E5E5] pb-5">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#D7FFB8] border-2 border-b-4 border-[#58CC02] flex items-center justify-center text-[#58A700] shrink-0">
+            <Calculator className="w-7 h-7" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-white">Laboratorio de Métricas & Árboles de Decisión (AC)</h3>
-            <p className="text-xs text-slate-400">Matriz de confusión, Sensibilidad, Precisión, Curvas ROC, Entropía de Shannon y Ganancia de Información</p>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-widest uppercase bg-[#D7FFB8] text-[#58A700] border border-[#58CC02]">
+                AC / MACHINE LEARNING
+              </span>
+              <span className="text-xs font-bold text-[#AFAFAF] uppercase">Métricas & Entropía</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-[#4B4B4B] uppercase tracking-tight mt-0.5">
+              Laboratorio de Métricas & Árboles de Decisión
+            </h3>
+            <p className="text-xs text-[#777777] font-semibold">
+              Matriz de confusión, Sensibilidad, Precisión, F1-Score, Entropía de Shannon y Ganancia ID3
+            </p>
           </div>
         </div>
 
         {/* Tab switch */}
-        <div className="flex items-center bg-slate-950 p-1.5 rounded-2xl border border-slate-800 text-xs self-start sm:self-auto">
+        <div className="flex items-center bg-[#F7F7F7] p-1.5 rounded-2xl border-2 border-[#E5E5E5] text-xs self-start sm:self-auto">
           <button
             onClick={() => {
               setActiveTab('confusion');
               soundManager.playClick();
             }}
-            className={`px-3 py-1.5 rounded-xl font-bold transition ${
-              activeTab === 'confusion' ? 'bg-emerald-600 text-white shadow' : 'text-slate-400 hover:text-white'
+            className={`px-3.5 py-2 rounded-xl font-black uppercase transition cursor-pointer ${
+              activeTab === 'confusion' ? 'bg-[#58CC02] text-white shadow-sm' : 'text-[#777777] hover:text-[#4B4B4B]'
             }`}
           >
-            📊 Matriz de Confusión & ROC
+            📊 Matriz 2x2 & ROC
           </button>
           <button
             onClick={() => {
               setActiveTab('entropy');
               soundManager.playClick();
             }}
-            className={`px-3 py-1.5 rounded-xl font-bold transition ${
-              activeTab === 'entropy' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'
+            className={`px-3.5 py-2 rounded-xl font-black uppercase transition cursor-pointer ${
+              activeTab === 'entropy' ? 'bg-[#1CB0F6] text-white shadow-sm' : 'text-[#777777] hover:text-[#4B4B4B]'
             }`}
           >
-            🌳 Entropía & Ganancia (ID3 / C4.5)
+            🌳 Entropía & Ganancia
           </button>
         </div>
       </div>
@@ -145,24 +155,26 @@ export const DecisionTreePlayground: React.FC = () => {
       {activeTab === 'confusion' ? (
         <div className="space-y-6">
           {/* Controls & Preset */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Ajuste de Valores de la Matriz (2x2):</span>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-black text-[#AFAFAF] uppercase tracking-wider">Ajuste de Valores de la Matriz (2x2):</span>
             <button
               onClick={loadCreditDatasetPreset}
-              className="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
+              className="duo-btn-white text-xs px-3.5 py-2 cursor-pointer"
             >
-              Cargar Preset Práctica Caret (Crédito)
+              📋 Cargar Caso Práctica Caret (Crédito)
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             {/* Visual 2x2 Matrix */}
-            <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800">
-              <div className="text-center text-xs font-bold text-slate-400 mb-3">CLASE REAL (GROUND TRUTH)</div>
+            <div className="bg-[#F7F7F7] p-5 rounded-3xl border-2 border-[#E5E5E5]">
+              <div className="text-center text-xs font-black text-[#777777] uppercase tracking-widest mb-3">CLASE REAL (GROUND TRUTH)</div>
               <div className="grid grid-cols-2 gap-3">
                 {/* TP */}
-                <div className="bg-emerald-950/40 border border-emerald-500/40 p-4 rounded-xl space-y-1">
-                  <label htmlFor="matrix-tp-input" className="text-[10px] uppercase font-bold text-emerald-400 block">Verdaderos Positivos (TP)</label>
+                <div className="bg-[#D7FFB8] border-2 border-b-4 border-[#58CC02] p-4 rounded-2xl space-y-1">
+                  <label htmlFor="matrix-tp-input" className="text-[10px] uppercase font-black text-[#58A700] block tracking-wider">
+                    Verdaderos Positivos (TP)
+                  </label>
                   <input
                     id="matrix-tp-input"
                     name="truePositives"
@@ -171,14 +183,16 @@ export const DecisionTreePlayground: React.FC = () => {
                     min={0}
                     value={tp}
                     onChange={e => setTp(Number(e.target.value))}
-                    className="w-full text-2xl font-black text-white bg-transparent focus:outline-none font-mono"
+                    className="w-full text-2xl font-black text-[#58A700] bg-transparent focus:outline-none font-mono"
                   />
-                  <div className="text-[10px] text-emerald-300/70">Predicho: Positivo &bull; Real: Positivo</div>
+                  <div className="text-[11px] text-[#58A700]/90 font-bold">Predicho: Pos &bull; Real: Pos</div>
                 </div>
 
                 {/* FP */}
-                <div className="bg-rose-950/40 border border-rose-500/40 p-4 rounded-xl space-y-1">
-                  <label htmlFor="matrix-fp-input" className="text-[10px] uppercase font-bold text-rose-400 block">Falsos Positivos (FP) - Error Tipo I</label>
+                <div className="bg-[#FFF0F0] border-2 border-b-4 border-[#FF4B4B] p-4 rounded-2xl space-y-1">
+                  <label htmlFor="matrix-fp-input" className="text-[10px] uppercase font-black text-[#EA2B2B] block tracking-wider">
+                    Falsos Positivos (FP) - Tipo I
+                  </label>
                   <input
                     id="matrix-fp-input"
                     name="falsePositives"
@@ -187,14 +201,16 @@ export const DecisionTreePlayground: React.FC = () => {
                     min={0}
                     value={fp}
                     onChange={e => setFp(Number(e.target.value))}
-                    className="w-full text-2xl font-black text-white bg-transparent focus:outline-none font-mono"
+                    className="w-full text-2xl font-black text-[#EA2B2B] bg-transparent focus:outline-none font-mono"
                   />
-                  <div className="text-[10px] text-rose-300/70">Predicho: Positivo &bull; Real: Negativo</div>
+                  <div className="text-[11px] text-[#EA2B2B]/90 font-bold">Predicho: Pos &bull; Real: Neg</div>
                 </div>
 
                 {/* FN */}
-                <div className="bg-amber-950/40 border border-amber-500/40 p-4 rounded-xl space-y-1">
-                  <label htmlFor="matrix-fn-input" className="text-[10px] uppercase font-bold text-amber-400 block">Falsos Negativos (FN) - Error Tipo II</label>
+                <div className="bg-[#FFF4D9] border-2 border-b-4 border-[#FFD966] p-4 rounded-2xl space-y-1">
+                  <label htmlFor="matrix-fn-input" className="text-[10px] uppercase font-black text-[#B87A00] block tracking-wider">
+                    Falsos Negativos (FN) - Tipo II
+                  </label>
                   <input
                     id="matrix-fn-input"
                     name="falseNegatives"
@@ -203,14 +219,16 @@ export const DecisionTreePlayground: React.FC = () => {
                     min={0}
                     value={fn}
                     onChange={e => setFn(Number(e.target.value))}
-                    className="w-full text-2xl font-black text-white bg-transparent focus:outline-none font-mono"
+                    className="w-full text-2xl font-black text-[#B87A00] bg-transparent focus:outline-none font-mono"
                   />
-                  <div className="text-[10px] text-amber-300/70">Predicho: Negativo &bull; Real: Positivo</div>
+                  <div className="text-[11px] text-[#B87A00]/90 font-bold">Predicho: Neg &bull; Real: Pos</div>
                 </div>
 
                 {/* TN */}
-                <div className="bg-cyan-950/40 border border-cyan-500/40 p-4 rounded-xl space-y-1">
-                  <label htmlFor="matrix-tn-input" className="text-[10px] uppercase font-bold text-cyan-400 block">Verdaderos Negativos (TN)</label>
+                <div className="bg-[#DDF4FF] border-2 border-b-4 border-[#84D8FF] p-4 rounded-2xl space-y-1">
+                  <label htmlFor="matrix-tn-input" className="text-[10px] uppercase font-black text-[#1899D6] block tracking-wider">
+                    Verdaderos Negativos (TN)
+                  </label>
                   <input
                     id="matrix-tn-input"
                     name="trueNegatives"
@@ -219,45 +237,45 @@ export const DecisionTreePlayground: React.FC = () => {
                     min={0}
                     value={tn}
                     onChange={e => setTn(Number(e.target.value))}
-                    className="w-full text-2xl font-black text-white bg-transparent focus:outline-none font-mono"
+                    className="w-full text-2xl font-black text-[#1899D6] bg-transparent focus:outline-none font-mono"
                   />
-                  <div className="text-[10px] text-cyan-300/70">Predicho: Negativo &bull; Real: Negativo</div>
+                  <div className="text-[11px] text-[#1899D6]/90 font-bold">Predicho: Neg &bull; Real: Neg</div>
                 </div>
               </div>
             </div>
 
             {/* Calculated Metrics */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                <div className="text-[10px] font-bold uppercase text-slate-400">Exactitud (Accuracy)</div>
-                <div className="text-2xl font-black text-white font-mono mt-0.5">{metrics.accuracy}%</div>
-                <div className="text-[10px] text-slate-500 font-mono">(TP + TN) / Total</div>
+              <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
+                <div className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider">Exactitud (Accuracy)</div>
+                <div className="text-2xl font-black text-[#4B4B4B] font-mono mt-0.5">{metrics.accuracy}%</div>
+                <div className="text-[11px] text-[#777777] font-mono font-bold">(TP + TN) / Total</div>
               </div>
 
-              <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                <div className="text-[10px] font-bold uppercase text-slate-400">Precisión (PPV)</div>
-                <div className="text-2xl font-black text-sky-400 font-mono mt-0.5">{metrics.precision}%</div>
-                <div className="text-[10px] text-slate-500 font-mono">TP / (TP + FP)</div>
+              <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
+                <div className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider">Precisión (PPV)</div>
+                <div className="text-2xl font-black text-[#1CB0F6] font-mono mt-0.5">{metrics.precision}%</div>
+                <div className="text-[11px] text-[#777777] font-mono font-bold">TP / (TP + FP)</div>
               </div>
 
-              <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                <div className="text-[10px] font-bold uppercase text-slate-400">Sensibilidad / Recall (TPR)</div>
-                <div className="text-2xl font-black text-emerald-400 font-mono mt-0.5">{metrics.recall}%</div>
-                <div className="text-[10px] text-slate-500 font-mono">TP / (TP + FN)</div>
+              <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
+                <div className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider">Sensibilidad (Recall)</div>
+                <div className="text-2xl font-black text-[#58CC02] font-mono mt-0.5">{metrics.recall}%</div>
+                <div className="text-[11px] text-[#777777] font-mono font-bold">TP / (TP + FN)</div>
               </div>
 
-              <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                <div className="text-[10px] font-bold uppercase text-slate-400">Especificidad (TNR)</div>
-                <div className="text-2xl font-black text-cyan-400 font-mono mt-0.5">{metrics.specificity}%</div>
-                <div className="text-[10px] text-slate-500 font-mono">TN / (TN + FP)</div>
+              <div className="bg-white p-4 rounded-2xl border-2 border-b-4 border-[#E5E5E5]">
+                <div className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider">Especificidad (TNR)</div>
+                <div className="text-2xl font-black text-[#CE82FF] font-mono mt-0.5">{metrics.specificity}%</div>
+                <div className="text-[11px] text-[#777777] font-mono font-bold">TN / (TN + FP)</div>
               </div>
 
-              <div className="col-span-2 bg-slate-950 p-4 rounded-xl border border-indigo-500/40 flex items-center justify-between">
+              <div className="col-span-2 bg-[#F2E5FF] p-4 rounded-2xl border-2 border-b-4 border-[#CE82FF] flex items-center justify-between">
                 <div>
-                  <div className="text-[10px] font-bold uppercase text-indigo-300">Puntuación F1 (F1-Score)</div>
-                  <div className="text-[10px] text-slate-400">Media armónica entre Precisión y Sensibilidad</div>
+                  <div className="text-[10px] font-black uppercase text-[#A559D9] tracking-wider">Puntuación F1 (F1-Score)</div>
+                  <div className="text-xs text-[#777777] font-bold">Media armónica entre Precisión y Sensibilidad</div>
                 </div>
-                <div className="text-3xl font-black text-indigo-400 font-mono">{metrics.f1}%</div>
+                <div className="text-3xl font-black text-[#A559D9] font-mono">{metrics.f1}%</div>
               </div>
             </div>
           </div>
@@ -265,133 +283,133 @@ export const DecisionTreePlayground: React.FC = () => {
       ) : (
         /* Entropy & Gain View */
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Cálculo de Entropía y Ganancia al Dividir por un Atributo:</span>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-black text-[#AFAFAF] uppercase tracking-wider">Cálculo de Entropía y Ganancia al Dividir por un Atributo:</span>
             <button
               onClick={loadTennisPreset}
-              className="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
+              className="duo-btn-white text-xs px-3.5 py-2 cursor-pointer"
             >
-              Cargar Preset ID3 PlayTennis
+              📋 Cargar Caso ID3 PlayTennis
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Parent Node */}
-            <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
-              <div className="text-xs font-bold text-white uppercase flex items-center justify-between">
-                <span>Nodo Padre (Conjunto S)</span>
-                <span className="text-amber-400 font-mono font-black">{parentPos + parentNeg} muestras</span>
+            <div className="bg-white p-5 rounded-3xl border-2 border-b-4 border-[#E5E5E5] space-y-3">
+              <div className="text-xs font-black text-[#4B4B4B] uppercase tracking-wider flex items-center justify-between">
+                <span>Nodo Padre (S)</span>
+                <span className="text-[#FF9600] font-mono font-black">{parentPos + parentNeg} muestras</span>
               </div>
               <div className="flex gap-2">
-                <div>
-                  <label className="text-[10px] font-bold text-slate-400">Positivos (+):</label>
+                <div className="flex-1">
+                  <label className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider block mb-1">Pos (+):</label>
                   <input
                     type="number"
                     min={0}
                     value={parentPos}
                     onChange={e => setParentPos(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono text-sm"
+                    className="w-full px-3 py-2 bg-[#F7F7F7] border-2 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono text-sm font-black focus:outline-none focus:border-[#58CC02]"
                   />
                 </div>
-                <div>
-                  <label className="text-[10px] font-bold text-slate-400">Negativos (-):</label>
+                <div className="flex-1">
+                  <label className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider block mb-1">Neg (-):</label>
                   <input
                     type="number"
                     min={0}
                     value={parentNeg}
                     onChange={e => setParentNeg(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono text-sm"
+                    className="w-full px-3 py-2 bg-[#F7F7F7] border-2 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono text-sm font-black focus:outline-none focus:border-[#FF4B4B]"
                   />
                 </div>
               </div>
-              <div className="pt-2 border-t border-slate-800 text-xs flex justify-between font-mono">
-                <span className="text-slate-400">Entropía H(S):</span>
-                <span className="text-amber-400 font-bold">{entropyResults.parentEntropy} bits</span>
+              <div className="pt-2.5 border-t-2 border-[#E5E5E5] text-xs flex justify-between font-mono">
+                <span className="text-[#777777] font-bold">Entropía H(S):</span>
+                <span className="text-[#FF9600] font-black">{entropyResults.parentEntropy} bits</span>
               </div>
             </div>
 
             {/* Split Branch 1 */}
-            <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
-              <div className="text-xs font-bold text-sky-300 uppercase flex items-center justify-between">
-                <span>Rama 1 (Atributo = v1)</span>
-                <span className="text-sky-400 font-mono font-black">{b1Pos + b1Neg} muestras</span>
+            <div className="bg-white p-5 rounded-3xl border-2 border-b-4 border-[#84D8FF] space-y-3">
+              <div className="text-xs font-black text-[#1CB0F6] uppercase tracking-wider flex items-center justify-between">
+                <span>Rama 1 (v1)</span>
+                <span className="text-[#1CB0F6] font-mono font-black">{b1Pos + b1Neg} muestras</span>
               </div>
               <div className="flex gap-2">
-                <div>
-                  <label className="text-[10px] font-bold text-slate-400">Pos (+):</label>
+                <div className="flex-1">
+                  <label className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider block mb-1">Pos (+):</label>
                   <input
                     type="number"
                     min={0}
                     value={b1Pos}
                     onChange={e => setB1Pos(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono text-sm"
+                    className="w-full px-3 py-2 bg-[#F7F7F7] border-2 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono text-sm font-black focus:outline-none focus:border-[#1CB0F6]"
                   />
                 </div>
-                <div>
-                  <label className="text-[10px] font-bold text-slate-400">Neg (-):</label>
+                <div className="flex-1">
+                  <label className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider block mb-1">Neg (-):</label>
                   <input
                     type="number"
                     min={0}
                     value={b1Neg}
                     onChange={e => setB1Neg(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono text-sm"
+                    className="w-full px-3 py-2 bg-[#F7F7F7] border-2 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono text-sm font-black focus:outline-none focus:border-[#1CB0F6]"
                   />
                 </div>
               </div>
-              <div className="pt-2 border-t border-slate-800 text-xs flex justify-between font-mono">
-                <span className="text-slate-400">H(S_v1):</span>
-                <span className="text-sky-400 font-bold">{entropyResults.b1Entropy} bits</span>
+              <div className="pt-2.5 border-t-2 border-[#E5E5E5] text-xs flex justify-between font-mono">
+                <span className="text-[#777777] font-bold">H(S_v1):</span>
+                <span className="text-[#1CB0F6] font-black">{entropyResults.b1Entropy} bits</span>
               </div>
             </div>
 
             {/* Split Branch 2 */}
-            <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
-              <div className="text-xs font-bold text-emerald-300 uppercase flex items-center justify-between">
-                <span>Rama 2 (Atributo = v2)</span>
-                <span className="text-emerald-400 font-mono font-black">{b2Pos + b2Neg} muestras</span>
+            <div className="bg-white p-5 rounded-3xl border-2 border-b-4 border-[#58CC02] space-y-3">
+              <div className="text-xs font-black text-[#58A700] uppercase tracking-wider flex items-center justify-between">
+                <span>Rama 2 (v2)</span>
+                <span className="text-[#58A700] font-mono font-black">{b2Pos + b2Neg} muestras</span>
               </div>
               <div className="flex gap-2">
-                <div>
-                  <label className="text-[10px] font-bold text-slate-400">Pos (+):</label>
+                <div className="flex-1">
+                  <label className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider block mb-1">Pos (+):</label>
                   <input
                     type="number"
                     min={0}
                     value={b2Pos}
                     onChange={e => setB2Pos(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono text-sm"
+                    className="w-full px-3 py-2 bg-[#F7F7F7] border-2 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono text-sm font-black focus:outline-none focus:border-[#58CC02]"
                   />
                 </div>
-                <div>
-                  <label className="text-[10px] font-bold text-slate-400">Neg (-):</label>
+                <div className="flex-1">
+                  <label className="text-[10px] font-black uppercase text-[#AFAFAF] tracking-wider block mb-1">Neg (-):</label>
                   <input
                     type="number"
                     min={0}
                     value={b2Neg}
                     onChange={e => setB2Neg(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono text-sm"
+                    className="w-full px-3 py-2 bg-[#F7F7F7] border-2 border-[#E5E5E5] rounded-xl text-[#4B4B4B] font-mono text-sm font-black focus:outline-none focus:border-[#58CC02]"
                   />
                 </div>
               </div>
-              <div className="pt-2 border-t border-slate-800 text-xs flex justify-between font-mono">
-                <span className="text-slate-400">H(S_v2):</span>
-                <span className="text-emerald-400 font-bold">{entropyResults.b2Entropy} bits</span>
+              <div className="pt-2.5 border-t-2 border-[#E5E5E5] text-xs flex justify-between font-mono">
+                <span className="text-[#777777] font-bold">H(S_v2):</span>
+                <span className="text-[#58A700] font-black">{entropyResults.b2Entropy} bits</span>
               </div>
             </div>
           </div>
 
           {/* Gain Result Highlight */}
-          <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 p-6 rounded-2xl border border-indigo-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-[#DDF4FF] p-6 rounded-3xl border-2 border-b-4 border-[#84D8FF] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <div className="text-xs uppercase font-bold text-indigo-300">Ganancia de Información Neta:</div>
-              <div className="text-3xl font-black text-white font-mono mt-1">
+              <div className="text-xs uppercase font-black text-[#1899D6] tracking-wider">Ganancia de Información Neta:</div>
+              <div className="text-3xl font-black text-[#1899D6] font-mono mt-1">
                 Gain(S, A) = {entropyResults.gain} bits
               </div>
-              <div className="text-xs text-slate-400 mt-1 font-mono">
+              <div className="text-xs text-[#777777] mt-1 font-mono font-bold">
                 Gain = H(S) - Remainder = {entropyResults.parentEntropy} - {entropyResults.remainder}
               </div>
             </div>
 
-            <div className="px-4 py-2 bg-indigo-500/20 border border-indigo-500/30 rounded-xl text-xs text-indigo-200">
+            <div className="px-4 py-2.5 bg-white border-2 border-b-4 border-[#84D8FF] rounded-2xl text-xs font-black text-[#1CB0F6]">
               {entropyResults.gain > 0.4 ? '🔥 Partición excelente (Alta reducción de incertidumbre)' : 'Atributo con ganancia moderada o baja'}
             </div>
           </div>
@@ -399,11 +417,13 @@ export const DecisionTreePlayground: React.FC = () => {
       )}
 
       {/* Exam Pitfall alert */}
-      <div className="bg-emerald-950/20 border border-emerald-900/40 p-4 rounded-2xl flex items-start gap-3 text-xs text-emerald-200/90">
-        <Sparkles className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-        <div>
-          <span className="font-bold text-emerald-300">Trampa Clásica de Aprendizaje Computacional en la FIUM:</span>
-          {' '}En conjuntos de datos altamente desbalanceados (ej. Detección de Fraude en Tarjetas de Crédito, 99% No Fraude y 1% Fraude),
+      <div className="bg-[#D7FFB8] border-2 border-b-4 border-[#58CC02] p-5 rounded-3xl flex items-start gap-3.5 text-xs text-[#58A700] font-bold">
+        <Sparkles className="w-5 h-5 text-[#58CC02] shrink-0 mt-0.5" />
+        <div className="leading-relaxed">
+          <span className="font-black text-[#58A700] uppercase tracking-wide block mb-1">
+            Trampa Clásica de Aprendizaje Computacional en la FIUM:
+          </span>
+          En conjuntos de datos altamente desbalanceados (ej. Detección de Fraude en Tarjetas de Crédito, 99% No Fraude y 1% Fraude),
           la métrica de Exactitud (Accuracy) es un ENGAÑO mortal: un clasificador trivial que diga siempre "No Fraude" obtiene un 99% de Accuracy pero es inútil.
           En exámenes SIEMPRE debes justificar el uso de <strong>Sensibilidad (Recall)</strong>, <strong>F1-Score</strong> o el <strong>Área bajo la Curva ROC (AUC)</strong>.
         </div>

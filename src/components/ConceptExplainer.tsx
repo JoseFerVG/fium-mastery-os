@@ -177,36 +177,36 @@ export const ConceptExplainer: React.FC<ConceptExplainerProps> = ({
 
           {/* 3. Code or Concrete Example if present */}
           {concept.codeOrExample && (
-            <div className="bg-[#1E293B] border-2 border-[#334155] rounded-3xl overflow-hidden shadow-sm">
-              <div className="px-5 py-3 bg-[#0F172A] border-b border-[#334155] flex items-center justify-between text-xs">
-                <span className="font-mono font-bold text-slate-200 flex items-center gap-2">
+            <div className="bg-[#F7F7F7] border-2 border-b-4 border-[#E5E5E5] rounded-3xl overflow-hidden">
+              <div className="px-5 py-3 bg-[#EFEFEF] border-b-2 border-[#E5E5E5] flex items-center justify-between text-xs">
+                <span className="font-mono font-black text-[#4B4B4B] flex items-center gap-2 uppercase tracking-wide">
                   <Code className="w-4 h-4 text-[#58CC02]" />
                   Ejemplo en Código ({concept.codeOrExample.language}):
                 </span>
 
                 <button
                   onClick={() => handleCopyCode(concept.codeOrExample!.code)}
-                  className="flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition cursor-pointer"
+                  className="duo-btn-white text-xs px-3 py-1 flex items-center gap-1.5 cursor-pointer"
                   title="Copiar código"
                 >
                   {copiedCode ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-[#58CC02]" />
-                      <span className="text-[#58CC02] font-mono">¡Copiado!</span>
+                      <span className="text-[#58CC02] font-black">¡Copiado!</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3.5 h-3.5" />
+                      <Copy className="w-3.5 h-3.5 text-[#777777]" />
                       <span>Copiar</span>
                     </>
                   )}
                 </button>
               </div>
-              <pre className="p-5 text-xs font-mono text-[#58CC02] bg-[#1E293B] overflow-x-auto selection:bg-emerald-900 selection:text-white">
+              <pre className="p-5 text-xs font-mono text-[#0B7285] bg-[#F7F7F7] overflow-x-auto selection:bg-[#DDF4FF] font-bold">
                 <code>{concept.codeOrExample.code}</code>
               </pre>
-              <div className="p-3.5 bg-[#0F172A] border-t border-[#334155] text-xs text-slate-400">
-                <strong className="text-white">Explicación:</strong> {concept.codeOrExample.explanation}
+              <div className="p-3.5 bg-white border-t-2 border-[#E5E5E5] text-xs text-[#777777] font-semibold">
+                <strong className="text-[#4B4B4B] uppercase tracking-wide">Explicación:</strong> {concept.codeOrExample.explanation}
               </div>
             </div>
           )}
