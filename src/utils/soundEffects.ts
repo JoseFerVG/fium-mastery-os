@@ -338,6 +338,10 @@ class SoundManager {
       console.warn('Audio error:', e);
     }
   }
+  // Celebration alias
+  public playCelebration() {
+    this.playFanfare();
+  }
 }
 
 export const soundManager = new SoundManager();

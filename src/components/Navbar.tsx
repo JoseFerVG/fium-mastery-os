@@ -1,7 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import { 
-  Zap, 
   Flame, 
   Clock, 
   BookOpen, 
@@ -10,7 +8,8 @@ import {
   Trophy,
   Bookmark,
   Cpu,
-  BookOpenCheck
+  BookOpenCheck,
+  Rocket
 } from 'lucide-react';
 import { Subject, SubjectId } from '../types';
 import { getPlayerLevel } from '../data/gamificationData';
@@ -43,8 +42,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   xp,
   gems,
   onNavigate,
-  onOpenExamRush,
-  onOpenFlashcards,
+  onOpenExamRush: _onOpenExamRush,
+  onOpenFlashcards: _onOpenFlashcards,
   onOpenAchievements,
   onResetProgress,
   onOpenRescuePlan,
@@ -52,47 +51,45 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const playerLevel = getPlayerLevel(xp);
 
-  const navItems = [
-    { id: 'dashboard', label: 'Panel', icon: <Compass className="w-3.5 h-3.5" /> },
-    { id: 'duolingo', label: 'FIUMingo', icon: <span className="text-sm">🦉</span>, badge: 'green' },
-    { id: 'simulators', label: 'Simuladores', icon: <Cpu className="w-3.5 h-3.5" /> },
-    { id: 'exam', label: 'Exámenes', icon: <BookOpen className="w-3.5 h-3.5" /> },
-    { id: 'pomodoro', label: 'Pomodoro', icon: <Clock className="w-3.5 h-3.5" /> },
+  const mainNavItems = [
+    { id: 'duolingo', label: 'APRENDER', icon: <span className="text-xl">🦉</span> },
+    { id: 'exam', label: 'PRÁCTICA', icon: <BookOpen className="w-5 h-5 stroke-[2.5]" /> },
+    { id: 'simulators', label: 'SIMULADORES', icon: <Cpu className="w-5 h-5 stroke-[2.5]" /> },
+    { id: 'dashboard', label: 'PANEL', icon: <Compass className="w-5 h-5 stroke-[2.5]" /> },
+    { id: 'pomodoro', label: 'ENFOQUE', icon: <Clock className="w-5 h-5 stroke-[2.5]" /> },
   ] as const;
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-950/75 backdrop-blur-2xl border-b border-white/10 shadow-lg shadow-black/40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo & Platform Info */}
+    <>
+      {/* ============================================================== */}
+      {/* 1. DUOLINGO DESKTOP LEFT SIDEBAR (Fixed, w-64, White, 2px border) */}
+      {/* ============================================================== */}
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 bg-white border-r-2 border-[#E5E5E5] p-4 flex-col justify-between z-40 select-none">
+        <div className="space-y-6">
+          {/* Logo & Brand Header */}
           <div 
-            className="flex items-center gap-3 cursor-pointer select-none group" 
             onClick={() => {
-              onNavigate('dashboard');
+              onNavigate('duolingo');
               soundManager.playClick();
             }}
+            className="flex items-center gap-2.5 px-3 py-2 cursor-pointer group"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 ring-1 ring-white/20 transition-transform duration-300 group-hover:scale-105">
-              <Zap className="w-5 h-5 text-white" />
+            <div className="text-3xl transform group-hover:scale-110 group-hover:rotate-6 transition-transform">
+              🦉
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-                  FIUM Mastery OS
-                </span>
-                <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
-                  UMU 2026/27
-                </span>
+              <span className="text-2xl font-black tracking-tight text-[#58CC02] uppercase font-sans">
+                FIUMingo
+              </span>
+              <div className="text-[10px] font-black tracking-wider text-[#AFAFAF] uppercase">
+                Informática UMU
               </div>
-              <p className="text-xs text-slate-400 hidden sm:block">
-                Recuperación Acelerada &bull; Convocatorias 2026/2027
-              </p>
             </div>
           </div>
 
-          {/* Navigation Items (Sliding Pill Dock) */}
-          <nav className="hidden lg:flex items-center gap-1 bg-slate-900/70 p-1.5 rounded-2xl border border-white/10 shadow-inner">
-            {navItems.map((item) => {
+          {/* Navigation Items (Duolingo 3D Button Style) */}
+          <nav className="space-y-2">
+            {mainNavItems.map(item => {
               const isActive = currentView === item.id;
               return (
                 <button
@@ -101,24 +98,29 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onNavigate(item.id);
                     soundManager.playClick();
                   }}
-                  className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors duration-200 ${
-                    isActive ? 'text-white' : 'text-slate-400 hover:text-white'
+                  className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-[#E5F6FD] border-2 border-b-4 border-[#84D8FF] text-[#1CB0F6]'
+                      : 'text-[#777777] hover:bg-[#F7F7F7] hover:text-[#4B4B4B] border-2 border-transparent'
                   }`}
                 >
-                  {isActive && (
-                    <motion.div
-                      layoutId="active-nav-pill"
-                      className="absolute inset-0 bg-indigo-600 rounded-xl shadow-md shadow-indigo-600/30 ring-1 ring-white/20"
-                      transition={{ type: 'spring', stiffness: 450, damping: 35 }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-1.5">
-                    {item.icon}
-                    {item.label}
-                  </span>
+                  <span className="shrink-0">{item.icon}</span>
+                  <span>{item.label}</span>
                 </button>
               );
             })}
+
+            {/* Misiones / Trofeos Button */}
+            <button
+              onClick={() => {
+                onOpenAchievements();
+                soundManager.playClick();
+              }}
+              className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-[#777777] hover:bg-[#F7F7F7] hover:text-[#4B4B4B] border-2 border-transparent transition-all cursor-pointer"
+            >
+              <Trophy className="w-5 h-5 text-[#FFC800] stroke-[2.5]" />
+              <span>MISIONES</span>
+            </button>
 
             {/* Quick Action: Modo Entre Libros */}
             {onOpenDeskCompanion && (
@@ -127,111 +129,109 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onOpenDeskCompanion();
                   soundManager.playPowerup();
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black text-pink-200 bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 border border-pink-500/40 transition-all hover:scale-105 ml-1 shadow-sm"
+                className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-[#FF4B4B] hover:bg-[#FFF0F0] border-2 border-transparent hover:border-[#FFD0D0] transition-all cursor-pointer"
               >
-                <BookOpenCheck className="w-3.5 h-3.5 text-pink-400" />
-                <span>📖 Entre Libros</span>
+                <BookOpenCheck className="w-5 h-5 text-[#FF4B4B] stroke-[2.5]" />
+                <span>ENTRE LIBROS</span>
               </button>
             )}
 
-            {/* Quick Action: Rescate 14 Días */}
+            {/* Quick Action: Sprint Rescate */}
             {onOpenRescuePlan && (
               <button
                 onClick={() => {
                   onOpenRescuePlan();
                   soundManager.playClick();
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-purple-300 bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 transition-all hover:scale-105 ml-1 shadow-sm"
+                className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-[#CE82FF] hover:bg-[#F5EAFF] border-2 border-transparent hover:border-[#E8C8FF] transition-all cursor-pointer"
               >
-                <span>🚀 Rescate</span>
+                <Rocket className="w-5 h-5 text-[#CE82FF] stroke-[2.5]" />
+                <span>PLAN RESCATE</span>
               </button>
             )}
-
-            {/* Quick Action: Supervivencia */}
-            <button
-              onClick={() => {
-                onOpenExamRush();
-                soundManager.playClick();
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 transition-all hover:scale-105 ml-1"
-            >
-              <Flame className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
-              Supervivencia
-            </button>
-
-            {/* Quick Action: Tarjetas */}
-            <button
-              onClick={() => {
-                onOpenFlashcards();
-                soundManager.playClick();
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all"
-            >
-              <Bookmark className="w-3.5 h-3.5 text-indigo-400" />
-              Tarjetas
-            </button>
           </nav>
+        </div>
 
-          {/* Gamification Stats: Level, XP, Gems, Streak */}
-          <div className="flex items-center gap-2.5">
-            {/* Level & Rank Badge */}
-            <motion.div 
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                onOpenAchievements();
-                soundManager.playClick();
-              }}
-              className="cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-900/90 border border-white/10 hover:border-amber-500/50 transition-all shadow-md select-none group"
-              title={`Nivel ${playerLevel.level}: ${playerLevel.title} (${xp} XP)`}
-            >
-              <span className="text-base group-hover:scale-110 transition-transform">{playerLevel.icon}</span>
-              <div className="hidden sm:block text-left font-mono">
-                <div className="text-[10px] text-amber-400 font-bold leading-none">Lv.{playerLevel.level}</div>
-                <div className="text-[11px] text-white font-bold leading-none mt-0.5">
+        {/* Bottom User Level & Stats Summary */}
+        <div className="pt-4 border-t-2 border-[#E5E5E5] space-y-3">
+          <div 
+            onClick={() => {
+              onOpenAchievements();
+              soundManager.playClick();
+            }}
+            className="p-3 bg-[#F7F7F7] border-2 border-[#E5E5E5] rounded-2xl flex items-center justify-between cursor-pointer hover:border-[#84D8FF] transition-all"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">{playerLevel.icon}</span>
+              <div>
+                <div className="text-[10px] font-black text-[#FF9600] uppercase tracking-wider leading-tight">
+                  Nv. {playerLevel.level} • {playerLevel.title}
+                </div>
+                <div className="text-xs font-black text-[#4B4B4B]">
                   <AnimatedCounter value={xp} suffix=" XP" />
                 </div>
               </div>
-            </motion.div>
-
-            {/* Gems with Animated Counter */}
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-slate-900/90 border border-white/10 text-cyan-300 font-mono text-xs font-bold shadow-md">
-              <span className="text-sm">💎</span>
-              <AnimatedCounter value={gems} />
             </div>
+            <span className="text-xs font-black text-[#1CB0F6]">💎 {gems}</span>
+          </div>
 
-            {/* Study Streak */}
-            <div 
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 font-mono text-xs font-bold select-none shadow-sm"
-              title={`Racha de estudio: ${streakDays} días`}
-            >
-              <Flame className="w-4 h-4 fill-rose-500 text-rose-500 animate-pulse" />
-              <span>{streakDays}d</span>
-            </div>
-
-            {/* Trophy button with accessible aria-label */}
-            <button
-              onClick={() => {
-                onOpenAchievements();
-                soundManager.playClick();
-              }}
-              aria-label="Abrir Sala de Trofeos y Logros"
-              className="p-2.5 rounded-2xl bg-slate-900/90 border border-white/10 hover:border-amber-500/50 text-amber-400 transition-all hover:scale-105"
-            >
-              <Trophy className="w-4 h-4" />
-            </button>
-
-            {/* Reset with accessible aria-label */}
+          <div className="flex items-center justify-between text-[11px] text-[#AFAFAF] px-1 font-bold">
+            <span>FIUM UMU 2026/27</span>
             <button
               onClick={onResetProgress}
-              aria-label="Reiniciar Progreso de Estudio"
-              className="p-2.5 rounded-2xl bg-slate-900/90 border border-white/10 hover:border-slate-700 text-slate-500 hover:text-white transition-all hover:scale-105"
+              title="Reiniciar progreso"
+              className="text-[#AFAFAF] hover:text-[#FF4B4B] transition p-1"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
-      </div>
-    </header>
+      </aside>
+
+      {/* ============================================================== */}
+      {/* 2. MOBILE TOP NAVBAR (Compact, Clean, Sticky, for < lg screens) */}
+      {/* ============================================================== */}
+      <header className="lg:hidden sticky top-0 z-40 bg-white border-b-2 border-[#E5E5E5] px-4 py-2.5 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div 
+            onClick={() => {
+              onNavigate('duolingo');
+              soundManager.playClick();
+            }}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <span className="text-2xl">🦉</span>
+            <span className="text-lg font-black text-[#58CC02] tracking-tight uppercase">
+              FIUMingo
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3.5 text-xs font-black">
+            {/* Streak */}
+            <div className="flex items-center gap-1 text-[#FF9600]">
+              <Flame className="w-4 h-4 fill-[#FF9600]" />
+              <span>{streakDays}</span>
+            </div>
+
+            {/* Gems */}
+            <div className="flex items-center gap-1 text-[#1CB0F6]">
+              <span>💎</span>
+              <span>{gems}</span>
+            </div>
+
+            {/* Achievements button */}
+            <button
+              onClick={() => {
+                onOpenAchievements();
+                soundManager.playClick();
+              }}
+              className="p-1.5 rounded-xl bg-[#FFF4D0] text-[#FF9600] border border-[#FFC800]/50"
+            >
+              <Trophy className="w-4 h-4 stroke-[2.5]" />
+            </button>
+          </div>
+        </div>
+      </header>
+    </>
   );
 };

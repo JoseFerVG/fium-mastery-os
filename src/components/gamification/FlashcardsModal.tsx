@@ -237,46 +237,46 @@ export const FlashcardsModal: React.FC<FlashcardsModalProps> = ({ onClose, onAdd
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-xl flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in select-none">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 450, damping: 30 }}
-        className="bg-slate-900 border-t sm:border border-white/15 w-full max-w-2xl rounded-t-3xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl relative space-y-6 max-h-[92vh] sm:max-h-none overflow-y-auto"
+        className="bg-white border-2 border-b-[6px] border-[#E5E5E5] w-full max-w-2xl rounded-t-3xl sm:rounded-3xl p-5 sm:p-8 relative space-y-6 max-h-[92vh] sm:max-h-none overflow-y-auto font-sans"
       >
         {/* Mobile Drag Handle */}
         <div className="pt-1 pb-0 flex justify-center sm:hidden">
-          <div className="w-12 h-1.5 rounded-full bg-slate-700/80" />
+          <div className="w-12 h-1.5 rounded-full bg-[#E5E5E5]" />
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div className="flex items-center justify-between border-b-2 border-[#E5E5E5] pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20">
-              <Layers className="w-5 h-5" />
+            <div className="p-3 bg-[#E5F6FD] text-[#1CB0F6] rounded-2xl border-2 border-[#84D8FF]">
+              <Layers className="w-6 h-6 stroke-[2.5]" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                Tarjetas de Memoria Activa (Anki FIUM)
-                <span className="text-xs font-mono font-normal text-slate-400">
+              <h3 className="text-lg font-black text-[#4B4B4B] flex items-center gap-2">
+                Tarjetas de Memoria Activa
+                <span className="text-xs font-black text-[#AFAFAF]">
                   [{currentIndex + 1} / {filteredCards.length}]
                 </span>
               </h3>
-              <p className="text-xs text-slate-400">Repaso rápido de trampas de examen y fórmulas esenciales</p>
+              <p className="text-xs text-[#777777] font-bold">Repaso de trampas de examen y fórmulas esenciales</p>
             </div>
           </div>
 
           <button
             onClick={onClose}
             aria-label="Cerrar modal de tarjetas"
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition"
+            className="p-2 rounded-xl text-[#AFAFAF] hover:text-[#4B4B4B] hover:bg-[#F7F7F7] transition cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6 stroke-[3]" />
           </button>
         </div>
 
-        {/* Subject Filter Pills (Smooth scrollable on mobile) */}
-        <div className="flex flex-nowrap sm:flex-wrap overflow-x-auto max-w-full pb-1 sm:pb-0 gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+        {/* Subject Filter Pills */}
+        <div className="flex flex-nowrap sm:flex-wrap overflow-x-auto max-w-full pb-1 sm:pb-0 gap-1.5">
           {(['all', 'aoc', 'aso', 'alf', 'tds', 'iso', 'ac', 'ar', 'st', 'si'] as const).map(sub => (
             <button
               key={sub}
@@ -286,10 +286,10 @@ export const FlashcardsModal: React.FC<FlashcardsModalProps> = ({ onClose, onAdd
                 setIsFlipped(false);
                 soundManager.playClick();
               }}
-              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase shrink-0 transition ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider shrink-0 transition border-2 border-b-4 ${
                 filterSubject === sub
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#E5F6FD] border-[#84D8FF] text-[#1CB0F6]'
+                  : 'bg-white border-[#E5E5E5] text-[#777777] hover:bg-[#F7F7F7]'
               }`}
             >
               {sub}
@@ -300,15 +300,15 @@ export const FlashcardsModal: React.FC<FlashcardsModalProps> = ({ onClose, onAdd
         {/* Interactive 3D Flip Card */}
         <div
           onClick={handleFlip}
-          className="cursor-pointer min-h-[280px] bg-slate-950/90 hover:border-indigo-500/60 border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-200 shadow-2xl relative group select-none active:scale-[0.99]"
+          className="cursor-pointer min-h-[280px] bg-[#F7F7F7] hover:border-[#84D8FF] border-2 border-b-4 border-[#E5E5E5] rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-200 relative group select-none active:translate-y-0.5"
         >
           {/* Card Top Banner */}
-          <div className="flex items-center justify-between text-xs font-mono font-bold">
-            <span className="px-2.5 py-1 rounded-lg bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 uppercase">
-              {currentCard.subjectName} &bull; {currentCard.category}
+          <div className="flex items-center justify-between text-xs font-black">
+            <span className="px-3 py-1 rounded-xl bg-white text-[#1CB0F6] border-2 border-[#84D8FF] uppercase">
+              {currentCard.subjectName} • {currentCard.category}
             </span>
-            <span className="text-slate-500 flex items-center gap-1 group-hover:text-indigo-400 transition text-[11px]">
-              <RotateCw className="w-3.5 h-3.5" /> Haz clic para voltear
+            <span className="text-[#AFAFAF] flex items-center gap-1 group-hover:text-[#1CB0F6] transition text-xs font-black">
+              <RotateCw className="w-4 h-4 stroke-[2.5]" /> Voltear
             </span>
           </div>
 
@@ -316,34 +316,34 @@ export const FlashcardsModal: React.FC<FlashcardsModalProps> = ({ onClose, onAdd
           <div className="my-auto py-4">
             {!isFlipped ? (
               <div className="space-y-3">
-                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Pregunta / Escenario de Examen:</span>
-                <p className="text-base sm:text-lg font-bold text-white leading-relaxed">
+                <span className="text-xs uppercase font-black text-[#AFAFAF] tracking-wider">Pregunta de Examen:</span>
+                <p className="text-base sm:text-lg font-black text-[#4B4B4B] leading-relaxed">
                   {currentCard.front}
                 </p>
               </div>
             ) : (
               <div className="space-y-4 animate-fadeIn">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">Respuesta Directa:</span>
-                  <p className="text-sm sm:text-base font-bold text-emerald-200 mt-1">
+                  <span className="text-xs uppercase font-black text-[#58CC02] tracking-wider">Respuesta Directa:</span>
+                  <p className="text-base sm:text-lg font-black text-[#58A700] mt-1">
                     {currentCard.back.answer}
                   </p>
                 </div>
 
-                <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 leading-relaxed font-mono">
-                  <strong className="text-indigo-300 font-sans">Regla Formal:</strong> {currentCard.back.rule}
+                <div className="bg-white p-4 rounded-2xl border-2 border-[#E5E5E5] text-xs text-[#4B4B4B] font-bold leading-relaxed">
+                  <strong className="text-[#1CB0F6] block mb-1">Regla Formal:</strong> {currentCard.back.rule}
                 </div>
 
-                <div className="bg-rose-950/20 p-3 rounded-xl border border-rose-900/40 text-xs text-rose-200/90 leading-relaxed">
-                  <strong className="text-rose-400">Trampa del Profesor:</strong> {currentCard.back.trap}
+                <div className="bg-[#FFF0F0] p-4 rounded-2xl border-2 border-[#FFD0D0] text-xs text-[#EA2B2B] font-bold leading-relaxed">
+                  <strong className="text-[#FF4B4B] block mb-1">⚠️ Trampa del Examen:</strong> {currentCard.back.trap}
                 </div>
               </div>
             )}
           </div>
 
           {/* Card Footer prompt */}
-          <div className="text-center text-[10px] text-slate-600 font-mono">
-            {isFlipped ? '¿Qué tal te ha resultado?' : 'Piensa la respuesta antes de voltear'}
+          <div className="text-center text-xs text-[#AFAFAF] font-black uppercase tracking-wider">
+            {isFlipped ? '¿Qué tal te ha parecido?' : 'Piensa la respuesta antes de voltear'}
           </div>
         </div>
 
@@ -352,45 +352,42 @@ export const FlashcardsModal: React.FC<FlashcardsModalProps> = ({ onClose, onAdd
           <div className="grid grid-cols-3 gap-3 animate-fadeIn">
             <button
               onClick={() => handleRate('hard')}
-              className="py-3 px-4 rounded-xl bg-rose-600/20 border border-rose-500/40 text-rose-300 hover:bg-rose-600 hover:text-white font-bold text-xs transition flex flex-col items-center"
+              className="duo-btn-red py-3 px-4 text-xs flex flex-col items-center"
             >
               <span>Difícil (+10 XP)</span>
-              <span className="text-[10px] opacity-75 font-normal">Repetir pronto</span>
             </button>
             <button
               onClick={() => handleRate('good')}
-              className="py-3 px-4 rounded-xl bg-amber-600/20 border border-amber-500/40 text-amber-300 hover:bg-amber-600 hover:text-white font-bold text-xs transition flex flex-col items-center"
+              className="duo-btn-yellow py-3 px-4 text-xs flex flex-col items-center"
             >
               <span>Bien (+15 XP)</span>
-              <span className="text-[10px] opacity-75 font-normal">Duda resuelta</span>
             </button>
             <button
               onClick={() => handleRate('easy')}
-              className="py-3 px-4 rounded-xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-600 hover:text-white font-bold text-xs transition flex flex-col items-center"
+              className="duo-btn-green py-3 px-4 text-xs flex flex-col items-center"
             >
               <span>Fácil (+20 XP)</span>
-              <span className="text-[10px] opacity-75 font-normal">Totalmente dominado</span>
             </button>
           </div>
         ) : (
           <div className="flex items-center justify-between">
             <button
               onClick={handlePrev}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl flex items-center gap-1 transition"
+              className="duo-btn-white px-4 py-2.5 text-xs"
             >
-              <ChevronLeft className="w-4 h-4" /> Anterior
+              <ChevronLeft className="w-4 h-4 mr-1" /> Anterior
             </button>
             <button
               onClick={handleFlip}
-              className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/30 transition"
+              className="duo-btn-blue px-6 py-2.5 text-xs"
             >
               Mostrar Solución
             </button>
             <button
               onClick={handleNext}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl flex items-center gap-1 transition"
+              className="duo-btn-white px-4 py-2.5 text-xs"
             >
-              Siguiente <ChevronRight className="w-4 h-4" />
+              Siguiente <ChevronRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         )}

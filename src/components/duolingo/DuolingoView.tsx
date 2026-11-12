@@ -6,11 +6,15 @@ import { DuolingoHeader } from './DuolingoHeader';
 import { DuolingoPath } from './DuolingoPath';
 import { DuolingoLessonModal } from './DuolingoLessonModal';
 import { DuolingoGuideModal } from './DuolingoGuideModal';
+import { DuolingoRightSidebar } from './DuolingoRightSidebar';
 import { soundManager } from '../../utils/soundEffects';
 
 interface DuolingoViewProps {
   initialSubjectId?: SubjectId;
   onBackToDashboard: () => void;
+  onOpenAchievements?: () => void;
+  onOpenExamRush?: () => void;
+  onOpenDeskCompanion?: () => void;
 }
 
 const DUOLINGO_STORAGE_KEY = 'fium_duolingo_state_v1';
@@ -29,6 +33,9 @@ const DEFAULT_STATE: DuolingoUserState = {
 export const DuolingoView: React.FC<DuolingoViewProps> = ({
   initialSubjectId = 'aoc',
   onBackToDashboard,
+  onOpenAchievements,
+  onOpenExamRush,
+  onOpenDeskCompanion,
 }) => {
   const [userState, setUserState] = useState<DuolingoUserState>(() => {
     try {
@@ -93,7 +100,7 @@ export const DuolingoView: React.FC<DuolingoViewProps> = ({
   const currentUnits = DUOLINGO_UNITS.filter(u => u.subjectId === userState.currentSubjectId);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-white text-[#4B4B4B] flex flex-col font-sans">
       {/* Duolingo Gamification Header */}
       <DuolingoHeader
         currentSubjectId={userState.currentSubjectId}
@@ -108,31 +115,44 @@ export const DuolingoView: React.FC<DuolingoViewProps> = ({
         onRefillHearts={handleRefillHearts}
       />
 
-      {/* Path Canvas */}
-      <main className="flex-1 pb-16">
-        {currentUnits.length > 0 ? (
-          <DuolingoPath
-            units={currentUnits}
-            completedLessons={userState.completedLessons}
-            onSelectLesson={lesson => setActiveLesson(lesson)}
-            onOpenGuide={unit => setActiveGuideUnit(unit)}
-          />
-        ) : (
-          <div className="max-w-md mx-auto text-center py-20 px-4 space-y-4">
-            <div className="text-4xl">🦉</div>
-            <h3 className="text-xl font-black text-white">Unidades en Preparación</h3>
-            <p className="text-xs text-slate-400">
-              Estamos volcando los apuntes y exámenes de esta asignatura del Aula Virtual al formato gamificado. ¡Prueba mientras tanto con AOC, ASO, ALF o TDS!
-            </p>
-            <button
-              onClick={() => handleSelectSubject('aoc')}
-              className="px-6 py-3 rounded-2xl bg-green-500 hover:bg-green-400 text-white font-black text-xs border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition"
-            >
-              Ir a AOC (Arquitectura)
-            </button>
-          </div>
-        )}
-      </main>
+      {/* Main Duolingo Dual-Column Layout (Center Snake + Right Sidebar) */}
+      <div className="flex-1 max-w-6xl w-full mx-auto flex justify-center">
+        {/* Central Learning Path */}
+        <main className="flex-1 max-w-2xl px-4 pb-20">
+          {currentUnits.length > 0 ? (
+            <DuolingoPath
+              units={currentUnits}
+              completedLessons={userState.completedLessons}
+              onSelectLesson={lesson => setActiveLesson(lesson)}
+              onOpenGuide={unit => setActiveGuideUnit(unit)}
+            />
+          ) : (
+            <div className="max-w-md mx-auto text-center py-20 px-4 space-y-4">
+              <div className="text-5xl">🦉</div>
+              <h3 className="text-xl font-black text-[#4B4B4B]">Unidades en Preparación</h3>
+              <p className="text-xs text-[#777777] font-bold">
+                Estamos volcando los apuntes y exámenes de esta asignatura del Aula Virtual al formato gamificado. ¡Prueba mientras tanto con AOC, ASO, ALF o TDS!
+              </p>
+              <button
+                onClick={() => handleSelectSubject('aoc')}
+                className="duo-btn-green px-6 py-3 text-xs"
+              >
+                Ir a AOC (Arquitectura)
+              </button>
+            </div>
+          )}
+        </main>
+
+        {/* Right Sidebar on Desktop */}
+        <DuolingoRightSidebar
+          xp={userState.xp}
+          streakDays={userState.streakDays}
+          gems={userState.gems}
+          onOpenAchievements={onOpenAchievements}
+          onOpenExamRush={onOpenExamRush}
+          onOpenDeskCompanion={onOpenDeskCompanion}
+        />
+      </div>
 
       {/* Guidebook Modal */}
       {activeGuideUnit && (

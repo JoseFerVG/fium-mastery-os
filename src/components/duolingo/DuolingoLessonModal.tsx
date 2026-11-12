@@ -3,7 +3,7 @@ import { DuolingoLesson, DuolingoQuestion, MatchPairsQuestion, CodeReorderQuesti
 import { DuoMascot, MascotMood } from './DuoMascot';
 import { soundManager } from '../../utils/soundEffects';
 import confetti from 'canvas-confetti';
-import { X, Heart, CheckCircle2, AlertCircle, ArrowRight, RotateCcw, Sparkles, Award } from 'lucide-react';
+import { X, Heart, CheckCircle2, AlertCircle, Sparkles, Award } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface DuolingoLessonModalProps {
@@ -43,6 +43,7 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
   const [mascotMood, setMascotMood] = useState<MascotMood>('idle');
   const [isFinished, setIsFinished] = useState(false);
   const [stats, setStats] = useState({ correctFirstTry: 0, totalMistakes: 0 });
+  const [isHeartShaking, setIsHeartShaking] = useState(false);
 
   const currentQ: DuolingoQuestion = lesson.questions[currentQuestionIndex];
   const progressPercent = Math.round(((currentQuestionIndex) / lesson.questions.length) * 100);
@@ -116,7 +117,6 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
 
     if (side === 'left') {
       if (selectedRight) {
-        // Evaluate pair
         const isMatch = q.pairs.some(p => p.left === item && p.right === selectedRight);
         if (isMatch) {
           soundManager.playClick();
@@ -131,7 +131,6 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
       }
     } else {
       if (selectedLeft) {
-        // Evaluate pair
         const isMatch = q.pairs.some(p => p.left === selectedLeft && p.right === item);
         if (isMatch) {
           soundManager.playClick();
@@ -147,7 +146,6 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
     }
   };
 
-  // Determine if check button should be enabled
   const canCheck = () => {
     if (answerStatus !== 'unanswered') return false;
     if (currentQ.type === 'multiple_choice') return selectedChoice !== null;
@@ -160,7 +158,6 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
     return false;
   };
 
-  // Check Answer Handler
   const handleCheckAnswer = () => {
     if (!canCheck()) return;
 
@@ -176,7 +173,7 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
         selectedTokens.length === q.correctSequence.length &&
         selectedTokens.every((tok, idx) => tok === q.correctSequence[idx]);
     } else if (currentQ.type === 'match_pairs') {
-      isCorrect = true; // Already validated on pairing
+      isCorrect = true;
     }
 
     if (isCorrect) {
@@ -188,51 +185,51 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
       soundManager.playIncorrect();
       setAnswerStatus('incorrect');
       setMascotMood('crying');
+      setIsHeartShaking(true);
+      setTimeout(() => setIsHeartShaking(false), 600);
       onLoseHeart();
       setStats(prev => ({ ...prev, totalMistakes: prev.totalMistakes + 1 }));
     }
   };
 
-  // Continue to next question or finish lesson
   const handleNext = () => {
     if (currentQuestionIndex < lesson.questions.length - 1) {
       setCurrentQuestionIndex(idx => idx + 1);
     } else {
-      // Completed!
       soundManager.playFanfare();
       setIsFinished(true);
       confetti({
-        particleCount: 100,
-        spread: 80,
+        particleCount: 120,
+        spread: 90,
         origin: { y: 0.6 }
       });
       onCompleteLesson(lesson.xpReward, lesson.gemReward);
     }
   };
 
-  // Out of hearts state
+  // Out of hearts modal
   if (hearts <= 0 && answerStatus === 'incorrect') {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
-        <div className="w-full max-w-md bg-slate-900 border-2 border-rose-800/80 rounded-3xl p-6 text-center space-y-6 shadow-2xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+        <div className="w-full max-w-md bg-white border-2 border-b-[6px] border-[#FF4B4B] rounded-3xl p-8 text-center space-y-6">
           <DuoMascot mood="crying" size="lg" speechText="¡Sin vidas!" />
           <div>
-            <h3 className="text-2xl font-black text-white">¡Te has quedado sin vidas!</h3>
-            <p className="text-xs text-slate-400 mt-2">
-              Los temas de ingeniería de la UMU no perdonan. Recarga tus vidas al instante para seguir practicando o repasa la guía de estudio.
+            <h3 className="text-2xl font-black text-[#4B4B4B]">¡Te has quedado sin vidas!</h3>
+            <p className="text-xs text-[#777777] font-bold mt-2 leading-relaxed">
+              Los temas de ingeniería de la FIUM son exigentes. Recarga tus vidas al instante para seguir practicando o repasa la guía de estudio.
             </p>
           </div>
           <div className="flex flex-col gap-3">
             <button
               onClick={onRefillHearts}
-              className="w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black border-b-4 border-rose-800 active:border-b-0 active:translate-y-1 transition text-sm flex items-center justify-center gap-2"
+              className="duo-btn-red w-full py-4 text-sm flex items-center justify-center gap-2"
             >
-              <Heart className="w-5 h-5 fill-white" />
+              <Heart className="w-5 h-5 fill-white stroke-[2]" />
               Recargar Vidas Gratis (Modo Alumno)
             </button>
             <button
               onClick={onClose}
-              className="w-full py-3 rounded-2xl bg-slate-800 text-slate-300 hover:text-white font-bold transition text-xs"
+              className="duo-btn-white w-full py-3.5 text-xs"
             >
               Volver al Mapa de Lecciones
             </button>
@@ -245,27 +242,27 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
   // Lesson Finished Screen
   if (isFinished) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
-        <div className="w-full max-w-md bg-slate-900 border-2 border-green-500/40 rounded-3xl p-8 text-center space-y-6 shadow-2xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+        <div className="w-full max-w-md bg-white border-2 border-b-[6px] border-[#58CC02] rounded-3xl p-8 text-center space-y-6">
           <DuoMascot mood="cheering" size="lg" speechText="¡INCREÍBLE!" />
           <div>
-            <h2 className="text-3xl font-black text-white tracking-tight">¡Lección Completada!</h2>
-            <p className="text-sm text-green-400 font-bold mt-1">{lesson.title}</p>
+            <h2 className="text-3xl font-black text-[#58CC02] tracking-tight">¡Lección Completada!</h2>
+            <p className="text-sm text-[#4B4B4B] font-extrabold mt-1">{lesson.title}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-slate-950 p-4 rounded-2xl border-2 border-amber-500/30">
-              <span className="text-[10px] font-black uppercase text-amber-400 tracking-wider">EXP Ganada</span>
-              <div className="text-2xl font-black text-white flex items-center justify-center gap-1.5 mt-1">
-                <Sparkles className="w-5 h-5 text-amber-400" />
+            <div className="bg-[#FFF9E5] p-4 rounded-2xl border-2 border-b-4 border-[#FFC800]">
+              <span className="text-[10px] font-black uppercase text-[#E5A500] tracking-wider">EXP Ganada</span>
+              <div className="text-2xl font-black text-[#4B4B4B] flex items-center justify-center gap-1.5 mt-1">
+                <Sparkles className="w-5 h-5 text-[#FFC800] fill-[#FFC800]" />
                 +{lesson.xpReward} XP
               </div>
             </div>
 
-            <div className="bg-slate-950 p-4 rounded-2xl border-2 border-sky-500/30">
-              <span className="text-[10px] font-black uppercase text-sky-400 tracking-wider">Gemas</span>
-              <div className="text-2xl font-black text-white flex items-center justify-center gap-1.5 mt-1">
-                <Award className="w-5 h-5 text-sky-400" />
+            <div className="bg-[#E5F6FD] p-4 rounded-2xl border-2 border-b-4 border-[#1CB0F6]">
+              <span className="text-[10px] font-black uppercase text-[#1899D6] tracking-wider">Gemas</span>
+              <div className="text-2xl font-black text-[#4B4B4B] flex items-center justify-center gap-1.5 mt-1">
+                <Award className="w-5 h-5 text-[#1CB0F6]" />
                 +{lesson.gemReward} 💎
               </div>
             </div>
@@ -273,7 +270,7 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
 
           <button
             onClick={onClose}
-            className="w-full py-4 rounded-2xl bg-green-500 hover:bg-green-400 text-white font-black text-base border-b-4 border-green-700 active:border-b-0 active:translate-y-1 transition shadow-lg shadow-green-500/20"
+            className="duo-btn-green w-full py-4 text-base"
           >
             CONTINUAR AL MAPA
           </button>
@@ -284,48 +281,54 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-50 flex flex-col bg-slate-950 text-slate-100 font-sans"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex flex-col bg-white text-[#4B4B4B] font-sans select-none"
     >
       {/* Top Bar with Progress & Hearts */}
-      <div className="max-w-3xl w-full mx-auto px-4 py-4 flex items-center justify-between gap-4">
+      <div className="max-w-3xl w-full mx-auto px-4 py-4 sm:py-6 flex items-center justify-between gap-4">
         <button
           onClick={onClose}
           aria-label="Cerrar lección"
-          className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 transition"
+          className="p-2 text-[#AFAFAF] hover:text-[#4B4B4B] transition cursor-pointer"
         >
-          <X className="w-6 h-6" />
+          <X className="w-6 h-6 stroke-[3]" />
         </button>
 
-        {/* Duolingo Green Progress Bar */}
-        <div className="flex-1 h-4 bg-slate-800 rounded-full overflow-hidden p-0.5">
+        {/* Duolingo Green Chunky Progress Bar */}
+        <div className="flex-1 h-4 bg-[#E5E5E5] rounded-full overflow-hidden p-0.5 relative">
           <div
-            className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full transition-all duration-300 shadow-sm"
+            className="h-full bg-[#58CC02] rounded-full transition-all duration-300 relative"
             style={{ width: `${progressPercent}%` }}
-          />
+          >
+            {/* Top Gloss highlight */}
+            <div className="absolute top-0.5 left-2 right-2 h-1 bg-white/30 rounded-full" />
+          </div>
         </div>
 
         {/* Hearts indicator */}
-        <div className="flex items-center gap-1.5 text-rose-500 font-black text-sm">
-          <Heart className="w-6 h-6 fill-rose-500" />
+        <div
+          className={`flex items-center gap-1.5 text-[#FF4B4B] font-black text-base ${
+            isHeartShaking ? 'animate-shake' : ''
+          }`}
+        >
+          <Heart className="w-6 h-6 fill-[#FF4B4B] stroke-[2]" />
           <span>{hearts}</span>
         </div>
       </div>
 
       {/* Center Question Canvas */}
-      <div className="flex-1 max-w-2xl w-full mx-auto px-4 py-6 overflow-y-auto flex flex-col justify-center">
+      <div className="flex-1 max-w-2xl w-full mx-auto px-4 py-4 sm:py-8 overflow-y-auto flex flex-col justify-center">
         {/* Mascot & Prompt */}
-        <div className="flex items-start gap-4 mb-6">
+        <div className="flex items-start gap-4 mb-6 sm:mb-8">
           <DuoMascot mood={mascotMood} size="sm" />
-          <div>
-            <h2 className="text-lg md:text-xl font-black text-white leading-snug">
+          <div className="flex-1">
+            <h2 className="text-xl sm:text-2xl font-black text-[#4B4B4B] leading-tight">
               {currentQ.prompt}
             </h2>
             {currentQ.subPrompt && (
-              <p className="text-xs text-slate-400 font-medium mt-1">
+              <p className="text-xs text-[#777777] font-bold mt-1.5 leading-relaxed">
                 {currentQ.subPrompt}
               </p>
             )}
@@ -347,17 +350,23 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
                     }
                   }}
                   disabled={answerStatus !== 'unanswered'}
-                  className={`w-full text-left p-4 rounded-2xl font-bold text-sm transition-all flex items-center justify-between border-2 border-b-4 ${
+                  className={`w-full text-left p-4 rounded-2xl font-extrabold text-sm transition-all flex items-center justify-between border-2 border-b-4 cursor-pointer ${
                     isSelected
-                      ? 'bg-sky-500/10 border-sky-500 text-sky-300 shadow-md shadow-sky-500/10'
-                      : 'bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-200 hover:bg-slate-850'
+                      ? 'bg-[#DDF4FF] border-[#84D8FF] text-[#1CB0F6]'
+                      : 'bg-white border-[#E5E5E5] text-[#4B4B4B] hover:bg-[#F7F7F7] active:border-b-2 active:translate-y-0.5'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-7 h-7 rounded-xl bg-slate-800 text-slate-400 flex items-center justify-center font-mono text-xs border border-slate-700">
+                    <span
+                      className={`w-7 h-7 rounded-xl flex items-center justify-center font-black text-xs border-2 ${
+                        isSelected
+                          ? 'border-[#84D8FF] text-[#1CB0F6] bg-white'
+                          : 'border-[#E5E5E5] text-[#AFAFAF] bg-[#F7F7F7]'
+                      }`}
+                    >
                       {idx + 1}
                     </span>
-                    <span>{opt}</span>
+                    <span className="leading-snug">{opt}</span>
                   </div>
                 </button>
               );
@@ -367,7 +376,7 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
 
         {/* QUESTION TYPE 2: True / False */}
         {currentQ.type === 'true_false' && (
-          <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="grid grid-cols-2 gap-4 mt-2">
             <button
               onClick={() => {
                 if (answerStatus === 'unanswered') {
@@ -376,10 +385,10 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
                 }
               }}
               disabled={answerStatus !== 'unanswered'}
-              className={`p-6 rounded-2xl font-black text-base transition-all border-2 border-b-4 ${
+              className={`p-6 rounded-2xl font-black text-base transition-all border-2 border-b-4 cursor-pointer ${
                 selectedTrueFalse === true
-                  ? 'bg-green-500/20 border-green-500 text-green-400'
-                  : 'bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-200'
+                  ? 'bg-[#E5F6FD] border-[#1CB0F6] text-[#1CB0F6]'
+                  : 'bg-white border-[#E5E5E5] hover:bg-[#F7F7F7] text-[#4B4B4B]'
               }`}
             >
               VERDADERO
@@ -392,10 +401,10 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
                 }
               }}
               disabled={answerStatus !== 'unanswered'}
-              className={`p-6 rounded-2xl font-black text-base transition-all border-2 border-b-4 ${
+              className={`p-6 rounded-2xl font-black text-base transition-all border-2 border-b-4 cursor-pointer ${
                 selectedTrueFalse === false
-                  ? 'bg-rose-500/20 border-rose-500 text-rose-400'
-                  : 'bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-200'
+                  ? 'bg-[#FFF0F0] border-[#FF4B4B] text-[#FF4B4B]'
+                  : 'bg-white border-[#E5E5E5] hover:bg-[#F7F7F7] text-[#4B4B4B]'
               }`}
             >
               FALSO
@@ -406,16 +415,15 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
         {/* QUESTION TYPE 3: Code / Formula Reorder */}
         {currentQ.type === 'code_reorder' && (
           <div className="space-y-6">
-            {/* Assembled sequence dropzone */}
-            <div className="min-h-20 p-4 rounded-2xl bg-slate-900 border-2 border-dashed border-slate-700 flex flex-wrap gap-2 items-center">
+            <div className="min-h-20 p-4 rounded-2xl bg-[#F7F7F7] border-2 border-dashed border-[#E5E5E5] flex flex-wrap gap-2 items-center">
               {selectedTokens.length === 0 ? (
-                <span className="text-xs text-slate-500 italic">Haz clic en los bloques inferiores para ordenar la fórmula o secuencia...</span>
+                <span className="text-xs text-[#AFAFAF] font-bold">Haz clic en los bloques inferiores para ordenar la fórmula o secuencia...</span>
               ) : (
                 selectedTokens.map((tok, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleDeselectToken(tok, idx)}
-                    className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono font-bold text-xs border-b-3 border-indigo-800 transition"
+                    className="duo-btn-blue px-4 py-2 text-xs font-mono lowercase"
                   >
                     {tok}
                   </button>
@@ -423,13 +431,12 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
               )}
             </div>
 
-            {/* Token Bank */}
-            <div className="flex flex-wrap gap-2 justify-center pt-4 border-t border-slate-800">
+            <div className="flex flex-wrap gap-2 justify-center pt-4 border-t-2 border-[#E5E5E5]">
               {availableTokens.map((tok, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSelectToken(tok, idx)}
-                  className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-mono font-bold text-xs border-2 border-b-4 border-slate-700 active:border-b-2 transition"
+                  className="duo-btn-white px-4 py-2 text-xs font-mono lowercase"
                 >
                   {tok}
                 </button>
@@ -441,8 +448,7 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
         {/* QUESTION TYPE 4: Match Pairs */}
         {currentQ.type === 'match_pairs' && (
           <div className="grid grid-cols-2 gap-4">
-            {/* Left Column */}
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {(currentQ as MatchPairsQuestion).pairs.map((p, idx) => {
                 const isMatched = matchedPairs.includes(p.left);
                 const isSelected = selectedLeft === p.left;
@@ -451,12 +457,12 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
                     key={idx}
                     onClick={() => handleSelectPairItem('left', p.left)}
                     disabled={isMatched}
-                    className={`w-full text-left p-3.5 rounded-xl font-bold text-xs transition border-2 border-b-4 ${
+                    className={`w-full text-left p-4 rounded-2xl font-black text-xs transition border-2 border-b-4 cursor-pointer ${
                       isMatched
-                        ? 'bg-green-950/40 border-green-800/40 text-green-500 opacity-50 cursor-default'
+                        ? 'bg-[#E5E5E5] border-[#CECECE] text-[#AFAFAF] cursor-default'
                         : isSelected
-                        ? 'bg-sky-500/20 border-sky-400 text-sky-300'
-                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800'
+                        ? 'bg-[#DDF4FF] border-[#84D8FF] text-[#1CB0F6]'
+                        : 'bg-white border-[#E5E5E5] text-[#4B4B4B] hover:bg-[#F7F7F7]'
                     }`}
                   >
                     {p.left}
@@ -465,8 +471,7 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
               })}
             </div>
 
-            {/* Right Column (shuffled order for challenge) */}
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {(currentQ as MatchPairsQuestion).pairs.slice().reverse().map((p, idx) => {
                 const isMatched = matchedPairs.includes(p.right);
                 const isSelected = selectedRight === p.right;
@@ -475,12 +480,12 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
                     key={idx}
                     onClick={() => handleSelectPairItem('right', p.right)}
                     disabled={isMatched}
-                    className={`w-full text-left p-3.5 rounded-xl font-bold text-xs transition border-2 border-b-4 ${
+                    className={`w-full text-left p-4 rounded-2xl font-black text-xs transition border-2 border-b-4 cursor-pointer ${
                       isMatched
-                        ? 'bg-green-950/40 border-green-800/40 text-green-500 opacity-50 cursor-default'
+                        ? 'bg-[#E5E5E5] border-[#CECECE] text-[#AFAFAF] cursor-default'
                         : isSelected
-                        ? 'bg-sky-500/20 border-sky-400 text-sky-300'
-                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800'
+                        ? 'bg-[#DDF4FF] border-[#84D8FF] text-[#1CB0F6]'
+                        : 'bg-white border-[#E5E5E5] text-[#4B4B4B] hover:bg-[#F7F7F7]'
                     }`}
                   >
                     {p.right}
@@ -492,46 +497,46 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
         )}
       </div>
 
-      {/* Bottom Sticky Action / Feedback Drawer (Authentic Duolingo Bottom Sheet) */}
+      {/* Bottom Sticky Action / Feedback Drawer (Official Duolingo Bottom Sheet) */}
       <div
-        className={`border-t-2 p-5 pb-safe transition-all duration-300 ${
+        className={`border-t-2 p-5 sm:p-6 pb-safe transition-colors duration-200 ${
           answerStatus === 'correct'
-            ? 'bg-green-950/90 border-green-600/80'
+            ? 'bg-[#D7FFB8] border-[#58CC02]'
             : answerStatus === 'incorrect'
-            ? 'bg-rose-950/90 border-rose-600/80'
-            : 'bg-slate-950 border-slate-800'
+            ? 'bg-[#FFDFE0] border-[#FF4B4B]'
+            : 'bg-white border-[#E5E5E5]'
         }`}
       >
-        <div className="max-w-2xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="max-w-2xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           {/* Status feedback message */}
           {answerStatus === 'correct' ? (
             <div className="flex items-start gap-3">
-              <div className="p-2 bg-green-500 rounded-full text-white shrink-0 mt-0.5">
-                <CheckCircle2 className="w-6 h-6" />
+              <div className="p-1.5 bg-[#58CC02] rounded-full text-white shrink-0 mt-0.5">
+                <CheckCircle2 className="w-7 h-7 stroke-[2.5]" />
               </div>
               <div>
-                <h4 className="text-base font-black text-green-400">¡Increíble! ¡Correcto!</h4>
-                <p className="text-xs text-green-200 mt-0.5">{currentQ.explanation}</p>
+                <h4 className="text-xl font-black text-[#58A700]">¡Excelente!</h4>
+                <p className="text-xs font-bold text-[#46A302] mt-0.5 leading-relaxed">{currentQ.explanation}</p>
               </div>
             </div>
           ) : answerStatus === 'incorrect' ? (
             <div className="flex items-start gap-3">
-              <div className="p-2 bg-rose-500 rounded-full text-white shrink-0 mt-0.5">
-                <AlertCircle className="w-6 h-6" />
+              <div className="p-1.5 bg-[#FF4B4B] rounded-full text-white shrink-0 mt-0.5">
+                <AlertCircle className="w-7 h-7 stroke-[2.5]" />
               </div>
               <div>
-                <h4 className="text-base font-black text-rose-400">Solución y Trampa de Examen:</h4>
-                <p className="text-xs text-rose-200 mt-0.5">{currentQ.explanation}</p>
+                <h4 className="text-xl font-black text-[#EA2B2B]">Solución correcta:</h4>
+                <p className="text-xs font-bold text-[#EA2B2B] mt-0.5 leading-relaxed">{currentQ.explanation}</p>
                 {currentQ.tip && (
-                  <p className="text-[11px] font-semibold text-rose-300 mt-1 bg-rose-900/40 p-2 rounded-lg">
+                  <p className="text-[11px] font-extrabold text-[#EA2B2B]/90 mt-1.5 bg-white/60 p-2.5 rounded-xl border border-[#FF4B4B]/20">
                     💡 <strong>Ojo en el examen:</strong> {currentQ.tip}
                   </p>
                 )}
               </div>
             </div>
           ) : (
-            <div className="text-xs text-slate-500 font-semibold hidden md:block">
-              {currentQ.type === 'multiple_choice' ? 'Pulsa 1-4 en el teclado o selecciona una opción' : 'Completa la respuesta para comprobar'}
+            <div className="text-xs text-[#AFAFAF] font-black hidden sm:block uppercase tracking-wider">
+              {currentQ.type === 'multiple_choice' ? 'Pulsa 1-4 en el teclado o elige una opción' : 'Completa la respuesta para comprobar'}
             </div>
           )}
 
@@ -540,24 +545,18 @@ export const DuolingoLessonModal: React.FC<DuolingoLessonModalProps> = ({
             <button
               onClick={handleCheckAnswer}
               disabled={!canCheck()}
-              className={`px-8 py-3.5 rounded-2xl font-black text-sm uppercase tracking-wider transition-all border-b-4 active:border-b-0 active:translate-y-1 ${
-                canCheck()
-                  ? 'bg-green-500 hover:bg-green-400 text-white border-green-700 shadow-lg shadow-green-500/20'
-                  : 'bg-slate-800 text-slate-500 border-slate-700 cursor-not-allowed'
-              }`}
+              className="duo-btn-green px-10 py-3.5 text-sm sm:w-auto w-full"
             >
               COMPROBAR
             </button>
           ) : (
             <button
               onClick={handleNext}
-              className={`px-8 py-3.5 rounded-2xl font-black text-sm uppercase tracking-wider text-white transition-all border-b-4 active:border-b-0 active:translate-y-1 ${
-                answerStatus === 'correct'
-                  ? 'bg-green-500 hover:bg-green-400 border-green-700 shadow-lg shadow-green-500/20'
-                  : 'bg-rose-500 hover:bg-rose-400 border-rose-700 shadow-lg shadow-rose-500/20'
-              }`}
+              className={`${
+                answerStatus === 'correct' ? 'duo-btn-green' : 'duo-btn-red'
+              } px-10 py-3.5 text-sm sm:w-auto w-full`}
             >
-              CONTINUAR →
+              CONTINUAR
             </button>
           )}
         </div>

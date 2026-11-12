@@ -41,30 +41,30 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
   const totalUnlocked = achievements.filter(a => a.unlocked).length;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-xl flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in select-none">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 450, damping: 30 }}
-        className="bg-slate-900 border-t sm:border border-white/15 w-full max-w-3xl rounded-t-3xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl relative space-y-6 max-h-[92vh] flex flex-col"
+        className="bg-white border-2 border-b-[6px] border-[#E5E5E5] w-full max-w-3xl rounded-t-3xl sm:rounded-3xl p-5 sm:p-8 relative space-y-6 max-h-[92vh] flex flex-col font-sans"
       >
         {/* Mobile Drag Handle */}
         <div className="pt-1 pb-0 flex justify-center sm:hidden">
-          <div className="w-12 h-1.5 rounded-full bg-slate-700/80" />
+          <div className="w-12 h-1.5 rounded-full bg-[#E5E5E5]" />
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
+        <div className="flex items-center justify-between border-b-2 border-[#E5E5E5] pb-4 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-amber-500/10 text-amber-400 rounded-2xl border border-amber-500/20 shadow-md shadow-amber-500/10">
-              <Trophy className="w-6 h-6" />
+            <div className="p-3 bg-[#FFF4D0] text-[#FF9600] rounded-2xl border-2 border-[#FFC800]/50">
+              <Trophy className="w-6 h-6 stroke-[2.5]" />
             </div>
             <div>
-              <h2 className="text-xl font-black text-white flex items-center gap-2">
-                Sala de Trofeos & Rango de Alumno FIUM
+              <h2 className="text-xl font-black text-[#4B4B4B] flex items-center gap-2">
+                Sala de Trofeos & Rango FIUM
               </h2>
-              <p className="text-xs text-slate-400">
-                Desbloquea insignias de ingeniería y avanza de nivel con tu estudio
+              <p className="text-xs text-[#777777] font-bold">
+                Desbloquea insignias de ingeniería y sube de nivel
               </p>
             </div>
           </div>
@@ -72,46 +72,46 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
           <button
             onClick={onClose}
             aria-label="Cerrar sala de trofeos"
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition"
+            className="p-2 rounded-xl text-[#AFAFAF] hover:text-[#4B4B4B] hover:bg-[#F7F7F7] transition cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6 stroke-[3]" />
           </button>
         </div>
 
         {/* Current Player Level Banner */}
-        <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-5 rounded-2xl border border-indigo-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0 shadow-lg">
+        <div className="bg-[#FFF9E5] p-5 rounded-2xl border-2 border-b-4 border-[#FFC800] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-3xl shadow-lg shadow-amber-500/20">
+            <div className="w-14 h-14 rounded-2xl bg-white border-2 border-[#FFC800] flex items-center justify-center text-3xl shadow-sm">
               {currentLevel.icon}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
+                <span className="text-xs font-black text-[#FF9600] uppercase tracking-wider">
                   Nivel {currentLevel.level} de 10
                 </span>
-                <span className="text-[10px] bg-slate-800/90 px-2 py-0.5 rounded-full text-slate-300 font-mono border border-white/5">
+                <span className="text-[11px] bg-white px-2.5 py-0.5 rounded-full text-[#4B4B4B] font-black border border-[#FFC800]/40">
                   <AnimatedCounter value={xp} suffix=" XP" />
                 </span>
               </div>
-              <h3 className="text-lg font-black text-white">{currentLevel.title}</h3>
-              <p className="text-xs text-slate-400 mt-0.5">{currentLevel.perk}</p>
+              <h3 className="text-lg font-black text-[#4B4B4B]">{currentLevel.title}</h3>
+              <p className="text-xs text-[#777777] font-bold mt-0.5">{currentLevel.perk}</p>
             </div>
           </div>
 
-          <div className="sm:w-48 text-right space-y-1.5 font-mono">
-            <div className="text-[11px] text-slate-400 flex justify-between">
+          <div className="sm:w-48 text-right space-y-1.5">
+            <div className="text-xs text-[#777777] flex justify-between font-black">
               <span>Progreso Nivel</span>
-              <span className="text-amber-400 font-bold">{xpProgress}%</span>
+              <span className="text-[#FF9600]">{xpProgress}%</span>
             </div>
-            <div className="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 relative">
+            <div className="w-full bg-[#E5E5E5] h-3 rounded-full overflow-hidden p-0.5">
               <div
-                className="bg-gradient-to-r from-indigo-500 via-amber-400 to-yellow-300 h-full rounded-full transition-all duration-700 animate-shimmer"
+                className="bg-[#FFC800] h-full rounded-full transition-all duration-700"
                 style={{ width: `${xpProgress}%` }}
               />
             </div>
             {nextLevel && (
-              <span className="text-[10px] text-slate-500 block">
-                Faltan {Math.max(0, nextLevel.minXp - xp)} XP para: <strong className="text-slate-300 font-sans">{nextLevel.title}</strong>
+              <span className="text-[10px] text-[#AFAFAF] font-bold block">
+                Faltan {Math.max(0, nextLevel.minXp - xp)} XP para: <strong className="text-[#4B4B4B]">{nextLevel.title}</strong>
               </span>
             )}
           </div>
@@ -119,14 +119,14 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
 
         {/* Filter Tabs & Gems Counter */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-          <div className="flex flex-wrap gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+          <div className="flex flex-wrap gap-1.5">
             {[
               { id: 'all', label: `Todos (${totalUnlocked}/${achievements.length})` },
               { id: 'mastery', label: 'Maestría' },
               { id: 'exam', label: 'Exámenes' },
               { id: 'speedrun', label: 'Supervivencia' },
               { id: 'streak', label: 'Rachas' },
-              { id: 'focus', label: 'Foco Pomodoro' }
+              { id: 'focus', label: 'Foco' }
             ].map(tab => (
               <button
                 key={tab.id}
@@ -134,10 +134,10 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
                   setFilterCategory(tab.id as typeof filterCategory);
                   soundManager.playClick();
                 }}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition border-2 border-b-4 ${
                   filterCategory === tab.id
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#E5F6FD] border-[#84D8FF] text-[#1CB0F6]'
+                    : 'bg-white border-[#E5E5E5] text-[#777777] hover:bg-[#F7F7F7]'
                 }`}
               >
                 {tab.label}
@@ -145,8 +145,8 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
             ))}
           </div>
 
-          <div className="text-xs font-mono text-cyan-300 font-bold flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-950 border border-white/5">
-            <span>💎 <AnimatedCounter value={gems} suffix=" Gemas Acumuladas" /></span>
+          <div className="text-xs text-[#1CB0F6] font-black flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#E5F6FD] border-2 border-[#84D8FF]">
+            <span>💎 <AnimatedCounter value={gems} suffix=" Gemas" /></span>
           </div>
         </div>
 
@@ -156,42 +156,38 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
             {filtered.map(ach => (
               <div
                 key={ach.id}
-                className={`p-4 rounded-2xl border transition-all flex items-start gap-3 ${
+                className={`p-4 rounded-2xl border-2 border-b-4 transition-all flex items-start gap-3.5 ${
                   ach.unlocked
-                    ? 'bg-slate-950/80 border-amber-500/40 shadow-lg shadow-amber-500/5 relative overflow-hidden'
-                    : 'bg-slate-950/40 border-slate-800/80 opacity-60'
+                    ? 'bg-white border-[#FFC800] text-[#4B4B4B]'
+                    : 'bg-[#F7F7F7] border-[#E5E5E5] text-[#AFAFAF] opacity-70'
                 }`}
               >
-                {ach.unlocked && (
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-amber-500/10 to-transparent pointer-events-none rounded-bl-3xl" />
-                )}
-
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 ${
-                  ach.unlocked ? 'bg-amber-500/20 border border-amber-500/30 animate-pulse-glow' : 'bg-slate-800'
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 border-2 ${
+                  ach.unlocked ? 'bg-[#FFF4D0] border-[#FFC800]' : 'bg-[#E5E5E5] border-[#CECECE]'
                 }`}>
-                  {ach.unlocked ? ach.icon : <Lock className="w-5 h-5 text-slate-500" />}
+                  {ach.unlocked ? ach.icon : <Lock className="w-5 h-5 text-[#AFAFAF] stroke-[2.5]" />}
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h4 className={`text-sm font-bold truncate ${ach.unlocked ? 'text-white' : 'text-slate-400'}`}>
+                    <h4 className={`text-sm font-black truncate ${ach.unlocked ? 'text-[#4B4B4B]' : 'text-[#AFAFAF]'}`}>
                       {ach.title}
                     </h4>
                     {ach.unlocked && (
-                      <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5 shrink-0">
-                        <CheckCircle2 className="w-3 h-3" /> Desbloqueado
+                      <span className="text-[10px] text-[#58CC02] font-black flex items-center gap-0.5 shrink-0">
+                        <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.5]" /> ¡Listo!
                       </span>
                     )}
                   </div>
 
-                  <p className="text-xs text-slate-400 mt-0.5 leading-snug">
+                  <p className="text-xs text-[#777777] font-bold mt-0.5 leading-snug">
                     {ach.description}
                   </p>
 
-                  <div className="mt-2 flex items-center gap-2 text-[11px] font-mono">
-                    <span className="text-indigo-400 font-bold">+{ach.xpReward} XP</span>
-                    <span className="text-slate-600">&bull;</span>
-                    <span className="text-amber-400 font-bold">+{ach.gemsReward} Gemas</span>
+                  <div className="mt-2 flex items-center gap-2 text-[11px] font-black">
+                    <span className="text-[#1CB0F6]">+{ach.xpReward} XP</span>
+                    <span className="text-[#CECECE]">•</span>
+                    <span className="text-[#FF9600]">+{ach.gemsReward} Gemas</span>
                   </div>
                 </div>
               </div>

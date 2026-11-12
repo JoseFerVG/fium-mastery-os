@@ -2,11 +2,14 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white overscroll-none;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+    background-color: #ffffff;
+    color: #4b4b4b;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    letter-spacing: -0.011em;
+    selection-background-color: #58cc02;
+    selection-color: #ffffff;
+    overscroll-behavior: none;
   }
 
   code, pre, kbd, samp, .font-mono {
@@ -16,115 +19,220 @@
   button, a, [role="button"] {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    user-select: none;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #3c3c3c;
+    font-weight: 800;
+    letter-spacing: -0.015em;
   }
 }
 
-/* Custom smooth scrollbar */
+/* Duolingo Solid 3D Buttons & Tactile Cards */
+.duo-btn-green {
+  background-color: #58cc02;
+  color: #ffffff;
+  border: 2px solid #58cc02;
+  border-bottom: 4px solid #58a700;
+  border-radius: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: none;
+  cursor: pointer;
+}
+.duo-btn-green:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+.duo-btn-green:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.duo-btn-green:disabled {
+  background-color: #e5e5e5;
+  border-color: #e5e5e5;
+  border-bottom-color: #cecece;
+  color: #afafaf;
+  cursor: not-allowed;
+}
+
+.duo-btn-blue {
+  background-color: #1cb0f6;
+  color: #ffffff;
+  border: 2px solid #1cb0f6;
+  border-bottom: 4px solid #1899d6;
+  border-radius: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: none;
+  cursor: pointer;
+}
+.duo-btn-blue:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+.duo-btn-blue:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.duo-btn-blue:disabled {
+  background-color: #e5e5e5;
+  border-color: #e5e5e5;
+  border-bottom-color: #cecece;
+  color: #afafaf;
+  cursor: not-allowed;
+}
+
+.duo-btn-white {
+  background-color: #ffffff;
+  color: #4b4b4b;
+  border: 2px solid #e5e5e5;
+  border-bottom: 4px solid #e5e5e5;
+  border-radius: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: none;
+  cursor: pointer;
+}
+.duo-btn-white:hover:not(:disabled) {
+  background-color: #f7f7f7;
+  border-color: #cecece;
+  border-bottom-color: #cecece;
+}
+.duo-btn-white:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.duo-btn-red {
+  background-color: #ff4b4b;
+  color: #ffffff;
+  border: 2px solid #ff4b4b;
+  border-bottom: 4px solid #ea2b2b;
+  border-radius: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: none;
+  cursor: pointer;
+}
+.duo-btn-red:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+.duo-btn-red:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.duo-btn-yellow {
+  background-color: #ffc800;
+  color: #ffffff;
+  border: 2px solid #ffc800;
+  border-bottom: 4px solid #e5a500;
+  border-radius: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: none;
+  cursor: pointer;
+}
+.duo-btn-yellow:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+.duo-btn-yellow:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.duo-btn-purple {
+  background-color: #ce82ff;
+  color: #ffffff;
+  border: 2px solid #ce82ff;
+  border-bottom: 4px solid #a559d9;
+  border-radius: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: none;
+  cursor: pointer;
+}
+.duo-btn-purple:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+.duo-btn-purple:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+/* Duolingo 3D Chunky Cards */
+.duo-card {
+  background-color: #ffffff;
+  border: 2px solid #e5e5e5;
+  border-bottom: 4px solid #e5e5e5;
+  border-radius: 1.5rem;
+  box-shadow: none;
+}
+
+.duo-card-interactive {
+  background-color: #ffffff;
+  border: 2px solid #e5e5e5;
+  border-bottom: 4px solid #e5e5e5;
+  border-radius: 1.5rem;
+  box-shadow: none;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+  cursor: pointer;
+}
+.duo-card-interactive:hover {
+  background-color: #f7fbff;
+  border-color: #84d8ff;
+  border-bottom-color: #84d8ff;
+}
+.duo-card-interactive:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+/* Custom Duolingo-style smooth scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #030712;
+  background: #f7f7f7;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #e5e5e5;
   border-radius: 9999px;
+  border: 2px solid #f7f7f7;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-/* Noise overlay to eliminate color banding and give tactile film depth */
-.bg-noise {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
-}
-
-/* Ambient Deep Space Mesh Gradient */
-.bg-mesh-gradient {
-  background: 
-    radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.16) 0%, transparent 45%),
-    radial-gradient(circle at 85% 15%, rgba(244, 63, 94, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 50% 85%, rgba(14, 165, 233, 0.14) 0%, transparent 50%),
-    radial-gradient(circle at 75% 70%, rgba(168, 85, 247, 0.10) 0%, transparent 45%),
-    #030712;
-}
-
-/* Liquid Glass Panels */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.70);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
-    0 20px 40px -15px rgba(0, 0, 0, 0.6);
-}
-
-.glass-panel-interactive {
-  background: rgba(15, 23, 42, 0.70);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
-    0 20px 40px -15px rgba(0, 0, 0, 0.6);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.glass-panel-interactive:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: 
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-    0 25px 50px -12px rgba(99, 102, 241, 0.15);
-  transform: translateY(-2px);
-}
-
-.glass-pill {
-  background: rgba(30, 41, 59, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
-}
-
-/* Mobile Safe Areas */
-.pb-safe {
-  padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));
-}
-.pt-safe {
-  padding-top: max(0.75rem, env(safe-area-inset-top, 0.75rem));
-}
-
-/* Shimmer metallic sweep effect */
-@keyframes shimmer-sweep {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.animate-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-.animate-shimmer::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.12) 50%,
-    transparent 100%
-  );
-  transform: translateX(-100%);
-  animation: shimmer-sweep 2.5s infinite;
-  pointer-events: none;
+  background: #cecece;
 }
 
 /* Elastic Shake on Error */
@@ -141,32 +249,27 @@
   animation: shake-spring 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
-/* Breathing glow for active indicators */
-@keyframes pulse-glow {
+/* Wiggle animation for Duo celebrations */
+@keyframes duo-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+.animate-wiggle {
+  animation: duo-wiggle 0.5s ease-in-out infinite;
+}
+
+/* Gentle bounce animation for active lesson nodes */
+@keyframes duo-bounce-gentle {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+    transform: translateY(0);
   }
   50% {
-    box-shadow: 0 0 35px rgba(99, 102, 241, 0.55);
+    transform: translateY(-8px);
   }
 }
-
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-/* Ambient background drifting aura */
-@keyframes ambient-shift {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(-30px, 20px) scale(1.08);
-  }
-}
-
-.animate-ambient {
-  animation: ambient-shift 12s ease-in-out infinite alternate;
+.animate-bounce-gentle {
+  animation: duo-bounce-gentle 1.8s ease-in-out infinite;
 }
 
 /* Tabular nums and text-wrap balance */
@@ -174,6 +277,10 @@
   font-variant-numeric: tabular-nums;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  text-wrap: balance;
+/* Safe areas */
+.pb-safe {
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));
+}
+.pt-safe {
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0.75rem));
 }

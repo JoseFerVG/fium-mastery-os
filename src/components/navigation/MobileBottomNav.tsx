@@ -1,12 +1,11 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { 
-  Compass, 
-  Sparkles, 
-  Bookmark, 
+  BookOpen, 
+  Cpu, 
+  Flame, 
   Trophy, 
-  BookOpenCheck,
-  Flame
+  BookOpenCheck 
 } from 'lucide-react';
 import { soundManager } from '../../utils/soundEffects';
 
@@ -23,106 +22,101 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   currentView,
   onNavigate,
   onOpenDeskCompanion,
-  onOpenFlashcards,
+  onOpenFlashcards: _onOpenFlashcards,
   onOpenAchievements,
-  streakDays,
+  streakDays: _streakDays,
 }) => {
   return (
     <nav 
       aria-label="Navegación Móvil Principal"
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-950/85 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.6)] pb-safe transition-all"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-[#E5E5E5] pb-safe shadow-[0_-4px_12px_rgba(0,0,0,0.04)]"
     >
-      <div className="max-w-md mx-auto px-2 py-1.5 flex items-center justify-around">
-        {/* Tab 1: Panel */}
-        <button
-          onClick={() => {
-            soundManager.playClick();
-            onNavigate('dashboard');
-          }}
-          className={`flex flex-col items-center justify-center py-1.5 px-2.5 rounded-2xl relative transition-all active:scale-95 ${
-            currentView === 'dashboard' ? 'text-indigo-400 font-bold' : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          {currentView === 'dashboard' && (
-            <motion.div
-              layoutId="mobile-nav-indicator"
-              className="absolute inset-0 bg-indigo-500/15 rounded-2xl border border-indigo-500/30"
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            />
-          )}
-          <Compass className="w-5 h-5 relative z-10" />
-          <span className="text-[10px] tracking-tight mt-0.5 relative z-10 font-sans">Panel</span>
-        </button>
-
-        {/* Tab 2: FIUMingo */}
+      <div className="max-w-md mx-auto px-2 py-2 flex items-center justify-around">
+        {/* Tab 1: APRENDER / FIUMingo */}
         <button
           onClick={() => {
             soundManager.playClick();
             onNavigate('duolingo');
           }}
-          className={`flex flex-col items-center justify-center py-1.5 px-2.5 rounded-2xl relative transition-all active:scale-95 ${
-            currentView === 'duolingo' ? 'text-green-400 font-bold' : 'text-slate-400 hover:text-slate-200'
+          className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl relative transition-transform active:scale-90 ${
+            currentView === 'duolingo' ? 'text-[#58CC02]' : 'text-[#AFAFAF] hover:text-[#4B4B4B]'
           }`}
         >
           {currentView === 'duolingo' && (
             <motion.div
-              layoutId="mobile-nav-indicator"
-              className="absolute inset-0 bg-green-500/15 rounded-2xl border border-green-500/30"
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              layoutId="mobile-nav-duo"
+              className="absolute inset-0 bg-[#EAFBEA] rounded-2xl border-2 border-[#58CC02]"
+              transition={{ type: 'spring', stiffness: 500, damping: 35 }}
             />
           )}
-          <span className="text-lg leading-none relative z-10">🦉</span>
-          <span className="text-[10px] tracking-tight mt-0.5 relative z-10 font-sans">FIUMingo</span>
+          <span className="text-xl leading-none relative z-10">🦉</span>
+          <span className="text-[10px] font-black uppercase tracking-wider mt-0.5 relative z-10">Aprender</span>
         </button>
 
-        {/* Tab 3: CENTER HERO BUTTON - MODO ENTRE LIBROS */}
-        <div className="relative -top-3">
-          <motion.button
-            whileTap={{ scale: 0.92 }}
-            onClick={() => {
-              soundManager.playPowerup();
-              onOpenDeskCompanion();
-            }}
-            className="flex flex-col items-center justify-center w-13 h-13 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-pink-500 text-white shadow-lg shadow-purple-600/40 border-2 border-white/25 active:border-white/40 relative group"
-            title="Estudio Rápido Entre Libros"
-          >
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl blur-sm opacity-60 group-hover:opacity-100 transition animate-pulse" />
-            <BookOpenCheck className="w-6 h-6 relative z-10 fill-white/20" />
-            <span className="absolute -bottom-5 text-[9px] font-black tracking-tight text-purple-300 uppercase whitespace-nowrap drop-shadow">
-              Entre Libros
-            </span>
-          </motion.button>
-        </div>
-
-        {/* Tab 4: Flashcards / Repaso */}
+        {/* Tab 2: PRÁCTICA / EXÁMENES */}
         <button
           onClick={() => {
             soundManager.playClick();
-            onOpenFlashcards();
+            onNavigate('exam');
           }}
-          className="flex flex-col items-center justify-center py-1.5 px-2.5 rounded-2xl relative text-slate-400 hover:text-slate-200 transition-all active:scale-95"
+          className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl relative transition-transform active:scale-90 ${
+            currentView === 'exam' ? 'text-[#1CB0F6]' : 'text-[#AFAFAF] hover:text-[#4B4B4B]'
+          }`}
         >
-          <Bookmark className="w-5 h-5 relative z-10 text-indigo-400" />
-          <span className="text-[10px] tracking-tight mt-0.5 relative z-10 font-sans">Tarjetas</span>
+          {currentView === 'exam' && (
+            <motion.div
+              layoutId="mobile-nav-duo"
+              className="absolute inset-0 bg-[#E5F6FD] rounded-2xl border-2 border-[#84D8FF]"
+              transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+            />
+          )}
+          <BookOpen className="w-5 h-5 relative z-10 stroke-[2.5]" />
+          <span className="text-[10px] font-black uppercase tracking-wider mt-0.5 relative z-10">Práctica</span>
         </button>
 
-        {/* Tab 5: Progreso / Trofeos */}
+        {/* Tab 3: SIMULADORES */}
+        <button
+          onClick={() => {
+            soundManager.playClick();
+            onNavigate('simulators');
+          }}
+          className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl relative transition-transform active:scale-90 ${
+            currentView === 'simulators' ? 'text-[#CE82FF]' : 'text-[#AFAFAF] hover:text-[#4B4B4B]'
+          }`}
+        >
+          {currentView === 'simulators' && (
+            <motion.div
+              layoutId="mobile-nav-duo"
+              className="absolute inset-0 bg-[#F5EAFF] rounded-2xl border-2 border-[#CE82FF]"
+              transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+            />
+          )}
+          <Cpu className="w-5 h-5 relative z-10 stroke-[2.5]" />
+          <span className="text-[10px] font-black uppercase tracking-wider mt-0.5 relative z-10">Sims</span>
+        </button>
+
+        {/* Tab 4: MISIONES & LOGROS */}
         <button
           onClick={() => {
             soundManager.playClick();
             onOpenAchievements();
           }}
-          className="flex flex-col items-center justify-center py-1.5 px-2.5 rounded-2xl relative text-slate-400 hover:text-slate-200 transition-all active:scale-95"
+          className="flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-[#AFAFAF] hover:text-[#4B4B4B] active:scale-90 transition-transform"
         >
-          <div className="relative">
-            <Trophy className="w-5 h-5 text-amber-400" />
-            {streakDays > 0 && (
-              <span className="absolute -top-1 -right-2 flex items-center justify-center bg-rose-500 text-white text-[9px] font-mono font-bold w-4 h-4 rounded-full border border-slate-950">
-                <Flame className="w-2.5 h-2.5 fill-white" />
-              </span>
-            )}
-          </div>
-          <span className="text-[10px] tracking-tight mt-0.5 relative z-10 font-sans">Nivel</span>
+          <Trophy className="w-5 h-5 stroke-[2.5] text-[#FFC800]" />
+          <span className="text-[10px] font-black uppercase tracking-wider mt-0.5 text-[#E5A500]">Misiones</span>
+        </button>
+
+        {/* Tab 5: MODO ENTRE LIBROS */}
+        <button
+          onClick={() => {
+            soundManager.playPowerup();
+            onOpenDeskCompanion();
+          }}
+          className="flex flex-col items-center justify-center py-1 px-3 rounded-2xl text-[#AFAFAF] hover:text-[#4B4B4B] active:scale-90 transition-transform"
+        >
+          <BookOpenCheck className="w-5 h-5 stroke-[2.5] text-[#FF4B4B]" />
+          <span className="text-[10px] font-black uppercase tracking-wider mt-0.5 text-[#FF4B4B]">Libros</span>
         </button>
       </div>
     </nav>

@@ -58,7 +58,7 @@ const DEFAULT_PROGRESS: UserProgress = {
 };
 
 export const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'course' | 'exam' | 'pomodoro' | 'duolingo' | 'simulators'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'course' | 'exam' | 'pomodoro' | 'duolingo' | 'simulators'>('duolingo');
   const [selectedSubjectId, setSelectedSubjectId] = useState<SubjectId>('aoc');
   const [selectedSimulatorId, setSelectedSimulatorId] = useState<SimulatorId | undefined>(undefined);
 
@@ -285,11 +285,8 @@ export const App: React.FC = () => {
   const overallPercentage = totalConcepts > 0 ? Math.round((greenConcepts / totalConcepts) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-mesh-gradient bg-noise text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
-      {/* Top Ambient Glow Orb */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-gradient-to-b from-indigo-500/15 via-purple-500/5 to-transparent blur-3xl rounded-full z-0" />
-
-      {/* Top Navbar */}
+    <div className="min-h-screen bg-white text-[#4B4B4B] flex flex-col font-sans selection:bg-[#58CC02] selection:text-white relative overflow-x-hidden">
+      {/* Duolingo Left Sidebar on Desktop & Top Bar on Mobile */}
       <Navbar
         currentView={currentView}
         selectedSubjectId={selectedSubjectId}
@@ -307,106 +304,124 @@ export const App: React.FC = () => {
         onOpenDeskCompanion={() => setIsDeskCompanionOpen(true)}
       />
 
-      {/* Main Content Area with View Transitions */}
-      <AnimatePresence mode="wait">
-        {currentView === 'duolingo' ? (
-          <motion.div
-            key="duolingo"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="flex-1 w-full relative z-10 pb-24 lg:pb-12"
-          >
-            <DuolingoView
-              initialSubjectId={selectedSubjectId}
-              onBackToDashboard={() => handleNavigate('dashboard')}
-            />
-          </motion.div>
-        ) : (
-          <motion.main
-            key={currentView}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-28 lg:pb-12 relative z-10"
-          >
-            {currentView === 'dashboard' && (
-              <Dashboard
-                progress={progress}
-                onSelectSubject={handleSelectSubject}
-                onOpenExamTrainer={() => handleNavigate('exam')}
-                onOpenPomodoro={() => handleNavigate('pomodoro')}
-                onOpenDuolingo={() => handleNavigate('duolingo')}
-                onOpenExamRush={() => setIsExamRushOpen(true)}
-                onOpenFlashcards={() => setIsFlashcardsOpen(true)}
+      {/* Main Content Area Offset for Desktop Left Sidebar */}
+      <div className="lg:pl-64 flex flex-col flex-1 min-h-screen">
+        <AnimatePresence mode="wait">
+          {currentView === 'duolingo' ? (
+            <motion.div
+              key="duolingo"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="flex-1 w-full pb-24 lg:pb-12"
+            >
+              <DuolingoView
+                initialSubjectId={selectedSubjectId}
+                onBackToDashboard={() => handleNavigate('dashboard')}
                 onOpenAchievements={() => setIsAchievementsOpen(true)}
-                onOpenSimulators={handleOpenSimulators}
-                onClaimQuest={handleClaimQuest}
-                onOpenRescuePlan={() => setIsRescuePlanOpen(true)}
+                onOpenExamRush={() => setIsExamRushOpen(true)}
                 onOpenDeskCompanion={() => setIsDeskCompanionOpen(true)}
               />
-            )}
+            </motion.div>
+          ) : (
+            <motion.main
+              key={currentView}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-28 lg:pb-12"
+            >
+              {currentView === 'dashboard' && (
+                <Dashboard
+                  progress={progress}
+                  onSelectSubject={handleSelectSubject}
+                  onOpenExamTrainer={() => handleNavigate('exam')}
+                  onOpenPomodoro={() => handleNavigate('pomodoro')}
+                  onOpenDuolingo={() => handleNavigate('duolingo')}
+                  onOpenExamRush={() => setIsExamRushOpen(true)}
+                  onOpenFlashcards={() => setIsFlashcardsOpen(true)}
+                  onOpenAchievements={() => setIsAchievementsOpen(true)}
+                  onOpenSimulators={handleOpenSimulators}
+                  onClaimQuest={handleClaimQuest}
+                  onOpenRescuePlan={() => setIsRescuePlanOpen(true)}
+                  onOpenDeskCompanion={() => setIsDeskCompanionOpen(true)}
+                />
+              )}
 
-            {currentView === 'simulators' && (
-              <SimulatorsHub
-                initialSimulatorId={selectedSimulatorId}
-                onBack={() => handleNavigate('dashboard')}
-              />
-            )}
+              {currentView === 'simulators' && (
+                <SimulatorsHub
+                  initialSimulatorId={selectedSimulatorId}
+                  onBack={() => handleNavigate('dashboard')}
+                />
+              )}
 
-            {currentView === 'course' && (
-              <CourseView
-                subject={currentSubject}
-                topicMastery={progress.topicMastery}
-                onUpdateMastery={handleUpdateMastery}
-                onOpenExamTrainer={(subjId) => handleNavigate('exam', subjId)}
-                onBack={() => handleNavigate('dashboard')}
-              />
-            )}
+              {currentView === 'course' && (
+                <CourseView
+                  subject={currentSubject}
+                  topicMastery={progress.topicMastery}
+                  onUpdateMastery={handleUpdateMastery}
+                  onOpenExamTrainer={(subjId) => handleNavigate('exam', subjId)}
+                  onBack={() => handleNavigate('dashboard')}
+                />
+              )}
 
-            {currentView === 'exam' && (
-              <ExamTrainer
-                initialSubjectId={selectedSubjectId}
-                onBack={() => handleNavigate('dashboard')}
-                onAnswerSaved={(qId, isCorrect) => {
-                  if (isCorrect) {
-                    handleAddXp(50);
-                    handleAddGems(5);
-                  }
-                }}
-              />
-            )}
-
-            {currentView === 'pomodoro' && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-black text-white tracking-tight">Estación de Enfoque Profundo</h2>
-                    <p className="text-sm text-slate-400">Técnica Pomodoro 25/5 optimizada para retención conceptual de ingeniería</p>
-                  </div>
-                  <button
-                    onClick={() => handleNavigate('dashboard')}
-                    className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
-                  >
-                    Volver al Panel
-                  </button>
-                </div>
-                <PomodoroTimer
-                  onSessionComplete={(mins) => {
-                    handleAddXp(mins * 2);
-                    handleAddGems(5);
-                    setProgress(p => ({ ...p, totalStudyMinutes: p.totalStudyMinutes + mins }));
+              {currentView === 'exam' && (
+                <ExamTrainer
+                  initialSubjectId={selectedSubjectId}
+                  onBack={() => handleNavigate('dashboard')}
+                  onAnswerSaved={(qId, isCorrect) => {
+                    if (isCorrect) {
+                      handleAddXp(50);
+                      handleAddGems(5);
+                    }
                   }}
                 />
-              </div>
-            )}
-          </motion.main>
-        )}
-      </AnimatePresence>
+              )}
 
-      {/* Gamification Modals with AnimatePresence */}
+              {currentView === 'pomodoro' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-2xl font-black text-[#4B4B4B] tracking-tight">Estación de Enfoque Profundo</h2>
+                      <p className="text-xs text-[#777777] font-bold">Técnica Pomodoro 25/5 optimizada para retención conceptual de ingeniería</p>
+                    </div>
+                    <button
+                      onClick={() => handleNavigate('dashboard')}
+                      className="duo-btn-white px-4 py-2 text-xs"
+                    >
+                      Volver al Panel
+                    </button>
+                  </div>
+                  <PomodoroTimer
+                    onSessionComplete={(mins) => {
+                      handleAddXp(mins * 2);
+                      handleAddGems(5);
+                      setProgress(p => ({ ...p, totalStudyMinutes: p.totalStudyMinutes + mins }));
+                    }}
+                  />
+                </div>
+              )}
+            </motion.main>
+          )}
+        </AnimatePresence>
+
+        {/* Footer */}
+        <footer className="border-t-2 border-[#E5E5E5] bg-white py-6 mb-16 lg:mb-0 text-center text-xs text-[#777777] font-bold">
+          <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="flex items-center gap-1.5">
+              <span>🦉</span>
+              <strong>FIUMingo</strong> • Aprende Grado en Ingeniería Informática UMU al estilo Duolingo
+            </p>
+            <p className="text-[11px] text-[#AFAFAF]">
+              Convocatorias Oficiales FIUM 2026/2027
+            </p>
+          </div>
+        </footer>
+      </div>
+
+      {/* Gamification Modals */}
       <AnimatePresence>
         {isExamRushOpen && (
           <ExamRushModal
@@ -460,7 +475,7 @@ export const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Native-feel Mobile Bottom Navigation Dock */}
+      {/* Duolingo Native-feel Mobile Bottom Navigation Dock */}
       <MobileBottomNav
         currentView={currentView}
         onNavigate={handleNavigate}
@@ -469,18 +484,6 @@ export const App: React.FC = () => {
         onOpenAchievements={() => setIsAchievementsOpen(true)}
         streakDays={progress.studyStreakDays}
       />
-
-      {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-6 mb-16 lg:mb-0 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>
-            FIUM Mastery OS &bull; Herramienta de Recuperación de Alto Rendimiento para el Grado en Ingeniería Informática (UMU)
-          </p>
-          <p className="font-mono text-slate-600">
-            José Fernando &bull; Convocatoria 2026/2027
-          </p>
-        </div>
-      </footer>
     </div>
   );
 };

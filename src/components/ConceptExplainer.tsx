@@ -21,7 +21,6 @@ import { SubnetCalculator } from './simulators/SubnetCalculator';
 import { RsaCryptolab } from './simulators/RsaCryptolab';
 import { AStarSearchVisualizer } from './simulators/AStarSearchVisualizer';
 import { DecisionTreePlayground } from './simulators/DecisionTreePlayground';
-import { SpotlightCard } from './ui/SpotlightCard';
 import { BadgePill } from './ui/BadgePill';
 import { soundManager } from '../utils/soundEffects';
 import confetti from 'canvas-confetti';
@@ -63,13 +62,10 @@ export const ConceptExplainer: React.FC<ConceptExplainerProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       {/* Top Banner & Mastery Controller */}
-      <SpotlightCard 
-        spotlightColor="rgba(99, 102, 241, 0.16)"
-        className="p-6 sm:p-8"
-      >
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+      <div className="duo-card p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b-2 border-[#E5E5E5]">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <BadgePill variant="rose">
@@ -78,48 +74,48 @@ export const ConceptExplainer: React.FC<ConceptExplainerProps> = ({
               <BadgePill variant="slate">
                 Dificultad: {concept.difficulty}
               </BadgePill>
-              <span className="flex items-center gap-1 text-xs text-slate-400 font-mono">
+              <span className="flex items-center gap-1 text-xs text-[#777777] font-bold">
                 <Clock className="w-3.5 h-3.5" /> {concept.timeEstimateMin} min de estudio
               </span>
               {concept.interactiveDemoId && (
                 <BadgePill variant="indigo" pulse icon={<Cpu className="w-3.5 h-3.5" />}>
-                  Laboratorio Interactivo Disponible
+                  Laboratorio Práctico
                 </BadgePill>
               )}
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">{concept.title}</h2>
-            <p className="text-sm text-slate-300 mt-1 leading-relaxed">{concept.subtitle}</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-[#4B4B4B] tracking-tight">{concept.title}</h2>
+            <p className="text-xs sm:text-sm text-[#777777] font-bold mt-1 leading-relaxed">{concept.subtitle}</p>
           </div>
 
           {/* Semáforo de Dominio Personal */}
-          <div className="bg-slate-950 p-2 rounded-2xl border border-slate-800 flex items-center gap-1 self-start md:self-auto shrink-0 shadow-inner">
-            <span className="text-xs font-bold text-slate-400 px-2 font-mono">Tu Nivel:</span>
+          <div className="bg-[#F7F7F7] p-2 rounded-2xl border-2 border-[#E5E5E5] flex items-center gap-1.5 self-start md:self-auto shrink-0">
+            <span className="text-xs font-black text-[#777777] px-2 uppercase">Tu Nivel:</span>
             <button
               onClick={() => handleStatusSelect('red')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase transition border-2 border-b-4 ${
                 masteryStatus === 'red'
-                  ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/30'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#FF4B4B] text-white border-[#EA2B2B]'
+                  : 'bg-white text-[#777777] border-[#E5E5E5]'
               }`}
             >
-              🔴 Bloqueado
+              🔴 Pendiente
             </button>
             <button
               onClick={() => handleStatusSelect('yellow')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase transition border-2 border-b-4 ${
                 masteryStatus === 'yellow'
-                  ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#FFC800] text-white border-[#E5A500]'
+                  : 'bg-white text-[#777777] border-[#E5E5E5]'
               }`}
             >
               🟡 En Progreso
             </button>
             <button
               onClick={() => handleStatusSelect('green')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase transition border-2 border-b-4 ${
                 masteryStatus === 'green'
-                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30 ring-1 ring-emerald-400'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#58CC02] text-white border-[#58A700]'
+                  : 'bg-white text-[#777777] border-[#E5E5E5]'
               }`}
             >
               🟢 Dominado (+50 XP)
@@ -128,49 +124,49 @@ export const ConceptExplainer: React.FC<ConceptExplainerProps> = ({
         </div>
 
         {/* The Feynman Breakdown Box */}
-        <div className="pt-6 space-y-6">
+        <div className="space-y-6">
           {/* 1. Intuition & Analogy */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-slate-950/80 border border-slate-800/90 p-5 rounded-2xl shadow-md">
-              <div className="flex items-center gap-2 text-indigo-400 font-bold text-sm mb-2">
-                <Lightbulb className="w-5 h-5 text-indigo-400" />
-                <span>1. Intuición Rápida (Explicado para tu abuela):</span>
+            <div className="bg-[#E5F6FD] border-2 border-[#84D8FF] p-5 rounded-3xl">
+              <div className="flex items-center gap-2 text-[#1CB0F6] font-black text-sm mb-2">
+                <Lightbulb className="w-5 h-5 text-[#1CB0F6]" />
+                <span>1. Intuición Rápida (Método Feynman):</span>
               </div>
-              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              <p className="text-[#4B4B4B] text-xs sm:text-sm font-bold leading-relaxed">
                 {concept.feynmanExplanation.intuition}
               </p>
             </div>
 
-            <div className="bg-slate-950/80 border border-slate-800/90 p-5 rounded-2xl shadow-md">
-              <div className="flex items-center gap-2 text-purple-400 font-bold text-sm mb-2">
-                <Sparkles className="w-5 h-5 text-purple-400" />
+            <div className="bg-[#F5EAFF] border-2 border-[#E8C8FF] p-5 rounded-3xl">
+              <div className="flex items-center gap-2 text-[#CE82FF] font-black text-sm mb-2">
+                <Sparkles className="w-5 h-5 text-[#CE82FF]" />
                 <span>Analogía del Mundo Real:</span>
               </div>
-              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed italic">
+              <p className="text-[#4B4B4B] text-xs sm:text-sm font-bold leading-relaxed italic">
                 "{concept.feynmanExplanation.analogy}"
               </p>
             </div>
           </div>
 
           {/* 2. Formal Theory & Rigorous Engineering */}
-          <div className="bg-slate-950/80 border border-slate-800/90 p-5 rounded-2xl shadow-md">
-            <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm mb-2">
-              <BookOpen className="w-5 h-5 text-cyan-400" />
+          <div className="bg-[#F7F7F7] border-2 border-[#E5E5E5] p-5 rounded-3xl">
+            <div className="flex items-center gap-2 text-[#4B4B4B] font-black text-sm mb-2">
+              <BookOpen className="w-5 h-5 text-[#1CB0F6]" />
               <span>2. Teoría Formal & Rigor de Examen:</span>
             </div>
-            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed whitespace-pre-line">
+            <p className="text-[#4B4B4B] text-xs sm:text-sm font-bold leading-relaxed whitespace-pre-line">
               {concept.feynmanExplanation.formalTheory}
             </p>
 
             {concept.feynmanExplanation.keyFormulasOrRules && (
-              <div className="mt-4 pt-4 border-t border-slate-800/80">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 font-mono">
+              <div className="mt-4 pt-4 border-t-2 border-[#E5E5E5]">
+                <span className="text-xs font-black text-[#777777] uppercase tracking-wider block mb-2">
                   Reglas de Oro / Fórmulas Clave:
                 </span>
                 <ul className="space-y-2">
                   {concept.feynmanExplanation.keyFormulasOrRules.map((rule, idx) => (
-                    <li key={idx} className="text-xs sm:text-sm text-indigo-300 flex items-start gap-2 font-mono bg-indigo-950/30 p-2.5 rounded-xl border border-indigo-500/20">
-                      <span className="text-indigo-400 font-bold">&bull;</span>
+                    <li key={idx} className="text-xs sm:text-sm text-[#1899D6] font-mono font-bold flex items-start gap-2 bg-[#E5F6FD] p-3 rounded-2xl border border-[#84D8FF]">
+                      <span className="text-[#1CB0F6] font-black">•</span>
                       <span>{rule}</span>
                     </li>
                   ))}
@@ -181,22 +177,22 @@ export const ConceptExplainer: React.FC<ConceptExplainerProps> = ({
 
           {/* 3. Code or Concrete Example if present */}
           {concept.codeOrExample && (
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-lg">
-              <div className="px-4 py-2.5 bg-slate-900 border-b border-slate-800 flex items-center justify-between text-xs">
-                <span className="font-mono font-bold text-slate-300 flex items-center gap-1.5">
-                  <Code className="w-4 h-4 text-emerald-400" />
+            <div className="bg-[#1E293B] border-2 border-[#334155] rounded-3xl overflow-hidden shadow-sm">
+              <div className="px-5 py-3 bg-[#0F172A] border-b border-[#334155] flex items-center justify-between text-xs">
+                <span className="font-mono font-bold text-slate-200 flex items-center gap-2">
+                  <Code className="w-4 h-4 text-[#58CC02]" />
                   Ejemplo en Código ({concept.codeOrExample.language}):
                 </span>
 
                 <button
                   onClick={() => handleCopyCode(concept.codeOrExample!.code)}
-                  className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+                  className="flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition cursor-pointer"
                   title="Copiar código"
                 >
                   {copiedCode ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400 font-mono">¡Copiado!</span>
+                      <Check className="w-3.5 h-3.5 text-[#58CC02]" />
+                      <span className="text-[#58CC02] font-mono">¡Copiado!</span>
                     </>
                   ) : (
                     <>
@@ -206,38 +202,38 @@ export const ConceptExplainer: React.FC<ConceptExplainerProps> = ({
                   )}
                 </button>
               </div>
-              <pre className="p-4 text-xs font-mono text-emerald-300 bg-slate-950 overflow-x-auto selection:bg-emerald-900 selection:text-white">
+              <pre className="p-5 text-xs font-mono text-[#58CC02] bg-[#1E293B] overflow-x-auto selection:bg-emerald-900 selection:text-white">
                 <code>{concept.codeOrExample.code}</code>
               </pre>
-              <div className="p-3 bg-slate-900/60 border-t border-slate-800 text-[11px] text-slate-400">
-                <strong className="text-slate-300">Explicación del snippet:</strong> {concept.codeOrExample.explanation}
+              <div className="p-3.5 bg-[#0F172A] border-t border-[#334155] text-xs text-slate-400">
+                <strong className="text-white">Explicación:</strong> {concept.codeOrExample.explanation}
               </div>
             </div>
           )}
 
           {/* 4. Common Exam Pitfalls */}
-          <div className="bg-rose-950/20 border border-rose-900/40 p-5 rounded-2xl shadow-md">
-            <div className="flex items-center gap-2 text-rose-400 font-bold text-sm mb-2">
-              <AlertTriangle className="w-5 h-5 text-rose-400" />
-              <span>3. Trampas Típicas de Examen (Donde los profesores quitan puntos):</span>
+          <div className="bg-[#FFF0F0] border-2 border-b-4 border-[#FFD0D0] p-5 rounded-3xl">
+            <div className="flex items-center gap-2 text-[#EA2B2B] font-black text-sm mb-2">
+              <AlertTriangle className="w-5 h-5 text-[#FF4B4B]" />
+              <span>3. Trampas Típicas de Examen:</span>
             </div>
-            <ul className="space-y-2 text-xs sm:text-sm text-rose-200/90 mt-3">
+            <ul className="space-y-2 text-xs sm:text-sm text-[#EA2B2B] font-bold mt-3">
               {concept.feynmanExplanation.examPitfalls.map((pitfall, idx) => (
-                <li key={idx} className="flex items-start gap-2 bg-rose-950/30 p-2.5 rounded-xl border border-rose-500/20">
-                  <span className="text-rose-400 font-bold text-sm">✕</span>
+                <li key={idx} className="flex items-start gap-2.5 bg-white p-3 rounded-2xl border border-[#FFD0D0]">
+                  <span className="text-[#FF4B4B] font-black text-sm">✕</span>
                   <span>{pitfall}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
-      </SpotlightCard>
+      </div>
 
-      {/* Embedded Interactive Simulators with Anchor */}
+      {/* Embedded Interactive Simulators */}
       {concept.interactiveDemoId && (
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-            <Cpu className="w-4 h-4" /> Laboratorio Práctico Integrado
+          <div className="flex items-center gap-2 text-xs font-black text-[#1CB0F6] uppercase tracking-wider">
+            <Cpu className="w-4 h-4 stroke-[2.5]" /> Laboratorio Práctico Integrado
           </div>
           {concept.interactiveDemoId === 'pipeline' && <PipelineSimulator />}
           {concept.interactiveDemoId === 'cache' && <CacheCalculator />}

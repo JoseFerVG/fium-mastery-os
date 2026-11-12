@@ -9,8 +9,7 @@ interface BadgePillProps {
 }
 
 /**
- * High-end BadgePill inspired by Skipper UI & Vengeance UI.
- * Features an optical glowing live indicator dot and sleek gradient border.
+ * Duolingo-styled Badge Pill with rounded-full shape and vibrant cartoon colors.
  */
 export const BadgePill: React.FC<BadgePillProps> = ({
   children,
@@ -20,24 +19,24 @@ export const BadgePill: React.FC<BadgePillProps> = ({
   icon,
 }) => {
   const variantStyles = {
-    indigo: 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 shadow-indigo-500/10',
-    emerald: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 shadow-emerald-500/10',
-    amber: 'bg-amber-500/10 text-amber-300 border-amber-500/30 shadow-amber-500/10',
-    rose: 'bg-rose-500/10 text-rose-300 border-rose-500/30 shadow-rose-500/10',
-    slate: 'bg-slate-800/60 text-slate-300 border-slate-700/60 shadow-black/20',
+    indigo: 'bg-[#E5F6FD] text-[#1CB0F6] border-2 border-[#84D8FF]',
+    emerald: 'bg-[#D7FFB8] text-[#58A700] border-2 border-[#58CC02]/40',
+    amber: 'bg-[#FFF4D0] text-[#E5A500] border-2 border-[#FFC800]/60',
+    rose: 'bg-[#FFDFE0] text-[#EA2B2B] border-2 border-[#FF4B4B]/40',
+    slate: 'bg-[#F7F7F7] text-[#777777] border-2 border-[#E5E5E5]',
   };
 
   const dotColors = {
-    indigo: 'bg-indigo-400',
-    emerald: 'bg-emerald-400',
-    amber: 'bg-amber-400',
-    rose: 'bg-rose-400',
-    slate: 'bg-slate-400',
+    indigo: 'bg-[#1CB0F6]',
+    emerald: 'bg-[#58CC02]',
+    amber: 'bg-[#FFC800]',
+    rose: 'bg-[#FF4B4B]',
+    slate: 'bg-[#AFAFAF]',
   };
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide border shadow-sm backdrop-blur-md transition-colors ${variantStyles[variant]} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black tracking-wide border transition-all ${variantStyles[variant]} ${className}`}
     >
       {pulse && (
         <span className="relative flex h-2 w-2">

@@ -110,37 +110,37 @@ export const DeskCompanionModal: React.FC<DeskCompanionModalProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-xl"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm select-none"
     >
       <motion.div
         initial={{ y: '100%', opacity: 0.5 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: '100%', opacity: 0 }}
         transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-        className="w-full sm:max-w-2xl bg-slate-900 border-t sm:border border-white/15 sm:rounded-3xl rounded-t-3xl shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[85vh] overflow-hidden"
+        className="w-full sm:max-w-2xl bg-white border-2 border-b-[6px] border-[#E5E5E5] sm:rounded-3xl rounded-t-3xl shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[85vh] overflow-hidden font-sans"
       >
         {/* Mobile Drag / Sheet Handle */}
         <div className="pt-3 pb-1 flex justify-center sm:hidden">
-          <div className="w-12 h-1.5 rounded-full bg-slate-700/80" />
+          <div className="w-12 h-1.5 rounded-full bg-[#E5E5E5]" />
         </div>
 
         {/* Modal Top Header */}
-        <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-slate-950/60 backdrop-blur-md">
+        <div className="px-6 py-4 border-b-2 border-[#E5E5E5] flex items-center justify-between bg-white">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-purple-500/20">
-              <Smartphone className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl bg-[#FFF0F0] border-2 border-[#FFD0D0] flex items-center justify-center text-[#FF4B4B]">
+              <Smartphone className="w-5 h-5 stroke-[2.5]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-black text-white text-base tracking-tight">
+                <h3 className="font-black text-[#4B4B4B] text-base tracking-tight">
                   Modo Móvil Entre Libros
                 </h3>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#FFF0F0] text-[#FF4B4B] border border-[#FFD0D0]">
                   3 MIN BLITZ
                 </span>
               </div>
-              <p className="text-xs text-slate-400">
-                Pon a prueba tu retención activa mientras tienes 2 libros abiertos en la mesa
+              <p className="text-xs text-[#777777] font-bold">
+                Retención activa con 2 libros abiertos en tu mesa
               </p>
             </div>
           </div>
@@ -151,21 +151,21 @@ export const DeskCompanionModal: React.FC<DeskCompanionModalProps> = ({
               onClose();
             }}
             aria-label="Cerrar modal"
-            className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white transition active:scale-95"
+            className="p-2 rounded-xl text-[#AFAFAF] hover:text-[#4B4B4B] hover:bg-[#F7F7F7] transition cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5 stroke-[3]" />
           </button>
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {!drillActive ? (
             /* Setup View: Select 2 Active Books */
             <div className="space-y-6">
-              <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
-                <div className="text-xs text-indigo-200 leading-relaxed">
-                  <strong>¿Cómo funciona?</strong> Coloca el móvil junto a tus apuntes o libros. Selecciona las 2 asignaturas que estás estudiando hoy. La app te lanzará 5 preguntas clave de examen contrastando las <em>trampas del profesor</em> con lo que acabas de leer.
+              <div className="p-4 rounded-2xl bg-[#E5F6FD] border-2 border-[#84D8FF] flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-[#1CB0F6] shrink-0 mt-0.5" />
+                <div className="text-xs text-[#1899D6] font-bold leading-relaxed">
+                  <strong>¿Cómo funciona?</strong> Coloca el móvil junto a tus apuntes. Elige 2 asignaturas y pon a prueba lo que acabas de leer con 5 preguntas clave de examen.
                 </div>
               </div>
 
@@ -173,14 +173,14 @@ export const DeskCompanionModal: React.FC<DeskCompanionModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Book 1 */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5 uppercase font-mono">
-                    <BookOpen className="w-3.5 h-3.5 text-purple-400" />
-                    Libro / Asignatura 1:
+                  <label className="text-xs font-black text-[#4B4B4B] flex items-center gap-1.5 uppercase tracking-wider">
+                    <BookOpen className="w-4 h-4 text-[#1CB0F6]" />
+                    Libro 1:
                   </label>
                   <select
                     value={selectedBook1}
                     onChange={(e) => setSelectedBook1(e.target.value as SubjectId)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-3 text-sm font-bold text-white focus:outline-none focus:border-purple-500"
+                    className="w-full bg-white border-2 border-b-4 border-[#E5E5E5] rounded-2xl px-4 py-3 text-xs font-black text-[#4B4B4B] focus:outline-none focus:border-[#84D8FF]"
                   >
                     {COURSES.map(c => (
                       <option key={c.id} value={c.id}>
@@ -188,23 +188,18 @@ export const DeskCompanionModal: React.FC<DeskCompanionModalProps> = ({
                       </option>
                     ))}
                   </select>
-                  {book1Course && (
-                    <div className="text-[11px] text-slate-400 px-1 font-mono">
-                      Temas: {book1Course.concepts.map(c => c.subtitle).join(', ')}
-                    </div>
-                  )}
                 </div>
 
                 {/* Book 2 */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5 uppercase font-mono">
-                    <BookOpen className="w-3.5 h-3.5 text-pink-400" />
-                    Libro / Asignatura 2:
+                  <label className="text-xs font-black text-[#4B4B4B] flex items-center gap-1.5 uppercase tracking-wider">
+                    <BookOpen className="w-4 h-4 text-[#FF4B4B]" />
+                    Libro 2:
                   </label>
                   <select
                     value={selectedBook2}
                     onChange={(e) => setSelectedBook2(e.target.value as SubjectId)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-3 text-sm font-bold text-white focus:outline-none focus:border-pink-500"
+                    className="w-full bg-white border-2 border-b-4 border-[#E5E5E5] rounded-2xl px-4 py-3 text-xs font-black text-[#4B4B4B] focus:outline-none focus:border-[#FF4B4B]"
                   >
                     {COURSES.map(c => (
                       <option key={c.id} value={c.id}>
@@ -212,81 +207,51 @@ export const DeskCompanionModal: React.FC<DeskCompanionModalProps> = ({
                       </option>
                     ))}
                   </select>
-                  {book2Course && (
-                    <div className="text-[11px] text-slate-400 px-1 font-mono">
-                      Temas: {book2Course.concepts.map(c => c.subtitle).join(', ')}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Real Fruits Forecast */}
-              <div className="p-4 rounded-2xl bg-slate-950/80 border border-white/10 space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-300 flex items-center gap-1.5">
-                    <TrendingUp className="w-4 h-4 text-emerald-400" />
-                    Frutos Reales de esta Sesión:
-                  </span>
-                  <span className="font-mono text-emerald-400 font-bold">+0.4 Nota Proyectada</span>
-                </div>
-                <div className="grid grid-cols-3 gap-2 text-center text-xs font-mono">
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                    <span className="text-slate-400 block text-[10px]">XP POSIBLE</span>
-                    <strong className="text-amber-400 text-sm">Hasta 450 XP</strong>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                    <span className="text-slate-400 block text-[10px]">RECOMPENSA</span>
-                    <strong className="text-cyan-400 text-sm">+15 Gemas</strong>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                    <span className="text-slate-400 block text-[10px]">COMBO RACHA</span>
-                    <strong className="text-rose-400 text-sm">x3 Multiplicador</strong>
-                  </div>
                 </div>
               </div>
 
               {/* Start Button */}
               <button
                 onClick={handleStartDrill}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-sm tracking-wide shadow-lg shadow-purple-600/30 flex items-center justify-center gap-2 transition active:scale-98"
+                className="duo-btn-green w-full py-4 text-sm"
               >
-                <Zap className="w-5 h-5 fill-white" />
+                <Zap className="w-5 h-5 mr-1.5" />
                 <span>INICIAR RETO ENTRE LIBROS (5 PREGUNTAS)</span>
               </button>
             </div>
           ) : drillFinished ? (
             /* Results Screen */
             <div className="text-center py-6 space-y-6">
-              <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-4xl shadow-xl shadow-amber-500/25">
+              <div className="w-20 h-20 mx-auto rounded-3xl bg-[#FFF4D0] border-2 border-b-4 border-[#FFC800] flex items-center justify-center text-4xl shadow-sm">
                 🏆
               </div>
 
               <div>
-                <h4 className="text-2xl font-black text-white">¡Reto Completado con Éxito!</h4>
-                <p className="text-xs text-slate-300 mt-1 max-w-sm mx-auto">
-                  Has fijado en tu memoria de largo plazo las preguntas más tramposas de tus dos libros.
+                <h4 className="text-2xl font-black text-[#58CC02]">¡Reto Completado!</h4>
+                <p className="text-xs text-[#777777] font-bold mt-1 max-w-sm mx-auto">
+                  Has fijado en tu memoria de largo plazo los conceptos más tramposos de tus dos asignaturas.
                 </p>
               </div>
 
               {/* Fruits Earned Card */}
-              <div className="p-4 rounded-2xl bg-slate-950 border border-white/10 max-w-sm mx-auto space-y-3">
-                <div className="text-xs font-bold text-slate-400 uppercase font-mono tracking-wider">
-                  Frutos Cosechados
+              <div className="p-5 rounded-3xl bg-[#F7F7F7] border-2 border-b-4 border-[#E5E5E5] max-w-sm mx-auto space-y-3">
+                <div className="text-xs font-black text-[#AFAFAF] uppercase tracking-wider">
+                  Recompensas Ganadas
                 </div>
-                <div className="flex justify-around items-center font-mono">
+                <div className="flex justify-around items-center font-black">
                   <div>
-                    <span className="text-2xl font-black text-amber-400">+{score}</span>
-                    <span className="text-[10px] text-slate-400 block font-sans">XP Total</span>
+                    <span className="text-2xl font-black text-[#FF9600]">+{score}</span>
+                    <span className="text-[10px] text-[#777777] block">XP</span>
                   </div>
-                  <div className="h-8 w-px bg-slate-800" />
+                  <div className="h-8 w-px bg-[#E5E5E5]" />
                   <div>
-                    <span className="text-2xl font-black text-cyan-400">+15</span>
-                    <span className="text-[10px] text-slate-400 block font-sans">Gemas</span>
+                    <span className="text-2xl font-black text-[#1CB0F6]">+15</span>
+                    <span className="text-[10px] text-[#777777] block">Gemas</span>
                   </div>
-                  <div className="h-8 w-px bg-slate-800" />
+                  <div className="h-8 w-px bg-[#E5E5E5]" />
                   <div>
-                    <span className="text-2xl font-black text-emerald-400">92%</span>
-                    <span className="text-[10px] text-slate-400 block font-sans">Retención</span>
+                    <span className="text-2xl font-black text-[#58CC02]">92%</span>
+                    <span className="text-[10px] text-[#777777] block">Retención</span>
                   </div>
                 </div>
               </div>
@@ -295,78 +260,72 @@ export const DeskCompanionModal: React.FC<DeskCompanionModalProps> = ({
               <div className="flex flex-col sm:flex-row gap-3 max-w-sm mx-auto">
                 <button
                   onClick={handleStartDrill}
-                  className="flex-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95"
+                  className="duo-btn-white flex-1 py-3 text-xs"
                 >
-                  <RotateCcw className="w-4 h-4" /> Otra Ronda
+                  <RotateCcw className="w-4 h-4 mr-1" /> Otra Ronda
                 </button>
                 <button
                   onClick={onClose}
-                  className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95 shadow-md shadow-purple-600/30"
+                  className="duo-btn-green flex-1 py-3 text-xs"
                 >
-                  <CheckCircle2 className="w-4 h-4" /> Volver a los Libros
+                  <CheckCircle2 className="w-4 h-4 mr-1" /> Continuar
                 </button>
               </div>
             </div>
           ) : (
             /* Active Drill Question View */
             <div className="space-y-4">
-              {/* Question Header & Combo Bar */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-xl bg-purple-500/20 text-purple-300 font-mono text-xs font-bold border border-purple-500/30">
+                  <span className="px-3 py-1 rounded-xl bg-[#E5F6FD] text-[#1CB0F6] font-black text-xs border border-[#84D8FF]">
                     Pregunta {currentIdx + 1} de {activeQuestions.length}
                   </span>
-                  <span className="text-xs font-bold text-slate-400 uppercase font-mono">
+                  <span className="text-xs font-black text-[#AFAFAF] uppercase">
                     {currentProblem.subjectId.toUpperCase()}
                   </span>
                 </div>
 
-                {/* Combo Multiplier */}
                 {comboStreak > 1 && (
-                  <motion.div
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono text-xs font-black"
-                  >
-                    <Flame className="w-4 h-4 fill-rose-500 text-rose-500 animate-pulse" />
+                  <div className="flex items-center gap-1 px-3 py-1 rounded-xl bg-[#FFF0F0] border border-[#FFD0D0] text-[#FF4B4B] font-black text-xs">
+                    <Flame className="w-4 h-4 fill-[#FF4B4B]" />
                     <span>COMBO x{getComboMultiplier(comboStreak)}</span>
-                  </motion.div>
+                  </div>
                 )}
               </div>
 
               {/* Progress bar */}
-              <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+              <div className="w-full bg-[#E5E5E5] h-3 rounded-full overflow-hidden p-0.5">
                 <div 
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all duration-300"
+                  className="bg-[#58CC02] h-full rounded-full transition-all duration-300"
                   style={{ width: `${((currentIdx + 1) / activeQuestions.length) * 100}%` }}
                 />
               </div>
 
               {/* Question Box */}
-              <div className="p-4 rounded-2xl bg-slate-950/70 border border-white/10 space-y-2">
-                <div className="text-[10px] font-mono text-indigo-400 font-bold uppercase">
+              <div className="p-5 rounded-3xl bg-[#F7F7F7] border-2 border-[#E5E5E5] space-y-2">
+                <div className="text-[10px] text-[#1CB0F6] font-black uppercase">
                   {currentProblem.courseYear}
                 </div>
-                <h4 className="text-sm sm:text-base font-bold text-white leading-relaxed">
+                <h4 className="text-sm sm:text-base font-black text-[#4B4B4B] leading-relaxed">
                   {currentProblem.question}
                 </h4>
               </div>
 
               {/* Options */}
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {currentProblem.options.map((opt, optIdx) => {
                   const isSelected = selectedOption === optIdx;
                   const isSubmitted = selectedOption !== null;
                   const isCorrect = opt.isCorrect;
 
-                  let optionStyle = 'bg-slate-950 hover:bg-slate-800/80 border-slate-800 text-slate-200';
+                  let optionStyle = 'bg-white hover:bg-[#F7F7F7] border-[#E5E5E5] text-[#4B4B4B]';
                   if (isSubmitted) {
                     if (isCorrect) {
-                      optionStyle = 'bg-emerald-950/40 border-emerald-500 text-emerald-200 font-bold';
+                      optionStyle = 'bg-[#D7FFB8] border-[#58CC02] text-[#58A700]';
                     } else if (isSelected) {
-                      optionStyle = 'bg-rose-950/40 border-rose-500 text-rose-200 font-bold';
+                      optionStyle = 'bg-[#FFDFE0] border-[#FF4B4B] text-[#EA2B2B]';
                     } else {
-                      optionStyle = 'bg-slate-950/50 border-slate-900 text-slate-500 opacity-50';
+                      optionStyle = 'bg-[#F7F7F7] border-[#E5E5E5] text-[#AFAFAF] opacity-60';
                     }
                   }
 
@@ -375,9 +334,9 @@ export const DeskCompanionModal: React.FC<DeskCompanionModalProps> = ({
                       key={optIdx}
                       disabled={isSubmitted}
                       onClick={() => handleSelectOption(optIdx)}
-                      className={`w-full text-left p-3.5 rounded-2xl border text-xs leading-relaxed flex items-start gap-3 transition-all active:scale-98 ${optionStyle}`}
+                      className={`w-full text-left p-4 rounded-2xl border-2 border-b-4 text-xs font-black leading-relaxed flex items-start gap-3 transition-all cursor-pointer ${optionStyle}`}
                     >
-                      <span className="w-6 h-6 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 font-mono text-[11px] font-bold">
+                      <span className="w-6 h-6 rounded-xl bg-white border border-[#E5E5E5] flex items-center justify-center shrink-0 text-[11px] font-black text-[#AFAFAF]">
                         {String.fromCharCode(65 + optIdx)}
                       </span>
                       <span className="flex-1 mt-0.5">{opt.text}</span>
@@ -386,41 +345,32 @@ export const DeskCompanionModal: React.FC<DeskCompanionModalProps> = ({
                 })}
               </div>
 
-              {/* Feedback & Exam Trap reveal */}
+              {/* Feedback reveal */}
               {selectedOption !== null && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="p-4 rounded-2xl bg-slate-950 border border-white/15 space-y-3"
-                >
+                <div className="p-5 rounded-3xl bg-[#F7F7F7] border-2 border-b-4 border-[#E5E5E5] space-y-3">
                   <div className="flex items-center gap-2">
                     {currentProblem.options[selectedOption].isCorrect ? (
-                      <span className="text-emerald-400 font-bold text-xs flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4" /> ¡Excelente! Has identificado la respuesta exacta
+                      <span className="text-[#58CC02] font-black text-sm flex items-center gap-1.5">
+                        <CheckCircle2 className="w-5 h-5 stroke-[2.5]" /> ¡Correcto!
                       </span>
                     ) : (
-                      <span className="text-rose-400 font-bold text-xs flex items-center gap-1.5">
-                        <AlertTriangle className="w-4 h-4" /> Has caído en una trampa común del examen
+                      <span className="text-[#FF4B4B] font-black text-sm flex items-center gap-1.5">
+                        <AlertTriangle className="w-5 h-5 stroke-[2.5]" /> ¡Ojo a la trampa!
                       </span>
                     )}
                   </div>
 
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-[#4B4B4B] font-bold leading-relaxed">
                     {currentProblem.options[selectedOption].explanation}
                   </p>
 
-                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200 leading-relaxed font-sans">
-                    <strong className="text-amber-400">💡 Consejo para tu libro:</strong> {currentProblem.examTip}
-                  </div>
-
                   <button
                     onClick={handleNextQuestion}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-600/30 transition active:scale-98"
+                    className="duo-btn-green w-full py-3.5 text-xs"
                   >
-                    <span>{currentIdx + 1 === activeQuestions.length ? 'VER RESULTADOS' : 'SIGUIENTE PREGUNTA'}</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <span>{currentIdx + 1 === activeQuestions.length ? 'VER RESULTADOS' : 'CONTINUAR'}</span>
                   </button>
-                </motion.div>
+                </div>
               )}
             </div>
           )}

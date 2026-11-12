@@ -32,9 +32,9 @@ export const DuoMascot: React.FC<DuoMascotProps> = ({
     <div className={`relative flex items-center justify-center ${className}`}>
       {/* Optional Speech Bubble */}
       {speechText && (
-        <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-white text-slate-800 text-xs font-bold px-3 py-2 rounded-2xl shadow-xl border-2 border-slate-200 whitespace-nowrap z-20 animate-bounce">
+        <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-white text-[#4b4b4b] text-xs font-black px-4 py-2 rounded-2xl border-2 border-b-4 border-[#e5e5e5] whitespace-nowrap z-20 animate-bounce-gentle">
           {speechText}
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-white"></div>
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-6 border-x-transparent border-t-6 border-t-white"></div>
         </div>
       )}
 
